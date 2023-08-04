@@ -1,7 +1,7 @@
 ---
 title: "火炬之光2 IMBA MOD 更新日志"
 date: 2023-08-04T16:03:54+10:00
-draft: true
+draft: false
 ---
 
 ### 2023-08-04
