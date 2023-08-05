@@ -5,6 +5,7 @@ draft: false
 ---
 
 ### 2023-08-05
+- 📈GRAPHS: 降低100级以后升级的经验要求
 - 🗑️移除重复NPC
 - 🐛修复NPC玛法大陆流放者语音错误
 - 🗑️删除损坏的TEXTURE_REPLACE Section
