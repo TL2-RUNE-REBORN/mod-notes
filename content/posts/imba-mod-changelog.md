@@ -6,6 +6,7 @@ draft: false
 
 ### 2023-08-10
 - 🐛修复Invalid Hierarchy
+- 🗑️移除Unique、太古、远古、MU、彩蛋、陨铁、传奇物品光柱效果(影响FPS)
 - 📈GRAPHS:增加天狱、炼狱难度怪物血量
 - 📝更新MOD解绑菜单文字内容
 - 🐛修复Invalid GUID
