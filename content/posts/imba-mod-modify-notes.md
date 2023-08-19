@@ -19,6 +19,9 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1916160073
 Variant Pets    
 https://steamcommunity.com/sharedfiles/filedetails/?id=1456944424
 
+- 大箱子
+https://steamcommunity.com/sharedfiles/filedetails/?id=136585458&searchtext=stash
+
 ## 趣味模组
 ### Runic Games员工作品
 
