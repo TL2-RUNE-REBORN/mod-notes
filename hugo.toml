@@ -2,7 +2,7 @@ baseURL = 'https://tl2-mod.chr.moe'
 languageCode = 'zh-CN'
 title = 'Torchlight 2'
 theme = 'paper'
-googleAnalytics = 'G-GDKTX0XLVE'
+googleAnalytics = 'G-WSK4F982KY'
 
 
 [params]
