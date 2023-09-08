@@ -56,7 +56,7 @@ An invalid `MPP` file (Cuz it is generated using the out-of-date `BINLAYOUT`).
 
 It is quite clear now, if you make changes to the `LAYOUT` file after you open the mod project, you will not be able to get the correct `MPP` file. You will have to build twice to get the correct one.  
 
-**Solution? **  
+**Solution?**  
 - Option 1: Open GUTS after you finish making changes to the `LAYOUT` files. GUTS's initialization will update the `BINLAYOUT`, then when building process, you will get the correct `MPP` file.
 - Option 2: Build twice
 
