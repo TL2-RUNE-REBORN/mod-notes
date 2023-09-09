@@ -1,7 +1,7 @@
 ---
 title: "火炬之光2 MOD 打包/解包工具"
 date: 2023-08-11T14:01:57+10:00
-draft: false
+author: "Mikuro"
 ---
 
 ## 链接

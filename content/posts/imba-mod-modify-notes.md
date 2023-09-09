@@ -1,7 +1,7 @@
 ---
 title: "火炬之光2 IMBA MOD 修改笔记"
 date: 2023-08-05T18:01:57+10:00
-draft: false
+author: "Mikuro"
 ---
 
 ## IMBA中引用MOD分析

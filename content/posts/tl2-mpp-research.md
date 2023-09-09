@@ -1,7 +1,7 @@
 ---
 title: "TL2 MPP Research"
 date: 2023-08-30T10:48:11+10:00
-draft: false
+author: "Mikuro"
 ---
 
 I have recently done some tests regarding the `.MPP` files.  
