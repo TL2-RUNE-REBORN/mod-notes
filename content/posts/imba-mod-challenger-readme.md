@@ -54,7 +54,9 @@ author: "Mikuro"
 MOD删除了时装，同时删除了第二套护甲装备，建议使用前把角色的所有装备脱下来，不然你可能会只剩一套时装在身上  
 
 ## 💬游戏打不开显示Fatal Initialization Failure怎么办  
-- 删除`local_settings.txt`文件重新打开游戏
+- 检查更新日志，你有没有按要求更新
+- 删除`C:\Users\用户名\Documents\my games\runic games\torchlight 2\local_settings.txt`文件重新打开游戏
+- 删除`C:\Users\用户名\Documents\my games\runic games\torchlight 2`文件夹重新打开游戏
 - 安装`VC运行库`，文件可以在群内下载到，下载解压后运行`自动安装VC运行库`自动安装即可
 - STEAM用户请从STEAM界面启动游戏  
 
