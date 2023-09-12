@@ -53,7 +53,7 @@ author: "Mikuro"
 鉴于太多人说原存档用不了，如果你真的需要原存档，用旧符文觉醒MOD加载，把所有装备石头都丢掉，说不定能进了，这个问题不再讨论，太费时间  
 MOD删除了时装，同时删除了第二套护甲装备，建议使用前把角色的所有装备脱下来，不然你可能会只剩一套时装在身上  
 
-## 💬游戏打不开显示Fatal Initialization Failure怎么办  
+## 💬游戏打不开或闪退怎么办  
 - 检查更新日志，你有没有按要求更新
 - 删除`C:\Users\用户名\Documents\my games\runic games\torchlight 2\local_settings.txt`文件重新打开游戏
 - 删除`C:\Users\用户名\Documents\my games\runic games\torchlight 2`文件夹重新打开游戏
