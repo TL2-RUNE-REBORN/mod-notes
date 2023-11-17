@@ -19,7 +19,7 @@ ACT5中的相位兽传送门暂时不支持联机，临时删除，后续处理�
 玛法大陆流放者售卖的POE地图暂时不支持联机，临时删除，后续处理方案待定
 
 **MOD顺序如下:**  
-<img width="507" alt="20231117-01" src="https://github.com/TL2-RUNE-REBORN/mod-notes/assets/6506815/fb6b2b01-70f7-45a8-a3eb-2ac3a5aa8034">
+![MOD排序](https://tl2-mod.chr.moe/posts/post-img/20231117-01.png)
 
 - ✨: 添加职业专精卷轴使用特效(临时)
 - 💬: 乔丹之石描述修正
