@@ -1,8 +1,42 @@
 ---
 title: "挑战者大陆MOD 更新日志"
-date: 2023-11-13T11:03:54+10:00
+date: 2023-11-17T11:03:54+10:00
 author: "Mikuro"
 ---
+
+
+### 2023-11-17
+本次更新之后，可支持联机游玩  
+
+海外下载链接:  
+https://github.com/TL2-RUNE-REBORN/mod-notes/releases/download/20231117/20231117.zip  
+
+国内下载链接:  
+https://521github.com/TL2-RUNE-REBORN/mod-notes/releases/download/20231117/20231117.zip  
+
+**已知问题:**  
+ACT5中的相位兽传送门暂时不支持联机，临时删除，后续处理方案待定
+玛法大陆流放者售卖的POE地图暂时不支持联机，临时删除，后续处理方案待定
+
+**MOD顺序如下:**  
+<img width="507" alt="20231117-01" src="https://github.com/TL2-RUNE-REBORN/mod-notes/assets/6506815/fb6b2b01-70f7-45a8-a3eb-2ac3a5aa8034">
+
+- ✨: 添加职业专精卷轴使用特效(临时)
+- 💬: 乔丹之石描述修正
+- 💬: 翻译修正
+- ♻️: ACT传送卷轴调整
+- ♻️: HEALTH/MANA POTION命名统一
+- ♻️: 无限之书(堕落小商店)删除无效内容
+- ♻️: 商店售卖SPAWNCLASS调整
+- ♻️: 流放者商店售卖SPAWNCLASS调整
+- 🗑️: 移除法玛大陆说明书镶嵌石
+- 🗑️: 移除无效的SPAWNCLASS
+- 🗑️: 移除随机装备币、毁灭硬币，修改对应配方和SPAWNCLASS
+- 🗑️: 移除IMBA纪念币
+- 🗑️: 移除不支持LAN的DUNGEON
+- 🗑️: 移除原版HASH完全相同内容
+- 🗑️: 移除无限药水【后续考虑补充】
+
 ### 2023-11-13
 - ♻️: 【灰烬术士】-【雷爆冲锋】移除盾牌、护甲数值挂钩，改回TL2原版属性
 - ♻️: 移除斯特尔克战弩、埃辛诺斯战刃中无效的成长属性AFFIX，补偿提高属性
