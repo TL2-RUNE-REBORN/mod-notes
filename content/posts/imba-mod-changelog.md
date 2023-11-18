@@ -12,11 +12,11 @@ https://github.com/TL2-RUNE-REBORN/mod-notes/releases/download/20231118/20231118
 https://521github.com/TL2-RUNE-REBORN/mod-notes/releases/download/20231118/20231118.zip  
 
 
-♻️: 遗失的碎片->总是已鉴定
-♻️: 移除出生地回音走廊ECHOPASS的群魔BOSS
-♻️: 商店售卖药水调整
-🐛: 修复死灵法师骷髅兵武器丢失的问题
-🐛: 修复神器合成的问题
+- ♻️: 遗失的碎片->总是已鉴定
+- ♻️: 移除出生地回音走廊ECHOPASS的群魔BOSS
+- ♻️: 商店售卖药水调整
+- 🐛: 修复死灵法师骷髅兵武器丢失的问题
+- 🐛: 修复神器合成的问题
 
 ### 2023-11-17
 本次更新之后，可支持联机游玩  
