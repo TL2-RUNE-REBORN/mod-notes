@@ -15,6 +15,10 @@ author: "Mikuro"
 ## 📝更新日志
 请访问[MOD更新日志页面](https://tl2-mod.chr.moe/posts/imba-mod-changelog/)
 
+## 下载链接
+- 访问QQ群  
+- [挑战者下载站-不保证下载速度](https://tl2-mod-download.chr.moe/)
+
 ## 📦️文件夹包含内容
 这个不是排序！
 这个不是排序！
@@ -32,10 +36,6 @@ author: "Mikuro"
 挑战者大陆--通用素材01.MOD
 ```
 
-## 🚩MOD排序  
-**按照组件号从上到下是从小到大即可**  
-![MOD排序](https://tl2-mod.chr.moe/posts/post-img/mod-order.png)
-
 ## 💩FAQ
 - 问: 能加别的背包MOD么  
 - 答: 不推荐，会覆盖掉护身符、暗黑传奇本身的背包设定  
@@ -49,15 +49,20 @@ author: "Mikuro"
 - 问：新版的配方怎么看呀？
 - 答：在合成师界面可以看到全部配方，想手动翻也可以查看[配方文档](https://tl2-mod.chr.moe/posts/challenger-mod-recipe-list/)
 
-## 🔧MOD安装
+## 🔧MOD安装及排序及更新
+### 安装
 将挑战者大陆MOD文件复制到以下目录即可，如果没有`mods`文件夹，自己新建一个即可  
 `C:\Users\你的用户名\Documents\my games\runic games\torchlight 2\mods`  
 **注意替换成你自己的用户名**  
-
+### 排序
+**打开MOD游戏后按照组件号从上到下是从小到大即可**  
+![MOD排序](https://tl2-mod.chr.moe/posts/post-img/mod-order.png)
+### 更新
 
 
 ## 💬游戏打不开或闪退怎么办  
 - 如果你不是正版游戏，建议购买正版游戏(天天打折)
+- 地图上装备太多了，选择局域网游戏并勾选刷新世界
 - 检查更新日志说明
 - 如果加了其他非挑战者大陆MOD，请自己解决
 - 删除`C:\Users\用户名\Documents\my games\runic games\torchlight 2\local_settings.txt`文件重新打开游戏
