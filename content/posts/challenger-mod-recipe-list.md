@@ -7,6 +7,8 @@ author: "Mikuro"
 
 ### 2023-11-23
 
+- 5个小护身符 = 大型护身符
+- 5个大型护身符 = 超大型护身符
 - 2个项圈 = RECIPE_COLLAR
 - 2个饰钉 = RECIPE_STUD
 - 3个血精灰烬石 + 3个火焰灰烬石 = HC_RECIPE_SKULLS_AND_MAGIC_GEMS_SRXX
