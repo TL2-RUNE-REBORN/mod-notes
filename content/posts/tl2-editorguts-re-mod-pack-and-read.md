@@ -261,10 +261,40 @@ world)** → raycast each cell → write .mpp → destroy. The dominant cost is 
 
 ### 5.3 Offline / headless generation
 - Offline numba backend (`mpp/native_nb.py`): `@njit(fastmath=False)` mirrors the scalar kernels, bit-identical IEEE754;
-  ~99.7% of cells match native (the rest = cliff/overhang float tie-breaks + nocollide cave walls, not reproducible).
+  **99.7109% of cells** match native across the 1293-tile corpus. Plain leaf templates (`1X1_CONCAVE_*`) are byte-exact;
+  the residual is characterized in §5.4.
 - **Headless byte-exact**: drive the real DLL (fork `TL2-Mikuro-Console.exe`) `InitEditor` + `EditorSetWorkingMod` +
   `CreateMod` (double pass: pass 1 writes .BINLAYOUT + stub .mpp, pass 2 writes the real .mpp). InitEditor is ~6.24s once
-  (Ogre/PAK/room-piece data ~3s + FMOD+D3D9 device ~2s + shaders).
+  (Ogre/PAK/room-piece data ~3s + FMOD+D3D9 device ~2s + shaders). The scratch mod's `MOD.DAT` must carry
+  `<INTEGER64>MOD_ID:` (**not** `GUID:`) or `CreateMod` bails after the `.BINDAT` step and writes no `.BINLAYOUT`/`.mpp`.
+
+### 5.4 What the last ~0.29% actually is (empirically pinned, not guessed)
+We finally *measured* every long-assumed claim about the residual, end to end:
+
+- **The `.BINLAYOUT` is fully deterministic and byte-exact.** Regenerating the same `.LAYOUT` N times through the real DLL
+  gives an SHA-identical `.BINLAYOUT` every run (incl. the tiles whose `.mpp` oscillates), and our offline compiler matches
+  it byte-for-byte. So the residual is **not** in BINLAYOUT — it is entirely downstream, in the `.mpp` pathing bake.
+- **The native `.mpp` bake is itself nondeterministic — but only on geometrically complex tiles.** Regen ×5: cliff/overhang
+  and multi-chunk tiles produce a *different* `.mpp` every run (tens of wall-boundary cells oscillate, 0.01–0.04%); plain
+  concave/cave tiles are byte-stable (0 variance). Those oscillating cells are unmatchable *in principle* — the corpus is one
+  noisy sample and the engine doesn't even match itself there.
+- **The rest is deterministic, and it is NOT float precision — it is a collision-set difference.** A Monte-Carlo float-fragility
+  test (perturb the ray/geometry by ~1 float32-ulp, count classification flips) showed **95–100% of our residual cells are
+  float-robust**, i.e. their disagreement can't come from a rounding boundary — the down-ray is hitting a *different set of
+  triangles*.
+- **We dumped the DLL's actual baked triangle soup** (a call-site hook on the StaticGeometry merge `sub_10068CB0`, reconstructing
+  each world triangle) and set-diffed it against our offline gather: **89.9% exact**, the rest half harmless transform-precision
+  and half a genuine over-bake that is **100% `nocollide`-material cave geometry** (stalagmites/shrooms/rock-clusters/overhangs).
+  It's a **per-instance** decision — the editor bakes *some* placements of the same mesh and drops others (dropped ones skew
+  elevated), with no clean static discriminator on the layout/DAT.
+- **We tried to close it** with a targeted rule (drop small elevated nocollide-only "decoration" pieces). SEW alone improved,
+  but a full-corpus A/B **regressed catastrophically (+563k diff cells)**: corpus-wide, "elevated nocollide" is dominantly *real
+  walls* (canyon overhangs, multi-level dungeon structures) the editor *does* bake — the elevation signal is fundamentally
+  ambiguous. The per-instance bake decision is genuinely runtime state.
+
+**Bottom line:** the offline floor (99.7109%) is a true floor — a tiny irreducible sliver of engine float-nondeterminism plus a
+runtime-only nocollide-collision-inclusion decision, neither derivable from the static files. For byte-exact `.mpp`, use the
+headless DLL backend (§5.3); the offline path is the fast, honest ~99.71% approximation.
 
 ---
 

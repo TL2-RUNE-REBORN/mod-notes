@@ -216,8 +216,19 @@ Object(递归):
 导出 `0x100DDDE0` → `Pathing_RegenAll_worker`(`sub_10018750`):扫 `*.layout` → **单线程** do/while 逐文件 `Pathing_RegenSingleFile_worker`(`sub_10015FA0`),每 20 文件做一次 Ogre 资源 unload 清扫。每文件:`CLevel_ctor`(`sub_101FD170`,1160B 对象)→ 置标志 → `CLevel_SetMppOutputPath`(`sub_1000B980`)→ **`CLevel_LoadLevelData`(`sub_1020AB90`,解析 layout + 经 Ogre 加载全部碰撞 mesh + 组装碰撞世界)** → raycast 每 cell → 写 .mpp → 析构。耗时大头是 **Ogre mesh 加载 + CLevel 生命周期**,非 raycast。
 
 ### 5.3 离线 / 无头生成
-- 离线 numba 后端(`mpp/native_nb.py`):`@njit(fastmath=False)` 镜像标量核,IEEE754 逐位一致;~99.7% cell 与 native 一致(剩余是 cliff/overhang 浮点 tie-break + nocollide 洞穴墙,不可复现)。
-- **无头 byte-exact**:驱动真实 DLL(`TL2-Mikuro-Console.exe` fork)`InitEditor` + `EditorSetWorkingMod` + `CreateMod`(双 pass:pass1 写 .BINLAYOUT + stub .mpp,pass2 写真 .mpp)。InitEditor 一次 ~6.24s(Ogre/PAK/room-piece 数据 ~3s + FMOD+D3D9 device ~2s + shader)。
+- 离线 numba 后端(`mpp/native_nb.py`):`@njit(fastmath=False)` 镜像标量核,IEEE754 逐位一致;全 1293 图语料 **99.7109% cell** 与 native 一致。平坦叶子模板(`1X1_CONCAVE_*`)逐字节精确;残差见 §5.4。
+- **无头 byte-exact**:驱动真实 DLL(`TL2-Mikuro-Console.exe` fork)`InitEditor` + `EditorSetWorkingMod` + `CreateMod`(双 pass:pass1 写 .BINLAYOUT + stub .mpp,pass2 写真 .mpp)。InitEditor 一次 ~6.24s(Ogre/PAK/room-piece 数据 ~3s + FMOD+D3D9 device ~2s + shader)。临时 `MOD.DAT` 的身份字段必须是 `<INTEGER64>MOD_ID:`(**不是** `GUID:`),否则 `CreateMod` 编完 `.BINDAT` 就退出、不写任何 `.BINLAYOUT`/`.mpp`。
+
+### 5.4 最后 ~0.29% 到底是什么(实测钉死,非猜测)
+我们把关于残差的每一个长期假设都**实测**了一遍:
+
+- **`.BINLAYOUT` 完全确定、且逐字节精确。** 同一 `.LAYOUT` 用真 DLL 重生成 N 次,`.BINLAYOUT` 的 SHA 每次都一样(包括那些 `.mpp` 会抖动的图),我们离线编译器也和它逐字节相同。所以残差**不在 BINLAYOUT**,完全在下游的 `.mpp` 烘焙里。
+- **原生 `.mpp` 烘焙本身不确定——但只在几何复杂的图上。** 重生成 ×5:悬崖/悬垂、多 chunk 图**每次都产出不同的 `.mpp`**(几十个墙体边界 cell 抖动,0.01–0.04%);平坦凹面/洞穴图字节稳定(0 抖动)。那些抖动的 cell **原理上不可匹配**——语料只是一次噪声采样,引擎自己都对不上自己。
+- **其余是确定性的,而且不是浮点精度——是碰撞集差异。** 蒙特卡洛浮点敏感度测试(对 ray/几何施 ~1 float32-ulp 扰动、数分类翻转)显示**我们残差 cell 的 95–100% 对浮点稳健**,即分歧不可能来自舍入边界——是 down-ray 命中了**不同的三角形集合**。
+- **我们 dump 了 DLL 真实烘焙的三角形汤**(hook StaticGeometry 合并 `sub_10068CB0` 的调用点,重建每个世界三角形)和离线 gather 做集合差:**89.9% 精确**,其余一半是无害的变换精度、一半是真实"多烘"——**100% 是 `nocollide` 材质的洞穴几何**(石笋/蘑菇/碎石/悬垂)。它是**按实例**决定的——同一个 mesh,编辑器烘一部分摆放、丢另一部分(被丢的偏架空),在 layout/DAT 上**没有干净的静态判据**。
+- **我们试着补齐**(定向规则:丢弃小的、架空的、纯 nocollide"装饰"件)。SEW 单图改善,但全语料 A/B **灾难性回归(+56 万 diff cell)**:全语料范围内"架空 nocollide"绝大多数是编辑器**确实烘焙**的真墙(峡谷悬垂、多层地牢结构)——高度信号根本分不开。这个按实例的烘焙决定是真正的运行时状态。
+
+**结论:** 离线天花板(99.7109%)是**真**天花板——一小撮不可约的引擎浮点不确定性 + 一个纯运行时的 nocollide 碰撞包含决定,两者都无法从静态文件推出。要字节精确 `.mpp` 就用无头 DLL 后端(§5.3);离线这条是快速、诚实的 ~99.71% 近似。
 
 ---
 
