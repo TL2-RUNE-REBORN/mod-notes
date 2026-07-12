@@ -1,5 +1,6 @@
 baseURL = 'https://tl2-mod.chr.moe'
-locale = 'zh-CN'
+# CF Pages 构建镜像是 hugo 0.147,用 languageCode(新版仅 deprecation 警告,无碍)
+languageCode = 'zh-CN'
 title = '余烬工坊'
 theme = 'emberworks'
 hasCJKLanguage = true
