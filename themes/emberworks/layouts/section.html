@@ -1,0 +1,16 @@
+{{ define "main" }}
+<section class="block">
+  <header class="sec nonum">
+    <h1>{{ .Title }}{{ with .Params.en }} <span class="en">{{ . }}</span>{{ end }}</h1>
+    {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+  </header>
+
+  {{ with .Content }}<div class="article-body">{{ . }}</div>{{ end }}
+
+  <div class="post-list">
+    {{ range .RegularPages.ByDate.Reverse }}
+    {{ partial "post-row.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}

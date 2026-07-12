@@ -1,279 +1,285 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<html
-  class="not-ready lg:text-base"
-  style="--bg: #faf8f1"
-  lang="zh-CN"
->
-  <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-  />
+  <title>余烬工坊 · Emberworks</title>
 
   
-  <title>Torchlight 2</title>
-
+  <meta name="description" content="火炬之光2 重制 / MOD / 工具 —— 开发日志、更新日志与自研工具库。">
   
-  <meta name="theme-color" />
+  <meta name="author" content="Mikuro">
+  <meta name="theme-color" content="#100e0b">
 
   
   
+  <link rel="preconnect" href="https://fonts.loli.net">
+  <link href="https://fonts.loli.net/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+
   
+  <link rel="stylesheet" href="/css/main.min.ba0282a51e95f1abde53280ab383cc61a17a7eea24505f82e75f2452ea7d5489.css">
+
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <meta name="generator" content="Hugo 0.164.0">
+
   
-  <meta
-    name="description"
-    content="A personal blog"
-  />
-  <meta name="author" content="Torchlight 2" />
+  <link rel="alternate" type="application/rss&#43;xml" href="https://tl2-mod.chr.moe/index.xml" title="余烬工坊">
   
 
   
   
-  
-  
-  
-  
-  <link rel="preload stylesheet" as="style" href="https://tl2-mod.chr.moe/main.min.css" />
-
-  
-
-  
-     
-  <link rel="preload" as="image" href="https://tl2-mod.chr.moe/theme.svg" />
-
-  
-  
-  
-  
-
-  
-  <link rel="preload" as="image" href="https://tl2-mod.chr.moe/github.svg" />
-  
-  <link rel="preload" as="image" href="https://tl2-mod.chr.moe/rss.svg" />
-  
-  
-
-  
-  
-
-  
-  <link rel="icon" href="https://tl2-mod.chr.moe/favicon.ico" />
-  <link rel="apple-touch-icon" href="https://tl2-mod.chr.moe/apple-touch-icon.png" />
-
-  
-  <meta name="generator" content="Hugo 0.115.4">
-
-  
-  
-  <link
-    rel="alternate"
-    type="application/rss&#43;xml"
-    href="https://tl2-mod.chr.moe/index.xml"
-    title="Torchlight 2"
-  />
-  
-
-  
-  
-  
-  
-  
-  
-  
-  <meta property="og:title" content="Torchlight 2" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://tl2-mod.chr.moe/" />
-
-  
-  <meta itemprop="name" content="Torchlight 2">
-<meta itemprop="description" content="">
-  
-  <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Torchlight 2"/>
-<meta name="twitter:description" content=""/>
-
-  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-WSK4F982KY"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-WSK4F982KY');
+        }
+      </script>
   
 </head>
 
-  <body class="text-black duration-200 ease-out dark:text-white">
-    <header class="mx-auto flex h-[4.5rem] max-w-3xl px-8 lg:justify-center">
-  <div class="relative z-50 mr-auto flex items-center">
-    <a
-      class="-translate-x-[1px] -translate-y-[1px] text-2xl font-semibold"
-      href="https://tl2-mod.chr.moe"
-      >Torchlight 2</a
-    >
-    <div
-      class="btn-dark text-[0] ml-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
-      role="button"
-      aria-label="Dark"
-    ></div>
-  </div>
-
-  <div
-    class="btn-menu relative z-50 -mr-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
-    role="button"
-    aria-label="Menu"
-  ></div>
-
-  
-  <script>
-    
-    const htmlClass = document.documentElement.classList;
-    setTimeout(() => {
-      htmlClass.remove('not-ready');
-    }, 10);
-
-    
-    const btnMenu = document.querySelector('.btn-menu');
-    btnMenu.addEventListener('click', () => {
-      htmlClass.toggle('open');
-    });
-
-    
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    const lightBg = '#faf8f1'.replace(/"/g, '');
-    const setDark = (isDark) => {
-      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
-      htmlClass[isDark ? 'add' : 'remove']('dark');
-      localStorage.setItem('dark', isDark);
-    };
-
-    
-    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    if (htmlClass.contains('dark')) {
-      setDark(true);
-    } else {
-      const darkVal = localStorage.getItem('dark');
-      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
-    }
-
-    
-    darkScheme.addEventListener('change', (event) => {
-      setDark(event.matches);
-    });
-
-    
-    const btnDark = document.querySelector('.btn-dark');
-    btnDark.addEventListener('click', () => {
-      setDark(localStorage.getItem('dark') !== 'true');
-    });
-  </script>
-
-  <div
-    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"
-  >
+<body>
+  <div class="wrap">
+    <header class="masthead">
+  <a class="brand" href="/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
     
     
-
+    <a href="/devlog/" >开发日志</a>
     
-    <nav
-      class="mt-12 flex justify-center space-x-10 dark:invert lg:ml-12 lg:mt-0 lg:items-center lg:space-x-6"
-    >
-      
-      <a
-        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
-        style="--url: url(./github.svg)"
-        href="https://github.com/heiybb"
-        target="_blank"
-        rel="me"
-      >
-        github
-      </a>
-      
-      <a
-        class="h-8 w-8 text-[0] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
-        style="--url: url(./rss.svg)"
-        href="https://tl2-mod.chr.moe/index.xml"
-        target="_blank"
-        rel="alternate"
-      >
-        rss
-      </a>
-      
-    </nav>
+    <a href="/changelog/" >更新日志</a>
     
-  </div>
+    <a href="/tools/" >工具库</a>
+    
+    <a href="/guides/" >指南</a>
+    
+    <a href="/support/" >赞助</a>
+    
+  </nav>
 </header>
 
-
-    <main
-      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl px-8 pb-16 pt-12 dark:prose-invert"
-    >
+    <main>
       
 
+<div class="hero">
+  <div class="embers"><b></b><b></b><b></b><b></b><b></b></div>
+  <span class="kicker">MIKURO · TORCHLIGHT II DEVWORKS</span>
+  <h1>余烬<em>工坊</em></h1>
+  <div class="sub">Emberworks <span class="zh">重制 · 模组 · 工具</span></div>
+  <p class="lede">拆解一盏旧灯,点亮一炉新火。这里存放 <strong>Torchlight II</strong> 的逆向研究与重制开发日志、<strong>挑战者大陆 MOD</strong> 的更新记录,以及一整套自研第三方工具 —— 从打包器到启动器。</p>
+</div>
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 
 
 
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅰ</span>
+    <h2>开发日志 <span class="en">Dev Journal</span></h2>
+    <p class="lede">逆向、复刻、踩坑与回填 —— <strong>决不写推断当结论</strong>。</p>
+  </header>
+
+  
+  
+  <article class="featured">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="icon-cell">
+      <div class="icon-frame">
+        <svg width="46" height="46" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C10.5 5.5 7 7.5 7 12a5 5 0 0 0 10 0c0-2-1-3.5-2-5-.5 2-1.5 3-2.5 3.5C13 8 13 4.5 12 2Z"
+            stroke="#ff9a3c" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M12 17.5a2.5 2.5 0 0 1-2.5-2.5c0-1.2.8-2 1.5-2.8.3 1 .8 1.5 1.5 1.8.4-.8.4-1.7.3-2.5 1.2 1 1.7 2.2 1.7 3.5a2.5 2.5 0 0 1-2.5 2.5Z"
+            fill="#ff9a3c" opacity=".55"/>
+        </svg>
+      </div>
+      <span class="icon-cap">最新</span>
+    </div>
+    <div class="body">
+      <div class="meta"><b>2026-06-20</b> · Mikuro</div>
+      <h3><a href="/devlog/tl2-editorguts-re-mod-pack-and-read-cn/">TL2 EditorGuts 逆向 — MOD 打包与读取内部结构</a></h3>
+      <p>从 EditorGuts.dll 导出函数逆向 .MOD 打包与读取的完整内部结构(中文版)。</p>
+    </div>
+  </article>
+  
+
+  <div class="post-list">
+    
+    <a class="post" href="/devlog/tl2-editorguts-re-mod-pack-and-read/">
+  <span class="d">2026-06-20</span>
+  <span class="t">TL2 EditorGuts RE — MOD Packing &amp; Reading Internals
+    
+    <span class="x">Reversing .MOD packing &amp; reading internals from EditorGuts.dll exports (English).</span>
+    
+  </span>
+</a>
+
+    
+    <a class="post" href="/devlog/tl2-mod-test-note/">
+  <span class="d">2023-11-28</span>
+  <span class="t">火炬之光2 MOD开发 测试日志
+    
+    <span class="x">MOD 开发过程中的实测记录与踩坑笔记。</span>
+    
+  </span>
+</a>
+
+    
+    <a class="post" href="/devlog/tl2-mpp-research/">
+  <span class="d">2023-08-30</span>
+  <span class="t">TL2 MPP Research
+    
+    <span class="x">Why cleaning up .MPP files breaks dungeon walkability — repro steps and findings.</span>
+    
+  </span>
+</a>
+
+    
+    <a class="post" href="/devlog/imba-mod-modify-notes/">
+  <span class="d">2023-08-05</span>
+  <span class="t">火炬之光2 IMBA MOD 修改笔记
+    
+    <span class="x">IMBA MOD 修改的技术笔记与数据侧改动记录。</span>
+    
+  </span>
+</a>
+
+    
+  </div>
+  <a class="more" href="/devlog/">全部日志</a>
+</section>
+
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 
 
 
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅱ</span>
+    <h2>更新日志 <span class="en">Changelog</span></h2>
+    <p class="lede">挑战者大陆与 Mikuro 启动器的版本记录,条目按<strong>物品稀有度</strong>着色 —— 一眼扫出这版掉了什么好东西。</p>
+  </header>
+  <div class="post-list">
+    
+    <a class="post" href="/changelog/mikuro-launcher-changelog/">
+  <span class="d">2026-07-12</span>
+  <span class="t">Mikuro 启动器 更新日志
+    
+    <span class="x">Mikuro 启动器(含 MIKURO 游戏增强)的版本变更记录。</span>
+    
+  </span>
+</a>
+
+    
+    <a class="post" href="/changelog/imba-mod-changelog/">
+  <span class="d">2026-07-12</span>
+  <span class="t">挑战者大陆MOD 更新日志
+    
+    <span class="x">挑战者大陆整合包的全部版本变更记录。</span>
+    
+  </span>
+</a>
+
+    
+  </div>
+</section>
 
 
- 
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 
+
+
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅲ</span>
+    <h2>工具库 <span class="en">The Armory</span></h2>
+    <p class="lede">自研第三方工具,每一件都按<strong>装备</strong>陈列 —— 词缀是它的能力,品质是它的成熟度。</p>
+  </header>
+  <div class="tools">
+    
+    <article class="tool legendary">
+  <div class="head">
+    <div class="gem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+  <path d="M12 3c-2 3-6 4.5-6 9a6 6 0 0 0 12 0c0-4.5-4-6-6-9Z" stroke-width="1.3"/>
+  <circle cx="12" cy="14" r="2.4" stroke-width="1.2" opacity=".6"/>
+</svg></div>
+    <div>
+      <h3><a href="/tools/mikuro-launcher/">Mikuro 启动器</a></h3>
+      <div class="type">传奇 · MOD 启动器 · 游戏增强</div>
+    </div>
+  </div>
+  <hr>
+  
+  <ul class="affixes">
+    <li>突破官方 10 个 MOD 加载上限</li><li>DXVK 双版本按显卡驱动自动选择,减少黑屏 / 秒退</li><li>MIKURO 游戏增强:掉落过滤 / 存档崩溃修复 / 灵石限位</li><li>存档解绑:安全卸下职业 MOD 不废存档</li>
+  </ul>
+  
+  <p class="flavor">“上限只存在于旧启动器的一条指令里。”</p>
+  <div class="foot">
+    <span class="st">■ 已发布</span>
+    <span>windows · 整合包内置</span>
+  </div>
+</article>
+
+    
+    <article class="tool legendary">
+  <div class="head">
+    <div class="gem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+  <path d="M12 2 4 7v10l8 5 8-5V7l-8-5Z" stroke-width="1.3"/>
+  <path d="M12 2v20M4 7l8 5 8-5" stroke-width="1.3" opacity=".5"/>
+</svg></div>
+    <div>
+      <h3><a href="/tools/tl2-mikuro-tool/">火炬之光2 MOD 打包/解包工具</a></h3>
+      <div class="type">传奇 · MOD 打包 / 解包 CLI</div>
+    </div>
+  </div>
+  <hr>
+  
+  <ul class="affixes">
+    <li>3 秒初始化 —— 无需忍受编辑器 20 秒加载</li><li>直调 EditorGuts.dll 导出函数打包 / 解包</li><li>适合保持 workspace 干净的开发流</li>
+  </ul>
+  
+  <p class="flavor">“每次打包,不必再等编辑器苏醒。”</p>
+  <div class="foot">
+    <span class="st">■ 已发布</span>
+    <span>github.com/heiybb/TL2-Mikuro</span>
+  </div>
+</article>
+
+    
+  </div>
+</section>
 
 
 
     </main>
-
-    <footer
-  class="opaco mx-auto flex h-[4.5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"
->
-  <div class="mr-auto">
-    &copy; 2023
-    <a class="link" href="https://tl2-mod.chr.moe">Torchlight 2</a>
-  </div>
-  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
-    >Powered by Hugo️️</a
-  >️
-  <a
-    class="link"
-    href="https://github.com/nanxiaobei/hugo-paper"
-    rel="noopener"
-    target="_blank"
-    >✎ Paper</a
-  >
+    <footer class="site">
+  <span>EMBERWORKS · 余烬工坊 © 2026</span>
+  <span>
+    <b>MIKURO</b>
+     · <a href="https://github.com/heiybb" rel="me">GITHUB</a>
+     · <a href="/index.xml">RSS</a>
+  </span>
 </footer>
 
-  </body>
+  </div>
+  
+  <script src="/js/chips.min.fb9d1d4e0baf979a51d880d312339c7bff137e4c49030829f9e06c98e1ba7a73.js" defer></script>
+</body>
 </html>

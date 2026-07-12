@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mikuro 启动器 更新日志 — 余烬工坊</title>
+
+  
+  <meta name="description" content="Mikuro 启动器(含 MIKURO 游戏增强)的版本变更记录。">
+  
+  <meta name="author" content="Mikuro">
+  <meta name="theme-color" content="#100e0b">
+
+  
+  
+  <link rel="preconnect" href="https://fonts.loli.net">
+  <link href="https://fonts.loli.net/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  
+  <link rel="stylesheet" href="/css/main.min.ba0282a51e95f1abde53280ab383cc61a17a7eea24505f82e75f2452ea7d5489.css">
+
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <meta name="generator" content="Hugo 0.164.0">
+
+  
+
+  
+  
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-WSK4F982KY"></script>
+      <script>
+        var doNotTrack = false;
+        if ( true ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-WSK4F982KY');
+        }
+      </script>
+  
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="masthead">
+  <a class="brand" href="/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
+    
+    
+    <a href="/devlog/" >开发日志</a>
+    
+    <a href="/changelog/" class="on">更新日志</a>
+    
+    <a href="/tools/" >工具库</a>
+    
+    <a href="/guides/" >指南</a>
+    
+    <a href="/support/" >赞助</a>
+    
+  </nav>
+</header>
+
+    <main>
+      
+<article class="article-wrap">
+  <header class="article-head">
+    <span class="kicker">更新日志</span>
+    <h1>Mikuro 启动器 更新日志</h1>
+    <div class="a-meta">
+      <b>2026-07-12</b>
+       · Mikuro
+       · 约 1003 字
+    </div>
+  </header>
+
+  <div class="rarity-note">
+  词缀色阶 ——
+  <em class="l">■ 传奇橙 = 新增</em> ·
+  <em class="m">■ 魔法蓝 = 修复</em> ·
+  <em class="s">■ 套装绿 = 优化</em> ·
+  <em class="f">■ 焰红 = 移除</em> ·
+  <em class="g">■ 饰金 = 视觉</em> ·
+  <em class="r">■ 稀有黄 = 数值</em>
+</div>
+
+
+  <div class="article-body">
+    <h2 id="2026-07-12v115">2026-07-12（v1.1.5）</h2>
+<p>主要围绕显卡兼容（DXVK 双版本）、把增强功能整合为「MIKURO 游戏增强」一个开关、以及存档解绑的职业 MOD 识别做了改进。</p>
+<ul>
+<li>✨: DXVK 双版本（3.x / 2.7.1）按显卡驱动自动选择，兼容更多新老显卡，减少黑屏 / 秒退</li>
+<li>♻️: 原「物品过滤」开关改名为「MIKURO 游戏增强」——一个开关挂载整套游戏增强层（掉落过滤、存档修复等）；存档崩溃修复（大背包存档、过图闪退）并入其中并默认常开</li>
+<li>♻️: 存档解绑更智能——按角色职业名精确识别职业 MOD：普通内容 MOD 不再被误判为职业 MOD，也不再无谓要求你选原版职业；只有在真正解绑职业 MOD 时才提示选择原版职业</li>
+<li>✨: 悬浮提示弹出更快（250ms）、停留更久（30s），更容易看清</li>
+<li>🗑️: 隐藏几乎无人填写的「下载链接」字段，界面更清爽</li>
+</ul>
+<h2 id="2026-07-03v114">2026-07-03（v1.1.4）</h2>
+<p>本次围绕「存档 ↔ MOD 一键联动」「原版/MOD 启动自动区分」以及 DXVK 画质选项做了打磨，另外新增了悬浮窗冲突提示，避免游戏加加这类软件导致进不去游戏。</p>
+<ul>
+<li>✨: 双击存档卡片，自动按该存档记录的 MOD 顺序勾选并跳转到 MOD 列表（缺失 MOD 时提示「MOD 自动选择失败」）</li>
+<li>✨: 未选择任何 MOD 时，启动按钮变为「启动原版」，直接进入原版存档（save\），不再误用 MOD 存档（modsave\）</li>
+<li>✨: 存档卡片显示角色等级</li>
+<li>✨: 底部新增提示条，告知可双击存档卡片快速选择 MOD</li>
+<li>✨: 启动时提示请勿叠加游戏加加、MSI Afterburner / RTSS、Discord / Steam 悬浮窗、GeForce Experience 等软件——它们会与掉落过滤 / DXVK 争抢同一套 D3D9 钩子，可能导致游戏无法启动、黑屏或秒退（可勾选「不再提醒」，启动器更新后会再次提示）</li>
+<li>♻️: 「按 MOD 精确解绑」改为多选，可一次解绑指定的多个 MOD；解绑后的存档仍写回 modsave\（并附 .SVB.bak 备份）</li>
+<li>♻️: 存档卡片「带 MOD」标签精简为「MOD」</li>
+<li>✨: DXVK 选项新增「显示 FPS」「最大帧延迟」「纹理清晰度」（推荐值 最大帧延迟 1 / 纹理清晰度 -0.5）</li>
+<li>🎨: DXVK 选项弹窗改为从按钮上方弹出、下拉框加宽避免文字截断、齿轮图标更换为更直观的滑杆图标</li>
+<li>💬: 「地面清晰化（16× AF）」文案简化，更易理解</li>
+</ul>
+<h3 id="说明">说明</h3>
+<ul>
+<li>双击存档卡片的自动选择，依据的是存档里记录的 MOD 清单与加载顺序；若其中某个 MOD 当前未安装，则整体判为失败并提示。</li>
+<li>悬浮窗提示仅在启用了「掉落过滤」或「DXVK」时才出现（这两项才会挂接 D3D9）。若想在画面上看 FPS，请改用启动器 DXVK 选项里的「显示 FPS」。</li>
+</ul>
+
+  </div>
+
+  
+  
+  
+  <nav class="pager">
+    
+    <a class="next" href="/changelog/imba-mod-changelog/"><span>较早 →</span>挑战者大陆MOD 更新日志</a>
+  </nav>
+  
+  
+</article>
+
+    </main>
+    <footer class="site">
+  <span>EMBERWORKS · 余烬工坊 © 2026</span>
+  <span>
+    <b>MIKURO</b>
+     · <a href="https://github.com/heiybb" rel="me">GITHUB</a>
+     · <a href="/index.xml">RSS</a>
+  </span>
+</footer>
+
+  </div>
+  
+  <script src="/js/chips.min.fb9d1d4e0baf979a51d880d312339c7bff137e4c49030829f9e06c98e1ba7a73.js" defer></script>
+</body>
+</html>

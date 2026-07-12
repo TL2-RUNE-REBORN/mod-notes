@@ -1,0 +1,38 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{ if not .IsHome }}{{ .Title }} — {{ end }}{{ site.Title }}{{ if .IsHome }}{{ with site.Params.subtitle }} · {{ . }}{{ end }}{{ end }}</title>
+
+  {{ if .IsPage }}
+  <meta name="description" content="{{ .Summary | plainify | truncate 140 }}">
+  {{ else }}
+  <meta name="description" content="{{ site.Params.description }}">
+  {{ end }}
+  <meta name="author" content="{{ or .Params.author site.Params.author }}">
+  <meta name="theme-color" content="#100e0b">
+
+  {{/* 字体:默认走 fonts.loli.net(Google Fonts 大陆可达镜像)。
+       如需换回官方源,把 params.fontHost 设为 https://fonts.googleapis.com */}}
+  {{ $fontHost := site.Params.fontHost | default "https://fonts.loli.net" }}
+  <link rel="preconnect" href="{{ $fontHost }}">
+  <link href="{{ $fontHost }}/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+
+  <link rel="icon" href="{{ `favicon.ico` | relURL }}" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ `favicon-32.png` | relURL }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ `favicon-16.png` | relURL }}">
+  <link rel="apple-touch-icon" href="{{ `apple-touch-icon.png` | relURL }}">
+
+  {{ hugo.Generator }}
+
+  {{ range .AlternativeOutputFormats }}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">
+  {{ end }}
+
+  {{ if hugo.IsProduction }}
+  {{ template "_internal/google_analytics.html" . }}
+  {{ end }}
+</head>

@@ -1,0 +1,14 @@
+{{ define "main" }}
+<section class="block">
+  <header class="sec nonum">
+    <h1>{{ .Title }}{{ with .Params.en }} <span class="en">{{ . }}</span>{{ end }}</h1>
+    {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+  </header>
+
+  <div class="tools">
+    {{ range .RegularPages.ByWeight }}
+    {{ partial "tool-card.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale | default "zh-CN" }}">
+{{ partial "head.html" . }}
+<body>
+  <div class="wrap">
+    {{ partial "masthead.html" . }}
+    <main>
+      {{ block "main" . }}{{ end }}
+    </main>
+    {{ partial "footer.html" . }}
+  </div>
+  {{ $chips := resources.Get "js/chips.js" | minify | fingerprint }}
+  <script src="{{ $chips.RelPermalink }}" defer></script>
+</body>
+</html>

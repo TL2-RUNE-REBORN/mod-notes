@@ -1,0 +1,8 @@
+<a class="post" href="{{ .RelPermalink }}">
+  <span class="d">{{ .Date | time.Format "2006-01-02" }}</span>
+  <span class="t">{{ .Title }}
+    {{ with .Params.summary | default (.Summary | plainify | truncate 64) }}
+    <span class="x">{{ . }}</span>
+    {{ end }}
+  </span>
+</a>

@@ -1,28 +1,52 @@
 baseURL = 'https://tl2-mod.chr.moe'
-languageCode = 'zh-CN'
-title = 'Torchlight 2'
-theme = 'paper'
-googleAnalytics = 'G-WSK4F982KY'
+locale = 'zh-CN'
+title = '余烬工坊'
+theme = 'emberworks'
+hasCJKLanguage = true
+disableKinds = ['taxonomy', 'term']
 
+[services.googleAnalytics]
+  id = 'G-WSK4F982KY'
 
 [params]
-  # color style
-  color = 'linen'                           # linen, wheat, gray, light
+  subtitle = 'Emberworks'
+  author = 'Mikuro'
+  description = '火炬之光2 重制 / MOD / 工具 —— 开发日志、更新日志与自研工具库。'
+  github = 'heiybb'
+  rss = true
+  heroLede = "拆解一盏旧灯,点亮一炉新火。这里存放 **Torchlight II** 的逆向研究与重制开发日志、**挑战者大陆 MOD** 的更新记录,以及一整套自研第三方工具 —— 从打包器到启动器。"
+  # 字体源:默认 fonts.loli.net(大陆可达的 Google Fonts 镜像);
+  # 海外部署可切回官方源:
+  # fontHost = 'https://fonts.googleapis.com'
 
-  # header social icons
-  github = 'heiybb'                 # github.com/YOUR_GITHUB_ID
+[menus]
+  [[menus.main]]
+    name = '开发日志'
+    pageRef = '/devlog'
+    weight = 10
+  [[menus.main]]
+    name = '更新日志'
+    pageRef = '/changelog'
+    weight = 20
+  [[menus.main]]
+    name = '工具库'
+    pageRef = '/tools'
+    weight = 30
+  [[menus.main]]
+    name = '指南'
+    pageRef = '/guides'
+    weight = 40
+  [[menus.main]]
+    name = '赞助'
+    pageRef = '/support'
+    weight = 50
 
-  rss = true                                # show rss icon
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.highlight]
+    noClasses = false
 
-  # home page profile
-  #avatar = 'GRAVATAR_EMAIL'                 # gravatar email or image url
-  #name = 'YOUR_NAME'
-  #bio = 'YOUR_BIO'
-
-
-  # misc
-  disableHLJS = true                        # disable highlight.js
-  monoDarkIcon = true                       # show monochrome dark mode icon
-  #gravatarCdn = 'GRAVATAR_CDN_LINK'         # e.g. 'https://cdn.v2ex.com/gravatar/'
-  #graphCommentId = "YOUR_GRAPH_COMMENT_ID"  # use graph comment (disqus alternative)
-  math = false                               # enable KaTex math typesetting globally
+[outputs]
+  home = ['html', 'rss']
+  section = ['html']

@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>404 Page not found — 余烬工坊</title>
+  <title>火炬之光2 MOD 打包/解包工具 — 余烬工坊</title>
 
   
-  <meta name="description" content="火炬之光2 重制 / MOD / 工具 —— 开发日志、更新日志与自研工具库。">
+  <meta name="description" content="3 秒初始化的 MOD 打包/解包 CLI,直调 EditorGuts.dll。">
   
   <meta name="author" content="Mikuro">
   <meta name="theme-color" content="#100e0b">
@@ -59,7 +59,7 @@
     
     <a href="/changelog/" >更新日志</a>
     
-    <a href="/tools/" >工具库</a>
+    <a href="/tools/" class="on">工具库</a>
     
     <a href="/guides/" >指南</a>
     
@@ -70,11 +70,48 @@
 
     <main>
       
-<div class="notfound">
-  <div class="code">404</div>
-  <p>这条隧道还没有被照亮 —— 页面不存在或已被移动。</p>
-  <a class="more" href="/">返回炉边</a>
-</div>
+<article class="article-wrap">
+  <header class="article-head">
+    <span class="kicker">工具库</span>
+    <h1>火炬之光2 MOD 打包/解包工具</h1>
+    <div class="a-meta">
+      <b>2023-08-11</b>
+       · Mikuro
+       · 约 317 字
+    </div>
+  </header>
+
+  
+
+  <div class="article-body">
+    <h2 id="链接">链接</h2>
+<p><a href="https://github.com/heiybb/TL2-Mikuro">https://github.com/heiybb/TL2-Mikuro</a></p>
+<h2 id="诞生之由">诞生之由</h2>
+<p>每次打包/解包MOD时，都必须启动编辑器，并忍受20秒的等待时间，因为它会加载许多无关的功能<br>
+而TL2-Mikuro只需要3秒初始化<br>
+但它是通过直接调用<code>EditorGuts.dll</code>中的函数来实现这一点，因此很遗憾<code>EditorGuts</code>仍然需要安装</p>
+<h2 id="安装">安装</h2>
+<p>只需将<code>TL2-Mikuro.exe</code>放入<code>Editor.exe/Torchlight2.exe</code>同一文件夹即可。</p>
+<h2 id="已知问题">已知问题</h2>
+<p>受限于<code>EditorGuts.dll</code>内部的逻辑，MOD打包只接受<code>mods</code>文件夹下的项目，MOD解包也只接受目标目录下的<code>mods</code>。
+我是WPF和C#编程的新手，所以请原谅我代码中的不足之处。</p>
+<h2 id="待办事项">待办事项</h2>
+<p>进一步分析<code>EditorGuts.dll</code></p>
+<h2 id="许可证">许可证</h2>
+<p>本项目采用 <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.0</a> 许可。</p>
+
+  </div>
+
+  
+  
+  
+  <nav class="pager">
+    <a href="/tools/mikuro-launcher/"><span>← 较新</span>Mikuro 启动器</a>
+    
+  </nav>
+  
+  
+</article>
 
     </main>
     <footer class="site">

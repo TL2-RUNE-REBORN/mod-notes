@@ -1,0 +1,8 @@
+name = "Emberworks"
+license = "MIT"
+description = "余烬工坊 — Torchlight II 风格的开发日志/更新日志/工具站主题。深色编辑式排版 + 物品稀有度色阶。"
+homepage = "https://tl2-mod.chr.moe"
+min_version = "0.146.0"
+
+[author]
+  name = "Mikuro"

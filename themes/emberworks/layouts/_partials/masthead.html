@@ -1,0 +1,9 @@
+<header class="masthead">
+  <a class="brand" href="{{ site.Home.RelPermalink }}"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
+    {{ $current := . }}
+    {{ range site.Menus.main }}
+    <a href="{{ .URL }}" {{ if or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (and .PageRef (eq $current.Section (strings.TrimPrefix "/" .PageRef))) }}class="on"{{ end }}>{{ .Name }}</a>
+    {{ end }}
+  </nav>
+</header>
