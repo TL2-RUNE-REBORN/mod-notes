@@ -53,15 +53,22 @@ body::before{ /* 顶部余烬辉光 */
   box-shadow:0 0 8px rgba(255,154,60,.65);
   animation:ember-rise var(--t,12s) linear var(--w,0s) infinite;
 }
-.ember-field b:nth-child(1){left:6%;  --t:13s;--w:0s;  --dx:26px}
-.ember-field b:nth-child(2){left:15%; --t:17s;--w:5s;  --dx:-18px;width:3px;height:3px}
-.ember-field b:nth-child(3){left:27%; --t:11s;--w:2.5s;--dx:34px;width:2px;height:2px}
-.ember-field b:nth-child(4){left:38%; --t:17s;--w:9s;  --dx:-24px}
-.ember-field b:nth-child(5){left:52%; --t:12s;--w:4s;  --dx:20px;width:3px;height:3px}
-.ember-field b:nth-child(6){left:64%; --t:18s;--w:1s;  --dx:-30px;width:2px;height:2px}
-.ember-field b:nth-child(7){left:73%; --t:11s;--w:6.5s;--dx:24px}
-.ember-field b:nth-child(8){left:84%; --t:15s;--w:3s;  --dx:-16px;width:3px;height:3px}
-.ember-field b:nth-child(9){left:93%; --t:13s;--w:8s;  --dx:30px;width:2px;height:2px}
+.ember-field b:nth-child(1){left:4%;   --t:13s;--w:0s;  --dx:26px}
+.ember-field b:nth-child(2){left:11%;  --t:17s;--w:5s;  --dx:-18px;width:3px;height:3px}
+.ember-field b:nth-child(3){left:18%;  --t:11s;--w:2.5s;--dx:34px;width:2px;height:2px}
+.ember-field b:nth-child(4){left:25%;  --t:16s;--w:9s;  --dx:-24px}
+.ember-field b:nth-child(5){left:31%;  --t:10s;--w:1.8s;--dx:16px;width:2px;height:2px}
+.ember-field b:nth-child(6){left:38%;  --t:14s;--w:6s;  --dx:-28px;width:3px;height:3px}
+.ember-field b:nth-child(7){left:45%;  --t:12s;--w:4s;  --dx:20px;width:3px;height:3px}
+.ember-field b:nth-child(8){left:51%;  --t:18s;--w:0.5s;--dx:-30px;width:2px;height:2px}
+.ember-field b:nth-child(9){left:57%;  --t:11s;--w:7.5s;--dx:24px}
+.ember-field b:nth-child(10){left:63%; --t:15s;--w:3s;  --dx:-16px;width:3px;height:3px}
+.ember-field b:nth-child(11){left:69%; --t:10s;--w:5.5s;--dx:28px;width:2px;height:2px}
+.ember-field b:nth-child(12){left:75%; --t:16s;--w:1.2s;--dx:-22px}
+.ember-field b:nth-child(13){left:81%; --t:12s;--w:8s;  --dx:18px;width:3px;height:3px}
+.ember-field b:nth-child(14){left:87%; --t:14s;--w:2s;  --dx:-26px;width:2px;height:2px}
+.ember-field b:nth-child(15){left:93%; --t:13s;--w:6.8s;--dx:30px}
+.ember-field b:nth-child(16){left:97%; --t:17s;--w:4.5s;--dx:-14px;width:2px;height:2px}
 .ember-field b:nth-child(2n){background:var(--gold);box-shadow:0 0 8px rgba(216,178,106,.55)}
 @keyframes ember-rise{
   0%{transform:translate3d(0,0,0);opacity:0}

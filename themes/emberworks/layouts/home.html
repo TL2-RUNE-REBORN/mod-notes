@@ -10,12 +10,50 @@
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
-{{/* ═════ Ⅰ 开发日志 ═════ */}}
+{{/* ═════ Ⅰ 指南 ═════ */}}
+{{ $guides := site.GetPage "guides" }}
+{{ with $guides }}
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅰ</span>
+    <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
+    {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+  </header>
+  <div class="post-list">
+    {{ range .RegularPages.ByDate.Reverse }}
+    {{ partial "post-row.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+
+{{/* ═════ Ⅱ 更新日志 ═════ */}}
+{{ $changelog := site.GetPage "changelog" }}
+{{ with $changelog }}
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅱ</span>
+    <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
+    {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+  </header>
+  <div class="post-list">
+    {{ range .RegularPages.ByDate.Reverse }}
+    {{ partial "post-row.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+
+{{/* ═════ Ⅲ 开发日志 ═════ */}}
 {{ $devlog := site.GetPage "devlog" }}
 {{ with $devlog }}
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅰ</span>
+    <span class="num">Ⅲ</span>
     <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
     {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
   </header>
@@ -54,31 +92,12 @@
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
-{{/* ═════ Ⅱ 更新日志 ═════ */}}
-{{ $changelog := site.GetPage "changelog" }}
-{{ with $changelog }}
-<section class="block">
-  <header class="sec">
-    <span class="num">Ⅱ</span>
-    <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
-    {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
-  </header>
-  <div class="post-list">
-    {{ range .RegularPages.ByDate.Reverse }}
-    {{ partial "post-row.html" . }}
-    {{ end }}
-  </div>
-</section>
-{{ end }}
-
-<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
-
-{{/* ═════ Ⅲ 工具库 ═════ */}}
+{{/* ═════ Ⅳ 工具库 ═════ */}}
 {{ $tools := site.GetPage "tools" }}
 {{ with $tools }}
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅲ</span>
+    <span class="num">Ⅳ</span>
     <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
     {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
   </header>
