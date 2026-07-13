@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挑战者大陆 · 装备图鉴</title>
+<script src="vendor/tailwind.js"></script>
+<script type="importmap">
+{"imports":{
+  "three":"./vendor/three.module.js",
+  "three/addons/":"./vendor/addons/"
+}}
+</script>
+<style>
+  body{background:#0b0e14;color:#cbd5e1}
+  .rar-NORMAL{color:#e5e7eb}.rar-MAGIC{color:#60a5fa}.rar-UNIQUE{color:#facc15}
+  .rar-EPIC{color:#c084fc}.rar-LEGENDARY{color:#fb923c}
+  .rar-SET{color:#4ade80}.rar-QUEST{color:#f472b6}
+  tr.itemrow{content-visibility:auto;contain-intrinsic-size:auto 56px}
+  tr.itemrow:hover{background:#1a2030}
+  .icell img{image-rendering:pixelated}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#2b3548;border-radius:5px}
+  ::-webkit-scrollbar-track{background:#0b0e14}
+</style>
+</head>
+<body class="min-h-screen">
+<header class="sticky top-0 z-20 bg-[#11151f]/95 backdrop-blur border-b border-slate-800 px-4 py-3">
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-3">
+    <h1 class="text-xl font-bold text-amber-400">挑战者大陆 · 装备图鉴</h1>
+    <span class="text-xs text-slate-500">全组件 | 共 6360 件 | 生成于 2026-07-14 00:31 <span class="text-rose-400 font-bold"></span></span>
+    <div class="flex flex-wrap gap-2 ml-auto items-center text-sm">
+      <input id="q" type="search" placeholder="搜索名称 / 内部名..."
+        class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 w-56 outline-none focus:border-amber-500">
+      <select id="fMod" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5"></select>
+      <select id="fRarity" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5"></select>
+      <select id="fSlot" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5"></select>
+      <select id="fSort" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5">
+        <option value="level_desc">等级 ↓</option><option value="level_asc">等级 ↑</option>
+        <option value="name">名称</option><option value="rarity">品质</option>
+      </select>
+      <label class="flex items-center gap-1 text-xs text-slate-400">
+        <input id="fGlb" type="checkbox" class="accent-amber-500">仅有模型</label>
+      <span id="stat" class="text-xs text-slate-400"></span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-4">
+<table class="w-full text-sm border-separate border-spacing-0">
+  <thead class="text-left text-slate-400 text-xs uppercase">
+    <tr class="[&>th]:px-3 [&>th]:py-2 [&>th]:border-b [&>th]:border-slate-800 sticky top-[64px] bg-[#0b0e14] z-10">
+      <th class="w-14">图标</th><th>名称</th><th class="w-20">品质</th><th class="w-24">类型</th>
+      <th class="w-28">来源MOD</th>
+      <th class="w-16 text-right">等级</th><th class="w-64">装备要求</th><th class="w-28">属性</th>
+      <th class="w-20 text-center">3D</th>
+    </tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+<div id="sentinel" class="h-10"></div>
+<p id="empty" class="hidden text-center text-slate-500 py-16">没有匹配的装备</p>
+</main>
+
+<!-- 详情 + 3D 弹窗 -->
+<div id="modal" class="hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+  <div class="bg-[#131826] border border-slate-700 rounded-xl w-full max-w-4xl max-h-[92vh] overflow-auto shadow-2xl">
+    <div class="flex items-start justify-between px-5 py-4 border-b border-slate-800">
+      <div class="flex items-center gap-3">
+        <img id="mIcon" class="w-12 h-12 hidden" style="image-rendering:pixelated">
+        <div>
+          <div id="mName" class="text-lg font-bold"></div>
+          <div id="mSub" class="text-xs text-slate-500"></div>
+        </div>
+      </div>
+      <button id="mClose" class="text-slate-400 hover:text-white text-2xl leading-none px-2">&times;</button>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 p-5">
+      <div id="mStats" class="space-y-1.5 text-sm"></div>
+      <div>
+        <div id="viewerWrap" class="relative bg-[#0a0d14] rounded-lg border border-slate-800 h-80">
+          <canvas id="gl" class="w-full h-full rounded-lg"></canvas>
+          <div id="noModel" class="hidden absolute inset-0 flex items-center justify-center text-slate-600">无 3D 模型</div>
+          <div id="loading" class="hidden absolute inset-0 flex items-center justify-center text-slate-500">模型加载中...</div>
+        </div>
+        <p class="text-[11px] text-slate-600 mt-1">拖动旋转 · 滚轮缩放 · 右键平移</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+const DATA = window.EQUIP_DATA || [];
+const SETS = window.EQUIP_SETS || {};
+const P = '';          // 资源目录前缀 (release 版在子目录, 用 ../)
+const RELEASE = true;        // release 版隐藏内部ID/路径/词缀内部名
+const RARITY_ORDER = {NORMAL:0, MAGIC:1, SET:2, UNIQUE:3, EPIC:4, LEGENDARY:5, QUEST:6};
+
+// ---- TL2 色码 |cAARRGGBB...|u → HTML
+function esc(s){return (s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function tlColor(s){
+  // TL2 色码 |cAARRGGBB。个别彩蛋装备故意用近黑色隐藏名字, 深色背景下不可读 → 过暗时不上色
+  // DAT 里的字面 \n 转成换行
+  return esc(s).replace(/\|c([0-9a-fA-F]{8})/g,(_,h)=>{
+    const r=parseInt(h.slice(2,4),16),g=parseInt(h.slice(4,6),16),b=parseInt(h.slice(6,8),16);
+    return Math.max(r,g,b)<70?'<span>':`<span style="color:#${h.slice(2)}">`;
+  }).replace(/\|u/g,'</span>').replace(/\\n/g,'<br>');
+}
+function plain(s){return (s??'').replace(/\|c[0-9a-fA-F]{8}|\|u/g,'');}
+
+// ---- 筛选控件
+const slots=[...new Set(DATA.map(d=>d.slotCn))].sort((a,b)=>a.localeCompare(b,'zh'));
+const rars=[...new Set(DATA.map(d=>d.rarity))].sort((a,b)=>(RARITY_ORDER[a]??9)-(RARITY_ORDER[b]??9));
+const mods=[...new Set(DATA.map(d=>d.mod))].sort((a,b)=>a.localeCompare(b,'zh'));
+fMod.innerHTML='<option value="">全部MOD</option>'+mods.map(m=>`<option>${m}</option>`).join('');
+fRarity.innerHTML='<option value="">全部品质</option>'+rars.map(r=>{
+  const cn=DATA.find(d=>d.rarity===r).rarityCn;return `<option value="${r}">${cn}</option>`;}).join('');
+fSlot.innerHTML='<option value="">全部类型</option>'+slots.map(s=>`<option>${s}</option>`).join('');
+
+let view=[], cursor=0; const CHUNK=150;
+function reqText(d){
+  const parts=[];
+  if(d.reqs.lvl>0)parts.push(`等级 ${d.reqs.lvl}`);
+  if(d.reqs.str>0)parts.push(`力量 ${d.reqs.str}`);
+  if(d.reqs.dex>0)parts.push(`敏捷 ${d.reqs.dex}`);
+  if(d.reqs.mag>0)parts.push(`专注 ${d.reqs.mag}`);
+  if(d.reqs.def>0)parts.push(`体力 ${d.reqs.def}`);
+  return parts.length?parts.join(' · '):'<span class="text-slate-600">无</span>';
+}
+function statText(d){
+  if(d.isWeapon&&(d.dmg[0]||d.dmg[1]))return `伤害 ${d.dmg[0]}-${d.dmg[1]}`;
+  if(d.armor)return `护甲 ${d.armor}`;
+  return '<span class="text-slate-600">—</span>';
+}
+function rowHTML(d){
+  const icon=d.icon?`<img src="${P}${d.icon}" loading="lazy" class="w-10 h-10 object-contain">`
+                   :'<div class="w-10 h-10 bg-slate-800/60 rounded"></div>';
+  const btn=d.glb?`<button data-id="${d.id}" class="view3d px-2 py-1 text-xs rounded bg-amber-600/20 text-amber-400 border border-amber-700/40 hover:bg-amber-600/40">预览</button>`
+                 :'<span class="text-slate-700 text-xs">—</span>';
+  return `<tr class="itemrow cursor-pointer border-b border-slate-800/60 [&>td]:px-3 [&>td]:py-2" data-id="${d.id}">
+    <td class="icell">${icon}</td>
+    <td><div class="font-medium rar-${d.rarity}">${tlColor(d.name)}</div>
+        <div class="text-[11px] text-slate-600">${RELEASE?'':esc(d.intName)}${
+          (d.fx&&d.fx.length?` <span class="text-emerald-500/90">效果${d.fx.length}</span>`:'')+
+          (d.afx&&d.afx.length?` <span class="text-sky-500/90">词缀${d.afx.length}</span>`:'')+
+          (d.set?` <span class="text-green-500/90">套装</span>`:'')}</div></td>
+    <td><span class="rar-${d.rarity}">${d.rarityCn}</span></td>
+    <td class="text-slate-300">${d.slotCn}</td>
+    <td class="text-slate-500 text-xs">${esc(d.mod)}</td>
+    <td class="text-right text-slate-200">${d.level||'—'}</td>
+    <td class="text-slate-400 text-xs">${reqText(d)}</td>
+    <td class="text-xs text-slate-300">${statText(d)}</td>
+    <td class="text-center">${btn}</td></tr>`;
+}
+function renderMore(){
+  if(cursor>=view.length)return;
+  const frag=view.slice(cursor,cursor+CHUNK).map(rowHTML).join('');
+  rows.insertAdjacentHTML('beforeend',frag);
+  cursor+=CHUNK;
+}
+function apply(){
+  const q=(document.getElementById('q').value||'').trim().toLowerCase();
+  const fr=fRarity.value, fs=fSlot.value, fm=fMod.value, fg=fGlb.checked, sort=fSort.value;
+  view=DATA.filter(d=>
+    (!fr||d.rarity===fr)&&(!fs||d.slotCn===fs)&&(!fm||d.mod===fm)&&(!fg||d.glb)&&
+    (!q||plain(d.name).toLowerCase().includes(q)||(d.intName||'').toLowerCase().includes(q)));
+  view.sort((a,b)=>{
+    if(sort==='level_desc')return b.level-a.level;
+    if(sort==='level_asc')return a.level-b.level;
+    if(sort==='rarity')return (RARITY_ORDER[b.rarity]??9)-(RARITY_ORDER[a.rarity]??9)||b.level-a.level;
+    return plain(a.name).localeCompare(plain(b.name),'zh');
+  });
+  rows.innerHTML=''; cursor=0; renderMore();
+  stat.textContent=`${view.length} / ${DATA.length}`;
+  empty.classList.toggle('hidden',view.length>0);
+}
+new IntersectionObserver(es=>es[0].isIntersecting&&renderMore()).observe(sentinel);
+['q','fMod','fRarity','fSlot','fSort','fGlb'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener(el.tagName==='INPUT'&&el.type!=='checkbox'?'input':'change',apply);
+});
+apply();
+
+// ---- three.js 查看器 (单例渲染器)
+let renderer,scene,camera,controls,raf,gltfCache=new Map();
+function initGL(){
+  const canvas=document.getElementById('gl');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(45,1,0.01,1000);
+  controls=new OrbitControls(camera,canvas);
+  controls.autoRotate=true; controls.autoRotateSpeed=2.5; controls.enableDamping=true;
+  scene.add(new THREE.HemisphereLight(0xdde7ff,0x40352a,2.2));
+  const d1=new THREE.DirectionalLight(0xffffff,2.0); d1.position.set(3,5,4); scene.add(d1);
+  const d2=new THREE.DirectionalLight(0x8899ff,0.8); d2.position.set(-4,-2,-3); scene.add(d2);
+}
+function resizeGL(){
+  const c=renderer.domElement,w=c.clientWidth,h=c.clientHeight;
+  if(c.width!==w||c.height!==h){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+}
+function animate(){
+  raf=requestAnimationFrame(animate); resizeGL(); controls.update(); renderer.render(scene,camera);
+}
+let currentModel=null;
+async function loadGlbBuffer(url){
+  // file:// 下浏览器禁止 fetch → 提示用 serve 模式
+  if(location.protocol==='file:')
+    throw new Error('file:// 无法加载模型, 请运行: python extract_equipment.py --serve-only');
+  const r=await fetch(P+url);
+  if(!r.ok)throw new Error(r.status+' '+url);
+  return await r.arrayBuffer();
+}
+async function showModel(url){
+  if(!renderer)initGL();
+  if(currentModel){scene.remove(currentModel);currentModel=null;}
+  noModel.classList.toggle('hidden',!!url);
+  loading.classList.toggle('hidden',!url);
+  cancelAnimationFrame(raf); animate();
+  if(!url)return;
+  try{
+    let gltf=gltfCache.get(url);
+    if(!gltf){
+      const buf=await loadGlbBuffer(url);
+      gltf=await new GLTFLoader().parseAsync(buf,'');
+      gltfCache.set(url,gltf);
+    }
+    const model=gltf.scene.clone(true);
+    model.traverse(o=>{
+      if(o.isMesh){
+        if(!o.geometry.attributes.normal)o.geometry.computeVertexNormals();
+        o.material.side=THREE.DoubleSide;
+      }});
+    const box=new THREE.Box3().setFromObject(model);
+    const size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+    const r=Math.max(size.x,size.y,size.z)||1;
+    camera.position.set(r*1.4,r*0.8,r*1.4); camera.near=r/100; camera.far=r*20;
+    camera.updateProjectionMatrix();
+    controls.target.set(0,0,0); controls.update();
+    scene.add(model); currentModel=model;
+  }catch(e){console.error(e);noModel.textContent=e.message||'模型加载失败';
+    noModel.classList.add('px-6','text-center');noModel.classList.remove('hidden');}
+  loading.classList.add('hidden');
+}
+function openModal(d){
+  mName.innerHTML=`<span class="rar-${d.rarity}">${tlColor(d.name)}</span>`;
+  mSub.textContent=RELEASE?d.mod:`${d.intName} · ${d.mod} / ${d.file}`;
+  if(d.icon){mIcon.src=P+d.icon;mIcon.classList.remove('hidden');}else mIcon.classList.add('hidden');
+  const rows=[];
+  const add=(k,v)=>v&&rows.push(`<div class="flex justify-between border-b border-slate-800/60 py-1"><span class="text-slate-500">${k}</span><span class="text-right">${v}</span></div>`);
+  add('品质',`<span class="rar-${d.rarity}">${d.rarityCn}</span>`);
+  add('来源MOD',esc(d.mod));
+  add('类型',`${d.slotCn}${d.slot&&d.slot!==d.slotCn?` <span class="text-slate-600 text-xs">(${esc(d.slot)})</span>`:''}`);
+  add('物品等级',d.level||null);
+  add('掉落等级区间',(d.minLevel||d.maxLevel)?`${d.minLevel} ~ ${d.maxLevel}`:null);
+  add('装备要求',reqText(d));
+  if(d.isWeapon&&(d.dmg[0]||d.dmg[1]))add('武器伤害',`${d.dmg[0]} - ${d.dmg[1]}`);
+  add('攻速',d.speed||null);
+  add('护甲',d.armor||null);
+  add('最大孔数',d.sockets||null);
+  if(d.fx&&d.fx.length){
+    rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">自带效果</div>`);
+    d.fx.forEach(l=>rows.push(`<div class="text-emerald-300 text-[13px] leading-relaxed">${tlColor(l)}</div>`));
+  }
+  if(d.afx&&d.afx.length){
+    rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">固定词缀</div>`);
+    d.afx.forEach(a=>{
+      if(!a.n&&!a.fx.length)return;             // 无显示名且无效果 (release 隐藏内部名后) 整条跳过
+      if(a.n)rows.push(`<div class="text-sky-500/90 text-xs mt-1.5">${tlColor(a.n)}</div>`);
+      a.fx.forEach(l=>rows.push(`<div class="text-sky-300 text-[13px] leading-relaxed pl-3">${tlColor(l)}</div>`));
+      if(a.n&&!a.fx.length)rows.push(`<div class="text-slate-600 text-[12px] pl-3">(无数值效果)</div>`);
+    });
+  }
+  if(d.set){
+    const s=SETS[d.set];
+    const members=DATA.filter(x=>x.set===d.set);
+    rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">套装 ·
+      <span class="text-green-400 text-sm">${tlColor(s?s.name:d.set)}</span>
+      <span class="text-slate-600">(共${members.length}件)</span></div>`);
+    members.forEach(m=>rows.push(
+      `<div class="setmember text-[13px] cursor-pointer hover:underline${m.id===d.id?' opacity-50':''}" data-id="${m.id}">`+
+      `<span class="rar-${m.rarity}">${tlColor(m.name)}</span> <span class="text-slate-600 text-xs">${m.slotCn} · Lv${m.level||'?'}</span></div>`));
+    if(s)s.bonuses.forEach(b=>{
+      rows.push(`<div class="text-green-500/80 text-xs mt-1.5">${b.c} 件套装效果:</div>`);
+      b.fx.forEach(l=>rows.push(`<div class="text-green-300 text-[13px] leading-relaxed pl-3">${tlColor(l)}</div>`));
+    });
+  }
+  if(d.desc)rows.push(`<div class="pt-3 text-slate-400 italic text-[13px] leading-relaxed">${tlColor(d.desc)}</div>`);
+  mStats.innerHTML=rows.join('');
+  modal.classList.remove('hidden');modal.classList.add('flex');
+  showModel(d.glb);
+}
+function closeModal(){
+  modal.classList.add('hidden');modal.classList.remove('flex');
+  cancelAnimationFrame(raf);
+  if(currentModel){scene.remove(currentModel);currentModel=null;}
+}
+mClose.onclick=closeModal;
+mStats.addEventListener('click',e=>{
+  const el=e.target.closest('.setmember');
+  if(el)openModal(DATA[+el.dataset.id]);
+});
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+rows.addEventListener('click',e=>{
+  const tr=e.target.closest('tr.itemrow'); if(!tr)return;
+  openModal(DATA[+tr.dataset.id]);
+});
+// #item=<id> 直达详情
+const mh=location.hash.match(/#item=(\d+)/);
+if(mh&&DATA[+mh[1]])openModal(DATA[+mh[1]]);
+</script>
+</body>
+</html>
