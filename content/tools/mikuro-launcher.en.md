@@ -10,7 +10,7 @@ params:
   typeline: "Legendary · Mod Launcher · Game Enhancement"
   affixes:
     - "Breaks the official 10-mod loading cap — stack as many as you like"
-    - "MIKURO enhancements: loot filter / save-crash fix / gem socket gating / auto gold pickup"
+    - "MIKURO enhancements: loot filter / save-crash fix / gem socket gating"
     - "Dual DXVK builds auto-selected by GPU driver — cures black screens and instant exits on old drivers"
     - "Save manager: browse by level / class, unbind mods precisely, double-click to select a save's mod set"
     - "One click to join the MIKURO Afdian multiplayer servers (Guangzhou / Australia)"
@@ -45,7 +45,6 @@ One switch — "**MIKURO Game Enhancement**" — injects the MIKURO runtime into
 
 - **Loot filter** — filter ground drops by rarity / type, auto-detects mod-defined rarities (EPIC / RUNE, etc.); **quest items are never swallowed**; rules adjustable in-game at any time.
 - **Save / zone-transition crash fix** — byte-level runtime repair of crashes triggered by oversized bags and stashes when saving, loading or changing zones. **Fail-safe by design and on by default** — any anomaly falls back to vanilla behavior.
-- **Auto gold pickup** — dropped gold flows straight into your bag; no more stooping for every coin.
 - **Haste gem socket gating** — cooldown-reduction gems can only be socketed into weapons / helmets / gloves, matching their description (fixes "sockets anywhere, works anyway").
 - **Multiplayer-safe** — enhancements activate only in single-player or when you host, so they never break multiplayer validation.
 
