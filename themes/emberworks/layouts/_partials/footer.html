@@ -1,8 +1,8 @@
 <footer class="site">
-  <span>EMBERWORKS · 余烬工坊 © {{ now.Year }}</span>
+  <span>{{ i18n "footerBrand" }} © {{ now.Year }}</span>
   <span>
     <b>MIKURO</b>
     {{ with site.Params.github }} · <a href="https://github.com/{{ . }}" rel="me">GITHUB</a>{{ end }}
-    {{ if site.Params.rss }} · <a href="{{ `index.xml` | relURL }}">RSS</a>{{ end }}
+    {{ if site.Params.rss }}{{ with site.Home.OutputFormats.Get "rss" }} · <a href="{{ .RelPermalink }}">RSS</a>{{ end }}{{ end }}
   </span>
 </footer>

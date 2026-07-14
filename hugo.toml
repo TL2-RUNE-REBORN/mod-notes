@@ -1,50 +1,94 @@
 baseURL = 'https://tl2-mod.chr.moe'
-# CF Pages 构建镜像是 hugo 0.147,用 languageCode(新版仅 deprecation 警告,无碍)
-languageCode = 'zh-CN'
 title = '余烬工坊'
 theme = 'emberworks'
-hasCJKLanguage = true
 disableKinds = ['taxonomy', 'term']
+
+# 多语言:中文为默认语言、继续住根路径(现有 URL 不变);英文全部在 /en/ 下。
+# CF Pages 构建镜像是 hugo 0.147,以下多语言键均为长期稳定 API。
+defaultContentLanguage = 'zh-cn'
+defaultContentLanguageInSubdir = false
 
 [services.googleAnalytics]
   id = 'G-WSK4F982KY'
 
+# 语言无关的共享参数
 [params]
-  subtitle = 'Emberworks'
   author = 'Mikuro'
-  description = '火炬之光2 重制 / MOD / 工具 —— 开发日志、更新日志与自研工具库。'
   github = 'heiybb'
   rss = true
-  heroLede = "拆解一盏旧灯,点亮一炉新火。这里存放 **Torchlight II** 的逆向研究与重制开发日志、**挑战者大陆 MOD** 的更新记录,以及一整套自研第三方工具 —— 从打包器到启动器。"
   # 字体源:默认 fonts.loli.net(大陆可达的 Google Fonts 镜像);
   # 海外部署可切回官方源:
   # fontHost = 'https://fonts.googleapis.com'
 
-[menus]
-  [[menus.main]]
-    name = '开发日志'
-    pageRef = '/devlog'
-    weight = 10
-  [[menus.main]]
-    name = '更新日志'
-    pageRef = '/changelog'
-    weight = 20
-  [[menus.main]]
-    name = '工具库'
-    pageRef = '/tools'
-    weight = 30
-  [[menus.main]]
-    name = '指南'
-    pageRef = '/guides'
-    weight = 40
-  [[menus.main]]
-    name = '创意公示'
-    pageRef = '/ideas'
-    weight = 45
-  [[menus.main]]
-    name = '赞助'
-    pageRef = '/support'
-    weight = 50
+[languages]
+  [languages.zh-cn]
+    languageCode = 'zh-CN'
+    languageName = '中文'
+    weight = 1
+    title = '余烬工坊'
+    hasCJKLanguage = true
+    [languages.zh-cn.params]
+      subtitle = 'Emberworks'
+      description = '火炬之光2 重制 / MOD / 工具 —— 开发日志、更新日志与自研工具库。'
+      heroLede = "拆解一盏旧灯,点亮一炉新火。这里存放 **Torchlight II** 的逆向研究与重制开发日志、**挑战者大陆 MOD** 的更新记录,以及一整套自研第三方工具 —— 从打包器到启动器。"
+    [[languages.zh-cn.menus.main]]
+      name = '开发日志'
+      pageRef = '/devlog'
+      weight = 10
+    [[languages.zh-cn.menus.main]]
+      name = '更新日志'
+      pageRef = '/changelog'
+      weight = 20
+    [[languages.zh-cn.menus.main]]
+      name = '工具库'
+      pageRef = '/tools'
+      weight = 30
+    [[languages.zh-cn.menus.main]]
+      name = '指南'
+      pageRef = '/guides'
+      weight = 40
+    [[languages.zh-cn.menus.main]]
+      name = '创意公示'
+      pageRef = '/ideas'
+      weight = 45
+    [[languages.zh-cn.menus.main]]
+      name = '赞助'
+      pageRef = '/support'
+      weight = 50
+
+  [languages.en]
+    languageCode = 'en'
+    languageName = 'English'
+    weight = 2
+    title = 'Emberworks'
+    [languages.en.params]
+      subtitle = '余烬工坊'
+      description = 'Torchlight II remaster / mods / tools — dev journal, changelogs, and a homegrown armory of third-party tools.'
+      heroLede = "Tear down an old lantern, light a new furnace. This is where the **Torchlight II** reverse-engineering and remaster journal lives, alongside changelogs for the **Challenger Continent mod pack** and a full armory of homegrown tools — from packers to launchers."
+    [[languages.en.menus.main]]
+      name = 'Dev Journal'
+      pageRef = '/devlog'
+      weight = 10
+    [[languages.en.menus.main]]
+      name = 'Changelog'
+      pageRef = '/changelog'
+      weight = 20
+    [[languages.en.menus.main]]
+      name = 'Armory'
+      pageRef = '/tools'
+      weight = 30
+    [[languages.en.menus.main]]
+      name = 'Manual'
+      pageRef = '/guides'
+      weight = 40
+    [[languages.en.menus.main]]
+      name = 'Drawing Board'
+      pageRef = '/ideas'
+      weight = 45
+    [[languages.en.menus.main]]
+      name = 'Support'
+      pageRef = '/support'
+      weight = 50
 
 [markup]
   [markup.goldmark.renderer]

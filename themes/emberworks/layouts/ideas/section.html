@@ -6,12 +6,12 @@
   </header>
 
   <div class="rarity-note">
-    状态色阶 ——
-    <em class="w">■ 火种 = 刚冒头的念头</em> ·
-    <em class="m">■ 孵化 = 调研与原型</em> ·
-    <em class="l">■ 锻造 = 已在动工</em> ·
-    <em class="s">■ 出炉 = 已经做成</em> ·
-    <em class="f">■ 搁置 = 暂时冷却</em>
+    {{ i18n "statusLegendLead" }} ——
+    <em class="w">■ {{ i18n "status_spark" }} = {{ i18n "status_spark_d" }}</em> ·
+    <em class="m">■ {{ i18n "status_hatch" }} = {{ i18n "status_hatch_d" }}</em> ·
+    <em class="l">■ {{ i18n "status_forge" }} = {{ i18n "status_forge_d" }}</em> ·
+    <em class="s">■ {{ i18n "status_ship" }} = {{ i18n "status_ship_d" }}</em> ·
+    <em class="f">■ {{ i18n "status_hold" }} = {{ i18n "status_hold_d" }}</em>
   </div>
 
   {{ with .Content }}<div class="article-body">{{ . }}</div>{{ end }}

@@ -3,19 +3,22 @@
 <div class="hero">
   <div class="embers"><b></b><b></b><b></b><b></b><b></b></div>
   <span class="kicker">MIKURO · TORCHLIGHT II DEVWORKS</span>
-  <h1>余烬<em>工坊</em></h1>
-  <div class="sub">Emberworks <span class="zh">重制 · 模组 · 工具</span></div>
+  <h1>{{ i18n "homeH1" | safeHTML }}</h1>
+  <div class="sub">{{ i18n "homeSubAlt" }} <span class="zh">{{ i18n "homeSubTagline" }}</span></div>
   {{ with site.Params.heroLede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
 </div>
 
-<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+{{/* 分区编号按实际渲染的分区动态编排;没有内容的分区(如英文站未翻译栏目)整块跳过 */}}
+{{ $romans := slice "Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" }}
+{{ $n := 0 }}
 
-{{/* ═════ Ⅰ 指南 ═════ */}}
-{{ $guides := site.GetPage "guides" }}
-{{ with $guides }}
+{{/* ═════ 指南 ═════ */}}
+{{ with site.GetPage "guides" }}{{ if .RegularPages }}
+{{ $n = add $n 1 }}
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅰ</span>
+    <span class="num">{{ index $romans (sub $n 1) }}</span>
     <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
     {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
   </header>
@@ -25,16 +28,15 @@
     {{ end }}
   </div>
 </section>
-{{ end }}
+{{ end }}{{ end }}
 
+{{/* ═════ 更新日志 ═════ */}}
+{{ with site.GetPage "changelog" }}{{ if .RegularPages }}
+{{ $n = add $n 1 }}
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
-
-{{/* ═════ Ⅱ 更新日志 ═════ */}}
-{{ $changelog := site.GetPage "changelog" }}
-{{ with $changelog }}
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅱ</span>
+    <span class="num">{{ index $romans (sub $n 1) }}</span>
     <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
     {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
   </header>
@@ -44,16 +46,15 @@
     {{ end }}
   </div>
 </section>
-{{ end }}
+{{ end }}{{ end }}
 
+{{/* ═════ 开发日志 ═════ */}}
+{{ with site.GetPage "devlog" }}{{ if .RegularPages }}
+{{ $n = add $n 1 }}
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
-
-{{/* ═════ Ⅲ 开发日志 ═════ */}}
-{{ $devlog := site.GetPage "devlog" }}
-{{ with $devlog }}
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅲ</span>
+    <span class="num">{{ index $romans (sub $n 1) }}</span>
     <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
     {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
   </header>
@@ -71,7 +72,7 @@
             fill="#ff9a3c" opacity=".55"/>
         </svg>
       </div>
-      <span class="icon-cap">最新</span>
+      <span class="icon-cap">{{ i18n "latest" }}</span>
     </div>
     <div class="body">
       <div class="meta"><b>{{ .Date | time.Format "2006-01-02" }}</b>{{ with .Params.author }} · {{ . }}{{ end }}</div>
@@ -86,18 +87,17 @@
     {{ partial "post-row.html" . }}
     {{ end }}
   </div>
-  <a class="more" href="{{ .RelPermalink }}">全部日志</a>
+  <a class="more" href="{{ .RelPermalink }}">{{ i18n "allPosts" }}</a>
 </section>
-{{ end }}
+{{ end }}{{ end }}
 
+{{/* ═════ 工具库 ═════ */}}
+{{ with site.GetPage "tools" }}{{ if .RegularPages }}
+{{ $n = add $n 1 }}
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
-
-{{/* ═════ Ⅳ 工具库 ═════ */}}
-{{ $tools := site.GetPage "tools" }}
-{{ with $tools }}
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅳ</span>
+    <span class="num">{{ index $romans (sub $n 1) }}</span>
     <h2>{{ .Title }} <span class="en">{{ .Params.en }}</span></h2>
     {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
   </header>
@@ -107,6 +107,6 @@
     {{ end }}
   </div>
 </section>
-{{ end }}
+{{ end }}{{ end }}
 
 {{ end }}

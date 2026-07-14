@@ -1,0 +1,65 @@
+# Theme UI strings · English
+[homeH1]
+other = "Ember<em>works</em>"
+[homeSubAlt]
+other = "余烬工坊"
+[homeSubTagline]
+other = "Remaster · Mods · Tools"
+[latest]
+other = "Latest"
+[allPosts]
+other = "All entries"
+[footerBrand]
+other = "EMBERWORKS · 余烬工坊"
+[wordCount]
+other = "≈ {{ . }} words"
+[pagerNewer]
+other = "← Newer"
+[pagerOlder]
+other = "Older →"
+[toolStatusDefault]
+other = "Available"
+[nf_msg]
+other = "This tunnel has not been lit yet — the page does not exist or has moved."
+[nf_home]
+other = "Back to the hearth"
+
+# Drawing Board statuses
+[statusLegendLead]
+other = "Status scale"
+[status_spark]
+other = "Spark"
+[status_spark_d]
+other = "a fresh idea"
+[status_hatch]
+other = "Hatching"
+[status_hatch_d]
+other = "research & prototyping"
+[status_forge]
+other = "Forging"
+[status_forge_d]
+other = "under construction"
+[status_ship]
+other = "Shipped"
+[status_ship_d]
+other = "done and delivered"
+[status_hold]
+other = "Shelved"
+[status_hold_d]
+other = "cooling off"
+
+# Changelog rarity legend
+[rarityLead]
+other = "Affix scale"
+[r_add]
+other = "legendary orange = added"
+[r_fix]
+other = "magic blue = fixed"
+[r_opt]
+other = "set green = improved"
+[r_del]
+other = "flame red = removed"
+[r_art]
+other = "gold = visual"
+[r_bal]
+other = "rare yellow = balance"

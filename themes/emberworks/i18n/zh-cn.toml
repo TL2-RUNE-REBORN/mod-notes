@@ -1,0 +1,65 @@
+# 主题 UI 字符串 · 中文(默认语言)
+[homeH1]
+other = "余烬<em>工坊</em>"
+[homeSubAlt]
+other = "Emberworks"
+[homeSubTagline]
+other = "重制 · 模组 · 工具"
+[latest]
+other = "最新"
+[allPosts]
+other = "全部日志"
+[footerBrand]
+other = "EMBERWORKS · 余烬工坊"
+[wordCount]
+other = "约 {{ . }} 字"
+[pagerNewer]
+other = "← 较新"
+[pagerOlder]
+other = "较早 →"
+[toolStatusDefault]
+other = "可用"
+[nf_msg]
+other = "这条隧道还没有被照亮 —— 页面不存在或已被移动。"
+[nf_home]
+other = "返回炉边"
+
+# 创意公示状态
+[statusLegendLead]
+other = "状态色阶"
+[status_spark]
+other = "火种"
+[status_spark_d]
+other = "刚冒头的念头"
+[status_hatch]
+other = "孵化"
+[status_hatch_d]
+other = "调研与原型"
+[status_forge]
+other = "锻造"
+[status_forge_d]
+other = "已在动工"
+[status_ship]
+other = "出炉"
+[status_ship_d]
+other = "已经做成"
+[status_hold]
+other = "搁置"
+[status_hold_d]
+other = "暂时冷却"
+
+# 更新日志词缀色阶
+[rarityLead]
+other = "词缀色阶"
+[r_add]
+other = "传奇橙 = 新增"
+[r_fix]
+other = "魔法蓝 = 修复"
+[r_opt]
+other = "套装绿 = 优化"
+[r_del]
+other = "焰红 = 移除"
+[r_art]
+other = "饰金 = 视觉"
+[r_bal]
+other = "稀有黄 = 数值"

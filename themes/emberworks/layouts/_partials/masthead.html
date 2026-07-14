@@ -5,5 +5,11 @@
     {{ range site.Menus.main }}
     <a href="{{ .URL }}" {{ if or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (and .PageRef (eq $current.Section (strings.TrimPrefix "/" .PageRef))) }}class="on"{{ end }}>{{ .Name }}</a>
     {{ end }}
+    {{/* 语言切换:当前页有译文跳译文,没有则跳对方语言首页 */}}
+    {{ $targets := .Translations }}
+    {{ if not $targets }}{{ $targets = site.Home.Translations }}{{ end }}
+    {{ range $targets }}
+    <a class="lang" href="{{ .RelPermalink }}" title="{{ .Language.LanguageName }}">{{ if eq .Language.Lang "en" }}EN{{ else }}中文{{ end }}</a>
+    {{ end }}
   </nav>
 </header>

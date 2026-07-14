@@ -32,6 +32,10 @@
   <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}">
   {{ end }}
 
+  {{ if .IsTranslated }}{{ range .AllTranslations }}
+  <link rel="alternate" hreflang="{{ .Language.LanguageCode }}" href="{{ .Permalink }}">
+  {{ end }}{{ end }}
+
   {{ if hugo.IsProduction }}
   {{ template "_internal/google_analytics.html" . }}
   {{ end }}

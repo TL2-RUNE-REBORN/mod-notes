@@ -6,7 +6,7 @@
     <div class="a-meta">
       {{ if .Date }}<b>{{ .Date | time.Format "2006-01-02" }}</b>{{ end }}
       {{ with or .Params.author site.Params.author }} · {{ . }}{{ end }}
-      {{ if gt .WordCount 200 }} · 约 {{ .WordCount }} 字{{ end }}
+      {{ if gt .WordCount 200 }} · {{ i18n "wordCount" .WordCount }}{{ end }}
     </div>
   </header>
 
@@ -20,8 +20,8 @@
   {{ $prev := .PrevInSection }}{{ $next := .NextInSection }}
   {{ if or $prev $next }}
   <nav class="pager">
-    {{ with $next }}<a href="{{ .RelPermalink }}"><span>← 较新</span>{{ .Title }}</a>{{ end }}
-    {{ with $prev }}<a class="next" href="{{ .RelPermalink }}"><span>较早 →</span>{{ .Title }}</a>{{ end }}
+    {{ with $next }}<a href="{{ .RelPermalink }}"><span>{{ i18n "pagerNewer" }}</span>{{ .Title }}</a>{{ end }}
+    {{ with $prev }}<a class="next" href="{{ .RelPermalink }}"><span>{{ i18n "pagerOlder" }}</span>{{ .Title }}</a>{{ end }}
   </nav>
   {{ end }}
   {{ end }}

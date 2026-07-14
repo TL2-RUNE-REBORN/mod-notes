@@ -122,6 +122,12 @@ nav.site a{
 }
 nav.site a:hover{color:var(--ember-hi)}
 nav.site a.on{color:var(--ember);border-bottom-color:var(--ember)}
+/* 语言切换:与菜单同排,细线框与菜单项区分 */
+nav.site a.lang{
+  color:var(--faint);border:1px solid var(--line);border-radius:3px;
+  padding:3px 8px 2px;letter-spacing:.16em;
+}
+nav.site a.lang:hover{color:var(--ember-hi);border-color:var(--line-hi)}
 
 /* ---------- 英雄区(首页) ---------- */
 .hero{padding:76px 0 0}

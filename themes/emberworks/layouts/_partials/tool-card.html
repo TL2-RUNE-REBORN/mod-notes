@@ -14,7 +14,7 @@
   {{ end }}
   {{ with .Params.flavor }}<p class="flavor">“{{ . }}”</p>{{ end }}
   <div class="foot">
-    <span class="st{{ if eq .Params.statuskind "wip" }} wip{{ end }}">■ {{ .Params.status | default "可用" }}</span>
+    <span class="st{{ if eq .Params.statuskind "wip" }} wip{{ end }}">■ {{ .Params.status | default (i18n "toolStatusDefault") }}</span>
     {{ with .Params.metaline }}<span>{{ . }}</span>{{ end }}
   </div>
 </article>
