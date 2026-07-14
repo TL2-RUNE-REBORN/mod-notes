@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>挑战者大陆 · 装备图鉴</title>
-<script src="vendor/tailwind.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>装备图鉴 — 余烬工坊</title>
+<meta name="description" content="挑战者大陆全组件装备与镶嵌物图鉴:属性 / 词缀 / 套装 / 3D 模型预览。">
+<meta name="theme-color" content="#100e0b">
+<link rel="preconnect" href="https://fonts.loli.net">
+<link href="https://fonts.loli.net/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="icon" href="https://tl2-mod.chr.moe/favicon.ico" sizes="16x16 32x32 48x48">
 <script type="importmap">
 {"imports":{
   "three":"./vendor/three.module.js",
@@ -12,78 +16,275 @@
 }}
 </script>
 <style>
-  body{background:#0b0e14;color:#cbd5e1}
-  .rar-NORMAL{color:#e5e7eb}.rar-MAGIC{color:#60a5fa}.rar-UNIQUE{color:#facc15}
-  .rar-EPIC{color:#c084fc}.rar-LEGENDARY{color:#fb923c}
-  .rar-SET{color:#4ade80}.rar-QUEST{color:#f472b6}
-  tr.itemrow{content-visibility:auto;contain-intrinsic-size:auto 56px}
-  tr.itemrow:hover{background:#1a2030}
-  .icell img{image-rendering:pixelated}
-  ::-webkit-scrollbar{width:10px;height:10px}
-  ::-webkit-scrollbar-thumb{background:#2b3548;border-radius:5px}
-  ::-webkit-scrollbar-track{background:#0b0e14}
+/* ══════════ EMBERWORKS · 余烬工坊 design tokens(与主站一致) ══════════ */
+:root{
+  --bg:#100e0b; --bg-panel:#191410; --bg-panel2:#1f1813;
+  --line:#2c241b; --line-hi:#453724;
+  --text:#d9cdb6; --muted:#94856d; --faint:#675b48;
+  --ember:#ff9a3c; --ember-hi:#ffc26b; --flame:#e0592e; --gold:#d8b26a;
+  --r-magic:#6fa8ff; --r-rare:#ffd24a; --r-set:#7cc96e; --r-normal:#bdb4a4;
+  --r-epic:#b48cff;   /* 史诗紫 · 本 MOD 特有品质档 */
+  --serif:'Noto Serif SC','Palatino Linotype',Georgia,serif;
+  --disp:'Cinzel','Noto Serif SC',serif;
+  --ital:'Cormorant Garamond','Noto Serif SC',serif;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:15px;
+  line-height:1.75;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1100px 460px at 50% -8%, rgba(255,138,48,.10), transparent 60%),
+             radial-gradient(700px 300px at 82% 4%, rgba(224,89,46,.05), transparent 65%)}
+::selection{background:rgba(255,154,60,.25)}
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 32px 60px}
+
+/* ---------- 全站余烬火星 ---------- */
+.ember-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ember-field b{position:absolute;bottom:-8px;width:4px;height:4px;border-radius:50%;
+  background:var(--ember-hi);opacity:0;filter:blur(.4px);
+  box-shadow:0 0 8px rgba(255,154,60,.65);
+  animation:ember-rise var(--t,12s) linear var(--w,0s) infinite}
+.ember-field b:nth-child(1){left:4%;--t:13s;--w:0s;--dx:26px}
+.ember-field b:nth-child(2){left:11%;--t:17s;--w:5s;--dx:-18px;width:3px;height:3px}
+.ember-field b:nth-child(3){left:18%;--t:11s;--w:2.5s;--dx:34px;width:2px;height:2px}
+.ember-field b:nth-child(4){left:25%;--t:16s;--w:9s;--dx:-24px}
+.ember-field b:nth-child(5){left:31%;--t:10s;--w:1.8s;--dx:16px;width:2px;height:2px}
+.ember-field b:nth-child(6){left:38%;--t:14s;--w:6s;--dx:-28px;width:3px;height:3px}
+.ember-field b:nth-child(7){left:45%;--t:12s;--w:4s;--dx:20px;width:3px;height:3px}
+.ember-field b:nth-child(8){left:51%;--t:18s;--w:0.5s;--dx:-30px;width:2px;height:2px}
+.ember-field b:nth-child(9){left:57%;--t:11s;--w:7.5s;--dx:24px}
+.ember-field b:nth-child(10){left:63%;--t:15s;--w:3s;--dx:-16px;width:3px;height:3px}
+.ember-field b:nth-child(11){left:69%;--t:10s;--w:5.5s;--dx:28px;width:2px;height:2px}
+.ember-field b:nth-child(12){left:75%;--t:16s;--w:1.2s;--dx:-22px}
+.ember-field b:nth-child(13){left:81%;--t:12s;--w:8s;--dx:18px;width:3px;height:3px}
+.ember-field b:nth-child(14){left:87%;--t:14s;--w:2s;--dx:-26px;width:2px;height:2px}
+.ember-field b:nth-child(15){left:93%;--t:13s;--w:6.8s;--dx:30px}
+.ember-field b:nth-child(16){left:97%;--t:17s;--w:4.5s;--dx:-14px;width:2px;height:2px}
+.ember-field b:nth-child(2n){background:var(--gold);box-shadow:0 0 8px rgba(216,178,106,.55)}
+@keyframes ember-rise{0%{transform:translate3d(0,0,0);opacity:0}6%{opacity:.75}
+  50%{opacity:.4}100%{transform:translate3d(var(--dx,20px),-78vh,0) scale(.55);opacity:0}}
+
+/* ---------- 主站页头 / 页脚 ---------- */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding:30px 0 18px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--disp);font-size:17px;letter-spacing:.22em;color:var(--text);
+  text-decoration:none;white-space:nowrap}
+.brand b{color:var(--ember);font-weight:700}
+nav.site{display:flex;gap:26px;flex-wrap:wrap}
+nav.site a{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-decoration:none;
+  color:var(--muted);padding-bottom:4px;border-bottom:1px solid transparent;
+  transition:color .2s,border-color .2s;white-space:nowrap}
+nav.site a:hover{color:var(--ember-hi)}
+nav.site a.on{color:var(--ember);border-bottom-color:var(--ember)}
+footer.site{margin-top:80px;padding-top:26px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);
+  text-transform:uppercase}
+footer.site b{color:var(--muted);font-weight:500}
+footer.site a{color:var(--muted);text-decoration:none}
+footer.site a:hover{color:var(--ember-hi)}
+
+/* ---------- 标题区 ---------- */
+.hero{padding:44px 0 8px}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--ember)}
+.kicker .dbg{color:var(--flame);font-weight:600}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,40px);
+  line-height:1.25;margin-top:10px;color:var(--text)}
+.hero h1 .en{font-family:var(--ital);font-style:italic;font-weight:500;
+  font-size:.62em;color:var(--gold);margin-left:14px;letter-spacing:.02em}
+.hero .lede{color:var(--muted);margin-top:6px;font-size:14px}
+.hero .lede b{color:var(--gold);font-weight:600}
+
+/* ---------- 筛选工具条 ---------- */
+.toolbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:10px;
+  align-items:center;padding:14px 0 12px;margin-top:18px;
+  background:linear-gradient(rgba(16,14,11,.96),rgba(16,14,11,.92));
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.toolbar input[type=search],.toolbar select{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text);
+  background:var(--bg-panel);border:1px solid var(--line);border-radius:3px;
+  padding:7px 10px;outline:none;transition:border-color .2s}
+.toolbar input[type=search]{width:230px}
+.toolbar input[type=search]:focus,.toolbar select:focus{border-color:var(--ember)}
+.toolbar select option{background:var(--bg-panel)}
+.toolbar label.chk{display:flex;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.14em;color:var(--muted);cursor:pointer}
+.toolbar label.chk input{accent-color:var(--ember)}
+.toolbar .stat{margin-left:auto;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.18em;color:var(--faint)}
+
+/* ---------- 表格 ---------- */
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:980px}
+thead th{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--faint);text-align:left;font-weight:500;
+  padding:14px 10px 10px;border-bottom:1px solid var(--line-hi);
+  position:sticky;top:53px;background:var(--bg);z-index:10}
+thead th.r{text-align:right}
+thead th.c{text-align:center}
+tr.itemrow{cursor:pointer;content-visibility:auto;contain-intrinsic-size:auto 58px;
+  transition:background .15s}
+tr.itemrow:hover{background:var(--bg-panel)}
+tr.itemrow td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.icell img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;display:block}
+td.icell .noicon{width:40px;height:40px;background:var(--bg-panel);border:1px solid var(--line);border-radius:3px}
+.iname{font-weight:600;font-size:15px}
+.isub{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--faint);margin-top:2px}
+.isub .b-fx{color:var(--gold)}
+.isub .b-afx{color:var(--r-magic)}
+.isub .b-set{color:var(--r-set)}
+td.tnum{text-align:right;font-family:var(--mono);font-size:13px;color:var(--text)}
+td.treq,td.tstat{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.02em}
+td.tmod{font-size:12px;color:var(--faint)}
+td.tslot{font-size:13.5px;color:var(--text)}
+.btn3d{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ember);
+  background:none;border:1px solid rgba(255,154,60,.35);border-radius:3px;
+  padding:5px 10px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn3d:hover{color:var(--bg);background:var(--ember);box-shadow:0 0 14px rgba(255,154,60,.35)}
+.dim{color:var(--faint)}
+#empty{display:none;text-align:center;color:var(--faint);padding:70px 0;font-family:var(--mono);
+  font-size:11px;letter-spacing:.22em}
+
+/* ---------- 品质色阶(TL2 稀有度) ---------- */
+.rar-NORMAL{color:var(--r-normal)} .rar-MAGIC{color:var(--r-magic)}
+.rar-UNIQUE{color:var(--r-rare)} .rar-EPIC{color:var(--r-epic)}
+.rar-LEGENDARY{color:var(--ember)} .rar-SET{color:var(--r-set)} .rar-QUEST{color:var(--gold)}
+
+/* ---------- 详情弹窗 ---------- */
+#modal{display:none;position:fixed;inset:0;z-index:40;background:rgba(8,6,4,.78);
+  backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:22px}
+#modal.open{display:flex}
+.sheet{background:var(--bg-panel);border:1px solid var(--line-hi);border-radius:6px;
+  width:100%;max-width:960px;max-height:92vh;overflow:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  padding:20px 24px 16px;border-bottom:1px solid var(--line)}
+.sheet-head .tt{display:flex;align-items:center;gap:14px}
+.sheet-head img{width:46px;height:46px;object-fit:contain;image-rendering:pixelated}
+.sheet-head h2{font-size:19px;font-weight:700;line-height:1.35}
+.sheet-head .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);margin-top:3px}
+#mClose{background:none;border:none;color:var(--muted);font-size:26px;line-height:1;
+  cursor:pointer;padding:0 4px;font-family:var(--serif)}
+#mClose:hover{color:var(--ember-hi)}
+.sheet-body{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:22px 24px 26px}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:5px 0;
+  border-bottom:1px solid var(--line);font-size:13.5px}
+.kv .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--faint);
+  text-transform:uppercase;padding-top:3px;white-space:nowrap}
+.kv .v{text-align:right}
+.sec-h{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--faint);margin-top:18px;padding-bottom:4px}
+.fxline{font-size:13.5px;line-height:1.7;color:var(--gold)}
+.afxname{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--r-magic);
+  opacity:.75;margin-top:7px}
+.afxline{font-size:13.5px;line-height:1.7;color:var(--r-magic);padding-left:14px}
+.afxnone{font-size:12px;color:var(--faint);padding-left:14px}
+.tgt{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  color:var(--gold);border:1px solid rgba(216,178,106,.4);border-radius:3px;
+  padding:1px 6px;margin-right:6px;vertical-align:1px}
+.setname{color:var(--r-set);font-size:14px;font-weight:700}
+.setmember{font-size:13.5px;cursor:pointer;padding-left:14px;line-height:1.7}
+.setmember:hover{text-decoration:underline;text-decoration-color:rgba(255,154,60,.5)}
+.setmember .meta{font-family:var(--mono);font-size:10px;color:var(--faint);margin-left:6px}
+.setmember.cur{opacity:.5;cursor:default}
+.setbonus-c{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--r-set);
+  opacity:.8;margin-top:7px}
+.setline{font-size:13.5px;line-height:1.7;color:var(--r-set);padding-left:14px}
+.desc{margin-top:16px;font-family:var(--ital);font-style:italic;font-size:14.5px;
+  line-height:1.7;color:var(--gold);opacity:.9}
+.viewer{position:relative;background:#0b0906;border:1px solid var(--line);border-radius:4px;height:340px}
+.viewer canvas{width:100%;height:100%;border-radius:4px;display:block}
+.viewer .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;
+  text-align:center;padding:0 26px;line-height:2}
+.viewer-tip{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);margin-top:6px}
+
+@media (max-width:720px){
+  .wrap{padding:0 16px 40px}
+  .sheet-body{grid-template-columns:1fr}
+  thead th{position:static}
+  .toolbar{position:static}
+  .toolbar input[type=search]{width:100%}
+}
 </style>
 </head>
-<body class="min-h-screen">
-<header class="sticky top-0 z-20 bg-[#11151f]/95 backdrop-blur border-b border-slate-800 px-4 py-3">
-  <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-3">
-    <h1 class="text-xl font-bold text-amber-400">挑战者大陆 · 装备图鉴</h1>
-    <span class="text-xs text-slate-500">全组件 | 共 7003 件 | 生成于 2026-07-14 11:01 <span class="text-rose-400 font-bold"></span></span>
-    <div class="flex flex-wrap gap-2 ml-auto items-center text-sm">
-      <input id="q" type="search" placeholder="搜索名称 / 内部名..."
-        class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 w-56 outline-none focus:border-amber-500">
-      <select id="fMod" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5"></select>
-      <select id="fRarity" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5"></select>
-      <select id="fSlot" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5"></select>
-      <select id="fSort" class="bg-slate-800 border border-slate-700 rounded px-2 py-1.5">
-        <option value="level_desc">等级 ↓</option><option value="level_asc">等级 ↑</option>
-        <option value="name">名称</option><option value="rarity">品质</option>
-      </select>
-      <label class="flex items-center gap-1 text-xs text-slate-400">
-        <input id="fGlb" type="checkbox" class="accent-amber-500">仅有模型</label>
-      <span id="stat" class="text-xs text-slate-400"></span>
-    </div>
-  </div>
+<body>
+<div class="ember-field" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+<div class="wrap">
+
+<header class="masthead">
+  <a class="brand" href="https://tl2-mod.chr.moe/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
+    <a href="https://tl2-mod.chr.moe/devlog/">开发日志</a>
+    <a href="https://tl2-mod.chr.moe/changelog/">更新日志</a>
+    <a href="https://tl2-mod.chr.moe/tools/" class="on">工具库</a>
+    <a href="https://tl2-mod.chr.moe/guides/">指南</a>
+    <a href="https://tl2-mod.chr.moe/support/">赞助</a>
+  </nav>
 </header>
 
-<main class="max-w-7xl mx-auto px-4 py-4">
-<table class="w-full text-sm border-separate border-spacing-0">
-  <thead class="text-left text-slate-400 text-xs uppercase">
-    <tr class="[&>th]:px-3 [&>th]:py-2 [&>th]:border-b [&>th]:border-slate-800 sticky top-[64px] bg-[#0b0e14] z-10">
-      <th class="w-14">图标</th><th>名称</th><th class="w-20">品质</th><th class="w-24">类型</th>
-      <th class="w-28">来源MOD</th>
-      <th class="w-16 text-right">等级</th><th class="w-64">装备要求</th><th class="w-28">属性</th>
-      <th class="w-20 text-center">3D</th>
-    </tr>
-  </thead>
+<section class="hero">
+  <div class="kicker">Challenger Continent · Equipment Codex <span class="dbg"></span></div>
+  <h1>装备图鉴<span class="en">The Codex</span></h1>
+  <p class="lede">挑战者大陆全组件 <b>7003</b> 件装备与镶嵌物 —— 属性、词缀、套装与 3D 模型。生成于 2026-07-14 11:19。</p>
+</section>
+
+<div class="toolbar">
+  <input id="q" type="search" placeholder="搜索名称 / 内部名…">
+  <select id="fMod"></select>
+  <select id="fRarity"></select>
+  <select id="fSlot"></select>
+  <select id="fSort">
+    <option value="level_desc">等级 ↓</option><option value="level_asc">等级 ↑</option>
+    <option value="name">名称</option><option value="rarity">品质</option>
+  </select>
+  <label class="chk"><input id="fGlb" type="checkbox">仅有模型</label>
+  <span class="stat" id="stat"></span>
+</div>
+
+<div class="tablewrap">
+<table>
+  <thead><tr>
+    <th style="width:56px">图标</th><th>名称</th><th style="width:76px">品质</th>
+    <th style="width:96px">类型</th><th style="width:110px">来源 MOD</th>
+    <th class="r" style="width:64px">等级</th><th style="width:230px">装备要求</th>
+    <th style="width:120px">属性</th><th class="c" style="width:80px">3D</th>
+  </tr></thead>
   <tbody id="rows"></tbody>
 </table>
-<div id="sentinel" class="h-10"></div>
-<p id="empty" class="hidden text-center text-slate-500 py-16">没有匹配的装备</p>
-</main>
+</div>
+<div id="sentinel" style="height:40px"></div>
+<p id="empty">— 没有匹配的装备 —</p>
+
+<footer class="site">
+  <span>EMBERWORKS · 余烬工坊 © 2026</span>
+  <span><b>MIKURO</b> · <a href="https://github.com/heiybb" rel="me">GITHUB</a> · <a href="https://tl2-mod.chr.moe/index.xml">RSS</a></span>
+</footer>
+</div>
 
 <!-- 详情 + 3D 弹窗 -->
-<div id="modal" class="hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm items-center justify-center p-4">
-  <div class="bg-[#131826] border border-slate-700 rounded-xl w-full max-w-4xl max-h-[92vh] overflow-auto shadow-2xl">
-    <div class="flex items-start justify-between px-5 py-4 border-b border-slate-800">
-      <div class="flex items-center gap-3">
-        <img id="mIcon" class="w-12 h-12 hidden" style="image-rendering:pixelated">
+<div id="modal">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="tt">
+        <img id="mIcon" style="display:none">
         <div>
-          <div id="mName" class="text-lg font-bold"></div>
-          <div id="mSub" class="text-xs text-slate-500"></div>
+          <h2 id="mName"></h2>
+          <div class="sub" id="mSub"></div>
         </div>
       </div>
-      <button id="mClose" class="text-slate-400 hover:text-white text-2xl leading-none px-2">&times;</button>
+      <button id="mClose">&times;</button>
     </div>
-    <div class="grid md:grid-cols-2 gap-4 p-5">
-      <div id="mStats" class="space-y-1.5 text-sm"></div>
+    <div class="sheet-body">
+      <div id="mStats"></div>
       <div>
-        <div id="viewerWrap" class="relative bg-[#0a0d14] rounded-lg border border-slate-800 h-80">
-          <canvas id="gl" class="w-full h-full rounded-lg"></canvas>
-          <div id="noModel" class="hidden absolute inset-0 flex items-center justify-center text-slate-600">无 3D 模型</div>
-          <div id="loading" class="hidden absolute inset-0 flex items-center justify-center text-slate-500">模型加载中...</div>
+        <div class="viewer">
+          <canvas id="gl"></canvas>
+          <div id="noModel" class="ph" style="display:none">无 3D 模型</div>
+          <div id="loading" class="ph" style="display:none">模型加载中…</div>
         </div>
-        <p class="text-[11px] text-slate-600 mt-1">拖动旋转 · 滚轮缩放 · 右键平移</p>
+        <p class="viewer-tip">拖动旋转 · 滚轮缩放 · 右键平移</p>
       </div>
     </div>
   </div>
@@ -101,11 +302,9 @@ const P = '';          // 资源目录前缀 (release 版在子目录, 用 ../)
 const RELEASE = true;        // release 版隐藏内部ID/路径/词缀内部名
 const RARITY_ORDER = {NORMAL:0, MAGIC:1, SET:2, UNIQUE:3, EPIC:4, LEGENDARY:5, QUEST:6};
 
-// ---- TL2 色码 |cAARRGGBB...|u → HTML
+// ---- TL2 色码 |cAARRGGBB…|u → HTML; 字面 \n → 换行
 function esc(s){return (s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function tlColor(s){
-  // TL2 色码 |cAARRGGBB。个别彩蛋装备故意用近黑色隐藏名字, 深色背景下不可读 → 过暗时不上色
-  // DAT 里的字面 \n 转成换行
   return esc(s).replace(/\|c([0-9a-fA-F]{8})/g,(_,h)=>{
     const r=parseInt(h.slice(2,4),16),g=parseInt(h.slice(4,6),16),b=parseInt(h.slice(6,8),16);
     return Math.max(r,g,b)<70?'<span>':`<span style="color:#${h.slice(2)}">`;
@@ -130,37 +329,36 @@ function reqText(d){
   if(d.reqs.dex>0)parts.push(`敏捷 ${d.reqs.dex}`);
   if(d.reqs.mag>0)parts.push(`专注 ${d.reqs.mag}`);
   if(d.reqs.def>0)parts.push(`体力 ${d.reqs.def}`);
-  return parts.length?parts.join(' · '):'<span class="text-slate-600">无</span>';
+  return parts.length?parts.join(' · '):'<span class="dim">无</span>';
 }
 function statText(d){
   if(d.isWeapon&&(d.dmg[0]||d.dmg[1]))return `伤害 ${d.dmg[0]}-${d.dmg[1]}`;
   if(d.armor)return `护甲 ${d.armor}`;
-  return '<span class="text-slate-600">—</span>';
+  return '<span class="dim">—</span>';
 }
 function rowHTML(d){
-  const icon=d.icon?`<img src="${P}${d.icon}" loading="lazy" class="w-10 h-10 object-contain">`
-                   :'<div class="w-10 h-10 bg-slate-800/60 rounded"></div>';
-  const btn=d.glb?`<button data-id="${d.id}" class="view3d px-2 py-1 text-xs rounded bg-amber-600/20 text-amber-400 border border-amber-700/40 hover:bg-amber-600/40">预览</button>`
-                 :'<span class="text-slate-700 text-xs">—</span>';
-  return `<tr class="itemrow cursor-pointer border-b border-slate-800/60 [&>td]:px-3 [&>td]:py-2" data-id="${d.id}">
+  const icon=d.icon?`<img src="${P}${d.icon}" loading="lazy" alt="">`
+                   :'<div class="noicon"></div>';
+  const btn=d.glb?`<button class="btn3d" data-id="${d.id}">预览</button>`
+                 :'<span class="dim" style="font-family:var(--mono);font-size:10px">—</span>';
+  return `<tr class="itemrow" data-id="${d.id}">
     <td class="icell">${icon}</td>
-    <td><div class="font-medium rar-${d.rarity}">${tlColor(d.name)}</div>
-        <div class="text-[11px] text-slate-600">${RELEASE?'':esc(d.intName)}${
-          (d.fx&&d.fx.length?` <span class="text-emerald-500/90">效果${d.fx.length}</span>`:'')+
-          (d.afx&&d.afx.length?` <span class="text-sky-500/90">词缀${d.afx.length}</span>`:'')+
-          (d.set?` <span class="text-green-500/90">套装</span>`:'')}</div></td>
+    <td><div class="iname rar-${d.rarity}">${tlColor(d.name)}</div>
+        <div class="isub">${RELEASE?'':esc(d.intName)}${
+          (d.fx&&d.fx.length?` <span class="b-fx">效果${d.fx.length}</span>`:'')+
+          (d.afx&&d.afx.length?` <span class="b-afx">词缀${d.afx.length}</span>`:'')+
+          (d.set?` <span class="b-set">套装</span>`:'')}</div></td>
     <td><span class="rar-${d.rarity}">${d.rarityCn}</span></td>
-    <td class="text-slate-300">${d.slotCn}</td>
-    <td class="text-slate-500 text-xs">${esc(d.mod)}</td>
-    <td class="text-right text-slate-200">${d.level||'—'}</td>
-    <td class="text-slate-400 text-xs">${reqText(d)}</td>
-    <td class="text-xs text-slate-300">${statText(d)}</td>
-    <td class="text-center">${btn}</td></tr>`;
+    <td class="tslot">${d.slotCn}</td>
+    <td class="tmod">${esc(d.mod)}</td>
+    <td class="tnum">${d.level||'—'}</td>
+    <td class="treq">${reqText(d)}</td>
+    <td class="tstat">${statText(d)}</td>
+    <td style="text-align:center">${btn}</td></tr>`;
 }
 function renderMore(){
   if(cursor>=view.length)return;
-  const frag=view.slice(cursor,cursor+CHUNK).map(rowHTML).join('');
-  rows.insertAdjacentHTML('beforeend',frag);
+  rows.insertAdjacentHTML('beforeend',view.slice(cursor,cursor+CHUNK).map(rowHTML).join(''));
   cursor+=CHUNK;
 }
 function apply(){
@@ -177,7 +375,7 @@ function apply(){
   });
   rows.innerHTML=''; cursor=0; renderMore();
   stat.textContent=`${view.length} / ${DATA.length}`;
-  empty.classList.toggle('hidden',view.length>0);
+  empty.style.display=view.length?'none':'block';
 }
 new IntersectionObserver(es=>es[0].isIntersecting&&renderMore()).observe(sentinel);
 ['q','fMod','fRarity','fSlot','fSort','fGlb'].forEach(id=>{
@@ -196,9 +394,9 @@ function initGL(){
   camera=new THREE.PerspectiveCamera(45,1,0.01,1000);
   controls=new OrbitControls(camera,canvas);
   controls.autoRotate=true; controls.autoRotateSpeed=2.5; controls.enableDamping=true;
-  scene.add(new THREE.HemisphereLight(0xdde7ff,0x40352a,2.2));
+  scene.add(new THREE.HemisphereLight(0xffe7cf,0x40352a,2.2));
   const d1=new THREE.DirectionalLight(0xffffff,2.0); d1.position.set(3,5,4); scene.add(d1);
-  const d2=new THREE.DirectionalLight(0x8899ff,0.8); d2.position.set(-4,-2,-3); scene.add(d2);
+  const d2=new THREE.DirectionalLight(0xffb070,0.7); d2.position.set(-4,-2,-3); scene.add(d2);
 }
 function resizeGL(){
   const c=renderer.domElement,w=c.clientWidth,h=c.clientHeight;
@@ -209,7 +407,6 @@ function animate(){
 }
 let currentModel=null;
 async function loadGlbBuffer(url){
-  // file:// 下浏览器禁止 fetch → 提示用 serve 模式
   if(location.protocol==='file:')
     throw new Error('file:// 无法加载模型, 请运行: python extract_equipment.py --serve-only');
   const r=await fetch(P+url);
@@ -219,8 +416,9 @@ async function loadGlbBuffer(url){
 async function showModel(url){
   if(!renderer)initGL();
   if(currentModel){scene.remove(currentModel);currentModel=null;}
-  noModel.classList.toggle('hidden',!!url);
-  loading.classList.toggle('hidden',!url);
+  noModel.textContent='无 3D 模型';
+  noModel.style.display=url?'none':'flex';
+  loading.style.display=url?'flex':'none';
   cancelAnimationFrame(raf); animate();
   if(!url)return;
   try{
@@ -244,19 +442,18 @@ async function showModel(url){
     camera.updateProjectionMatrix();
     controls.target.set(0,0,0); controls.update();
     scene.add(model); currentModel=model;
-  }catch(e){console.error(e);noModel.textContent=e.message||'模型加载失败';
-    noModel.classList.add('px-6','text-center');noModel.classList.remove('hidden');}
-  loading.classList.add('hidden');
+  }catch(e){console.error(e);noModel.textContent=e.message||'模型加载失败';noModel.style.display='flex';}
+  loading.style.display='none';
 }
 function openModal(d){
   mName.innerHTML=`<span class="rar-${d.rarity}">${tlColor(d.name)}</span>`;
   mSub.textContent=RELEASE?d.mod:`${d.intName} · ${d.mod} / ${d.file}`;
-  if(d.icon){mIcon.src=P+d.icon;mIcon.classList.remove('hidden');}else mIcon.classList.add('hidden');
+  if(d.icon){mIcon.src=P+d.icon;mIcon.style.display='block';}else mIcon.style.display='none';
   const rows=[];
-  const add=(k,v)=>v&&rows.push(`<div class="flex justify-between border-b border-slate-800/60 py-1"><span class="text-slate-500">${k}</span><span class="text-right">${v}</span></div>`);
+  const add=(k,v)=>v&&rows.push(`<div class="kv"><span class="k">${k}</span><span class="v">${v}</span></div>`);
   add('品质',`<span class="rar-${d.rarity}">${d.rarityCn}</span>`);
   add('来源MOD',esc(d.mod));
-  add('类型',`${d.slotCn}${d.slot&&d.slot!==d.slotCn?` <span class="text-slate-600 text-xs">(${esc(d.slot)})</span>`:''}`);
+  add('类型',`${d.slotCn}${d.slot&&d.slot!==d.slotCn?` <span class="dim" style="font-size:11px">(${esc(d.slot)})</span>`:''}`);
   add('物品等级',d.level||null);
   add('掉落等级区间',(d.minLevel||d.maxLevel)?`${d.minLevel} ~ ${d.maxLevel}`:null);
   add('装备要求',reqText(d));
@@ -265,49 +462,48 @@ function openModal(d){
   add('护甲',d.armor||null);
   add('最大孔数',d.sockets||null);
   if(d.fx&&d.fx.length){
-    rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">自带效果</div>`);
-    d.fx.forEach(l=>rows.push(`<div class="text-emerald-300 text-[13px] leading-relaxed">${tlColor(l)}</div>`));
+    rows.push(`<div class="sec-h">自带效果</div>`);
+    d.fx.forEach(l=>rows.push(`<div class="fxline">${tlColor(l)}</div>`));
   }
   if(d.afx&&d.afx.length){
-    rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">固定词缀</div>`);
+    rows.push(`<div class="sec-h">固定词缀</div>`);
     d.afx.forEach(a=>{
-      if(!a.n&&!a.fx.length&&!a.tgt)return;     // 无显示名且无效果 (release 隐藏内部名后) 整条跳过
+      if(!a.n&&!a.fx.length&&!a.tgt)return;
       const head=[];
-      if(a.tgt)head.push(`<span class="text-amber-500/90 border border-amber-700/40 rounded px-1 py-px text-[11px] mr-1">镶嵌到${a.tgt}</span>`);
+      if(a.tgt)head.push(`<span class="tgt">镶嵌到${a.tgt}</span>`);
       if(a.n)head.push(tlColor(a.n));
-      if(head.length)rows.push(`<div class="text-sky-500/90 text-xs mt-1.5">${head.join('')}</div>`);
-      a.fx.forEach(l=>rows.push(`<div class="text-sky-300 text-[13px] leading-relaxed pl-3">${tlColor(l)}</div>`));
-      if(head.length&&!a.fx.length)rows.push(`<div class="text-slate-600 text-[12px] pl-3">(无数值效果)</div>`);
+      if(head.length)rows.push(`<div class="afxname">${head.join('')}</div>`);
+      a.fx.forEach(l=>rows.push(`<div class="afxline">${tlColor(l)}</div>`));
+      if(head.length&&!a.fx.length)rows.push(`<div class="afxnone">(无数值效果)</div>`);
     });
   }
   if(d.set){
     const s=SETS[d.set];
     const members=DATA.filter(x=>x.set===d.set);
-    rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">套装 ·
-      <span class="text-green-400 text-sm">${tlColor(s?s.name:d.set)}</span>
-      <span class="text-slate-600">(共${members.length}件)</span></div>`);
+    rows.push(`<div class="sec-h">套装 · <span class="setname">${tlColor(s?s.name:d.set)}</span>
+      <span style="text-transform:none;letter-spacing:.1em">(共${members.length}件)</span></div>`);
     members.forEach(m=>rows.push(
-      `<div class="setmember text-[13px] cursor-pointer hover:underline${m.id===d.id?' opacity-50':''}" data-id="${m.id}">`+
-      `<span class="rar-${m.rarity}">${tlColor(m.name)}</span> <span class="text-slate-600 text-xs">${m.slotCn} · Lv${m.level||'?'}</span></div>`));
+      `<div class="setmember${m.id===d.id?' cur':''}" data-id="${m.id}">`+
+      `<span class="rar-${m.rarity}">${tlColor(m.name)}</span><span class="meta">${m.slotCn} · Lv${m.level||'?'}</span></div>`));
     if(s)s.bonuses.forEach(b=>{
-      rows.push(`<div class="text-green-500/80 text-xs mt-1.5">${b.c} 件套装效果:</div>`);
-      b.fx.forEach(l=>rows.push(`<div class="text-green-300 text-[13px] leading-relaxed pl-3">${tlColor(l)}</div>`));
+      rows.push(`<div class="setbonus-c">${b.c} 件套装效果:</div>`);
+      b.fx.forEach(l=>rows.push(`<div class="setline">${tlColor(l)}</div>`));
     });
   }
-  if(d.desc)rows.push(`<div class="pt-3 text-slate-400 italic text-[13px] leading-relaxed">${tlColor(d.desc)}</div>`);
+  if(d.desc)rows.push(`<div class="desc">${tlColor(d.desc)}</div>`);
   mStats.innerHTML=rows.join('');
-  modal.classList.remove('hidden');modal.classList.add('flex');
+  modal.classList.add('open');
   showModel(d.glb);
 }
 function closeModal(){
-  modal.classList.add('hidden');modal.classList.remove('flex');
+  modal.classList.remove('open');
   cancelAnimationFrame(raf);
   if(currentModel){scene.remove(currentModel);currentModel=null;}
 }
 mClose.onclick=closeModal;
 mStats.addEventListener('click',e=>{
   const el=e.target.closest('.setmember');
-  if(el)openModal(DATA[+el.dataset.id]);
+  if(el&&!el.classList.contains('cur'))openModal(DATA[+el.dataset.id]);
 });
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
