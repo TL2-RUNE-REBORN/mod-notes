@@ -108,6 +108,8 @@ footer.site a:hover{color:var(--ember-hi)}
 .toolbar input[type=search]{width:230px}
 .toolbar input[type=search]:focus,.toolbar select:focus{border-color:var(--ember)}
 .toolbar select option{background:var(--bg-panel)}
+.toolbar select optgroup{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  color:var(--faint);font-style:normal;background:var(--bg)}
 .toolbar label.chk{display:flex;align-items:center;gap:6px;font-family:var(--mono);
   font-size:10.5px;letter-spacing:.14em;color:var(--muted);cursor:pointer}
 .toolbar label.chk input{accent-color:var(--ember)}
@@ -227,7 +229,7 @@ td.tslot{font-size:13.5px;color:var(--text)}
 <section class="hero">
   <div class="kicker">Challenger Continent · Equipment Codex <span class="dbg"></span></div>
   <h1>装备图鉴<span class="en">The Codex</span></h1>
-  <p class="lede">挑战者大陆全组件 <b>7003</b> 件装备与镶嵌物 —— 属性、词缀、套装与 3D 模型。生成于 2026-07-14 11:19。</p>
+  <p class="lede">挑战者大陆全组件 <b>7003</b> 件装备与镶嵌物 —— 属性、词缀、套装与 3D 模型。生成于 2026-07-14 11:31。</p>
 </section>
 
 <div class="toolbar">
@@ -313,13 +315,29 @@ function tlColor(s){
 function plain(s){return (s??'').replace(/\|c[0-9a-fA-F]{8}|\|u/g,'');}
 
 // ---- 筛选控件
-const slots=[...new Set(DATA.map(d=>d.slotCn))].sort((a,b)=>a.localeCompare(b,'zh'));
 const rars=[...new Set(DATA.map(d=>d.rarity))].sort((a,b)=>(RARITY_ORDER[a]??9)-(RARITY_ORDER[b]??9));
 const mods=[...new Set(DATA.map(d=>d.mod))].sort((a,b)=>a.localeCompare(b,'zh'));
 fMod.innerHTML='<option value="">全部MOD</option>'+mods.map(m=>`<option>${m}</option>`).join('');
 fRarity.innerHTML='<option value="">全部品质</option>'+rars.map(r=>{
   const cn=DATA.find(d=>d.rarity===r).rarityCn;return `<option value="${r}">${cn}</option>`;}).join('');
-fSlot.innerHTML='<option value="">全部类型</option>'+slots.map(s=>`<option>${s}</option>`).join('');
+// 类型下拉: 按大类 optgroup 嵌套 (每组头部可整组筛选)
+{
+  const CAT_ORDER=['武器','护甲','饰品','镶嵌物','其他'];
+  const byCat=new Map();
+  DATA.forEach(d=>{
+    if(!byCat.has(d.cat))byCat.set(d.cat,new Set());
+    byCat.get(d.cat).add(d.slotCn);
+  });
+  let html='<option value="">全部类型</option>';
+  CAT_ORDER.filter(c=>byCat.has(c)).forEach(c=>{
+    const slots=[...byCat.get(c)].sort((a,b)=>a.localeCompare(b,'zh'));
+    html+=`<optgroup label="${c}">`;
+    if(slots.length>1)html+=`<option value="cat:${c}">全部${c}</option>`;
+    html+=slots.map(s=>`<option value="${s}">${s}</option>`).join('');
+    html+='</optgroup>';
+  });
+  fSlot.innerHTML=html;
+}
 
 let view=[], cursor=0; const CHUNK=150;
 function reqText(d){
@@ -364,8 +382,9 @@ function renderMore(){
 function apply(){
   const q=(document.getElementById('q').value||'').trim().toLowerCase();
   const fr=fRarity.value, fs=fSlot.value, fm=fMod.value, fg=fGlb.checked, sort=fSort.value;
+  const slotOk=d=>!fs||(fs.startsWith('cat:')?d.cat===fs.slice(4):d.slotCn===fs);
   view=DATA.filter(d=>
-    (!fr||d.rarity===fr)&&(!fs||d.slotCn===fs)&&(!fm||d.mod===fm)&&(!fg||d.glb)&&
+    (!fr||d.rarity===fr)&&slotOk(d)&&(!fm||d.mod===fm)&&(!fg||d.glb)&&
     (!q||plain(d.name).toLowerCase().includes(q)||(d.intName||'').toLowerCase().includes(q)));
   view.sort((a,b)=>{
     if(sort==='level_desc')return b.level-a.level;
