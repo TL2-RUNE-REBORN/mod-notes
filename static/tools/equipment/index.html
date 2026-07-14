@@ -28,7 +28,7 @@
 <header class="sticky top-0 z-20 bg-[#11151f]/95 backdrop-blur border-b border-slate-800 px-4 py-3">
   <div class="max-w-7xl mx-auto flex flex-wrap items-center gap-3">
     <h1 class="text-xl font-bold text-amber-400">挑战者大陆 · 装备图鉴</h1>
-    <span class="text-xs text-slate-500">全组件 | 共 6360 件 | 生成于 2026-07-14 00:31 <span class="text-rose-400 font-bold"></span></span>
+    <span class="text-xs text-slate-500">全组件 | 共 7003 件 | 生成于 2026-07-14 11:01 <span class="text-rose-400 font-bold"></span></span>
     <div class="flex flex-wrap gap-2 ml-auto items-center text-sm">
       <input id="q" type="search" placeholder="搜索名称 / 内部名..."
         class="bg-slate-800 border border-slate-700 rounded px-3 py-1.5 w-56 outline-none focus:border-amber-500">
@@ -271,10 +271,13 @@ function openModal(d){
   if(d.afx&&d.afx.length){
     rows.push(`<div class="pt-3 text-slate-500 text-xs font-bold">固定词缀</div>`);
     d.afx.forEach(a=>{
-      if(!a.n&&!a.fx.length)return;             // 无显示名且无效果 (release 隐藏内部名后) 整条跳过
-      if(a.n)rows.push(`<div class="text-sky-500/90 text-xs mt-1.5">${tlColor(a.n)}</div>`);
+      if(!a.n&&!a.fx.length&&!a.tgt)return;     // 无显示名且无效果 (release 隐藏内部名后) 整条跳过
+      const head=[];
+      if(a.tgt)head.push(`<span class="text-amber-500/90 border border-amber-700/40 rounded px-1 py-px text-[11px] mr-1">镶嵌到${a.tgt}</span>`);
+      if(a.n)head.push(tlColor(a.n));
+      if(head.length)rows.push(`<div class="text-sky-500/90 text-xs mt-1.5">${head.join('')}</div>`);
       a.fx.forEach(l=>rows.push(`<div class="text-sky-300 text-[13px] leading-relaxed pl-3">${tlColor(l)}</div>`));
-      if(a.n&&!a.fx.length)rows.push(`<div class="text-slate-600 text-[12px] pl-3">(无数值效果)</div>`);
+      if(head.length&&!a.fx.length)rows.push(`<div class="text-slate-600 text-[12px] pl-3">(无数值效果)</div>`);
     });
   }
   if(d.set){
