@@ -1,0 +1,10 @@
+{{- $status := .Params.status | default "spark" -}}
+{{- $labels := dict "spark" "火种" "hatch" "孵化" "forge" "锻造" "ship" "出炉" "hold" "搁置" -}}
+<a class="post" href="{{ .RelPermalink }}">
+  <span class="d">{{ .Date | time.Format "2006-01-02" }}</span>
+  <span class="t"><span class="chip {{ $status }}">{{ index $labels $status | default $status }}</span> {{ .Title }}
+    {{ with .Params.summary | default (.Summary | plainify | truncate 64) }}
+    <span class="x">{{ . }}</span>
+    {{ end }}
+  </span>
+</a>

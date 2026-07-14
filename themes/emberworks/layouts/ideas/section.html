@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="block">
+  <header class="sec nonum">
+    <h1>{{ .Title }}{{ with .Params.en }} <span class="en">{{ . }}</span>{{ end }}</h1>
+    {{ with .Params.lede }}<p class="lede">{{ . | markdownify }}</p>{{ end }}
+  </header>
+
+  <div class="rarity-note">
+    状态色阶 ——
+    <em class="w">■ 火种 = 刚冒头的念头</em> ·
+    <em class="m">■ 孵化 = 调研与原型</em> ·
+    <em class="l">■ 锻造 = 已在动工</em> ·
+    <em class="s">■ 出炉 = 已经做成</em> ·
+    <em class="f">■ 搁置 = 暂时冷却</em>
+  </div>
+
+  {{ with .Content }}<div class="article-body">{{ . }}</div>{{ end }}
+
+  <div class="post-list">
+    {{ range .RegularPages.ByDate.Reverse }}
+    {{ partial "idea-row.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}

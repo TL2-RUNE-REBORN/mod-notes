@@ -99,6 +99,12 @@ body::before{ /* 顶部余烬辉光 */
 .chip.art {color:var(--gold);   border-color:rgba(216,178,106,.4);background:rgba(216,178,106,.07)}
 .chip.txt {color:var(--r-normal);border-color:rgba(189,180,164,.3);background:rgba(189,180,164,.05)}
 .chip.misc{color:var(--r-normal);border-color:rgba(189,180,164,.3);background:rgba(189,180,164,.05)}
+/* 创意公示状态(复用稀有度色阶):白火种 / 蓝孵化 / 橙锻造 / 绿出炉 / 红搁置 */
+.chip.spark{color:var(--r-normal);border-color:rgba(189,180,164,.3);background:rgba(189,180,164,.05)}
+.chip.hatch{color:var(--r-magic); border-color:rgba(111,168,255,.35);background:rgba(111,168,255,.06)}
+.chip.forge{color:var(--ember);   border-color:rgba(255,154,60,.4);  background:rgba(255,154,60,.07)}
+.chip.ship {color:var(--r-set);   border-color:rgba(124,201,110,.35);background:rgba(124,201,110,.06)}
+.chip.hold {color:var(--flame);   border-color:rgba(224,89,46,.4);   background:rgba(224,89,46,.07)}
 
 /* ---------- 站头 ---------- */
 .masthead{
@@ -234,6 +240,7 @@ section.block{margin-top:88px}
 .rarity-note .m{color:var(--r-magic)} .rarity-note .r{color:var(--r-rare)}
 .rarity-note .l{color:var(--ember)}  .rarity-note .s{color:var(--r-set)}
 .rarity-note .f{color:var(--flame)}  .rarity-note .g{color:var(--gold)}
+.rarity-note .w{color:var(--r-normal)}
 
 /* ---------- 工具卡 ---------- */
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:18px}

@@ -38,6 +38,10 @@ disableKinds = ['taxonomy', 'term']
     pageRef = '/guides'
     weight = 40
   [[menus.main]]
+    name = '创意公示'
+    pageRef = '/ideas'
+    weight = 45
+  [[menus.main]]
     name = '赞助'
     pageRef = '/support'
     weight = 50
