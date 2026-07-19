@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>怪物图鉴 — 余烬工坊</title>
+<meta name="description" content="原版火炬之光2 + 挑战者大陆怪物图鉴:数值 / 技能 / 抗性 / 3D 模型预览与实战数值计算。">
+<meta name="theme-color" content="#100e0b">
+<link rel="preconnect" href="https://fonts.loli.net">
+<link href="https://fonts.loli.net/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="icon" href="https://tl2-mod.chr.moe/favicon.ico" sizes="16x16 32x32 48x48">
+<script type="importmap">
+{"imports":{
+  "three":"./vendor/three.module.js",
+  "three/addons/":"./vendor/addons/"
+}}
+</script>
+<style>
+/* ══════════ EMBERWORKS · 余烬工坊 design tokens(与主站一致) ══════════ */
+:root{
+  --bg:#100e0b; --bg-panel:#191410; --bg-panel2:#1f1813;
+  --line:#2c241b; --line-hi:#453724;
+  --text:#d9cdb6; --muted:#94856d; --faint:#675b48;
+  --ember:#ff9a3c; --ember-hi:#ffc26b; --flame:#e0592e; --gold:#d8b26a;
+  --r-magic:#6fa8ff; --r-rare:#ffd24a; --r-set:#7cc96e; --r-normal:#bdb4a4;
+  --serif:'Noto Serif SC','Palatino Linotype',Georgia,serif;
+  --disp:'Cinzel','Noto Serif SC',serif;
+  --ital:'Cormorant Garamond','Noto Serif SC',serif;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:15px;
+  line-height:1.75;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1100px 460px at 50% -8%, rgba(255,138,48,.10), transparent 60%),
+             radial-gradient(700px 300px at 82% 4%, rgba(224,89,46,.05), transparent 65%)}
+::selection{background:rgba(255,154,60,.25)}
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 32px 60px}
+
+/* ---------- 全站余烬火星 ---------- */
+.ember-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ember-field b{position:absolute;bottom:-8px;width:4px;height:4px;border-radius:50%;
+  background:var(--ember-hi);opacity:0;filter:blur(.4px);
+  box-shadow:0 0 8px rgba(255,154,60,.65);
+  animation:ember-rise var(--t,12s) linear var(--w,0s) infinite}
+.ember-field b:nth-child(1){left:4%;--t:13s;--w:0s;--dx:26px}
+.ember-field b:nth-child(2){left:11%;--t:17s;--w:5s;--dx:-18px;width:3px;height:3px}
+.ember-field b:nth-child(3){left:18%;--t:11s;--w:2.5s;--dx:34px;width:2px;height:2px}
+.ember-field b:nth-child(4){left:25%;--t:16s;--w:9s;--dx:-24px}
+.ember-field b:nth-child(5){left:31%;--t:10s;--w:1.8s;--dx:16px;width:2px;height:2px}
+.ember-field b:nth-child(6){left:38%;--t:14s;--w:6s;--dx:-28px;width:3px;height:3px}
+.ember-field b:nth-child(7){left:45%;--t:12s;--w:4s;--dx:20px;width:3px;height:3px}
+.ember-field b:nth-child(8){left:51%;--t:18s;--w:0.5s;--dx:-30px;width:2px;height:2px}
+.ember-field b:nth-child(9){left:57%;--t:11s;--w:7.5s;--dx:24px}
+.ember-field b:nth-child(10){left:63%;--t:15s;--w:3s;--dx:-16px;width:3px;height:3px}
+.ember-field b:nth-child(11){left:69%;--t:10s;--w:5.5s;--dx:28px;width:2px;height:2px}
+.ember-field b:nth-child(12){left:75%;--t:16s;--w:1.2s;--dx:-22px}
+.ember-field b:nth-child(13){left:81%;--t:12s;--w:8s;--dx:18px;width:3px;height:3px}
+.ember-field b:nth-child(14){left:87%;--t:14s;--w:2s;--dx:-26px;width:2px;height:2px}
+.ember-field b:nth-child(15){left:93%;--t:13s;--w:6.8s;--dx:30px}
+.ember-field b:nth-child(16){left:97%;--t:17s;--w:4.5s;--dx:-14px;width:2px;height:2px}
+.ember-field b:nth-child(2n){background:var(--gold);box-shadow:0 0 8px rgba(216,178,106,.55)}
+@keyframes ember-rise{0%{transform:translate3d(0,0,0);opacity:0}6%{opacity:.75}
+  50%{opacity:.4}100%{transform:translate3d(var(--dx,20px),-78vh,0) scale(.55);opacity:0}}
+
+/* ---------- 主站页头 / 页脚 ---------- */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding:30px 0 18px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--disp);font-size:17px;letter-spacing:.22em;color:var(--text);
+  text-decoration:none;white-space:nowrap}
+.brand b{color:var(--ember);font-weight:700}
+nav.site{display:flex;gap:26px;flex-wrap:wrap}
+nav.site a{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-decoration:none;
+  color:var(--muted);padding-bottom:4px;border-bottom:1px solid transparent;
+  transition:color .2s,border-color .2s;white-space:nowrap}
+nav.site a:hover{color:var(--ember-hi)}
+nav.site a.on{color:var(--ember);border-bottom-color:var(--ember)}
+footer.site{margin-top:80px;padding-top:26px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);
+  text-transform:uppercase}
+footer.site b{color:var(--muted);font-weight:500}
+footer.site a{color:var(--muted);text-decoration:none}
+footer.site a:hover{color:var(--ember-hi)}
+
+/* ---------- 标题区 ---------- */
+.hero{padding:44px 0 8px}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--ember)}
+.kicker .dbg{color:var(--flame);font-weight:600}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,40px);
+  line-height:1.25;margin-top:10px;color:var(--text)}
+.hero h1 .en{font-family:var(--ital);font-style:italic;font-weight:500;
+  font-size:.62em;color:var(--gold);margin-left:14px;letter-spacing:.02em}
+.hero .lede{color:var(--muted);margin-top:6px;font-size:14px}
+.hero .lede b{color:var(--gold);font-weight:600}
+.legend{margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  color:var(--faint);display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.legend i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
+.legend i::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;
+  box-shadow:0 0 6px currentColor}
+.lg-boss{color:var(--ember)} .lg-champ{color:var(--r-rare)} .lg-mon{color:var(--r-normal)}
+.lg-pet{color:var(--r-set)} .lg-npc{color:var(--r-magic)}
+.legend .note{color:var(--faint)}
+
+/* ---------- 筛选工具条 ---------- */
+.toolbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:10px;
+  align-items:center;padding:14px 0 12px;margin-top:18px;
+  background:linear-gradient(rgba(16,14,11,.96),rgba(16,14,11,.92));
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.toolbar input[type=search],.toolbar select{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text);
+  background:var(--bg-panel);border:1px solid var(--line);border-radius:3px;
+  padding:7px 10px;outline:none;transition:border-color .2s}
+.toolbar input[type=search]{width:220px}
+.toolbar input[type=search]:focus,.toolbar select:focus{border-color:var(--ember)}
+.toolbar select option{background:var(--bg-panel)}
+.toolbar label.chk{display:flex;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.14em;color:var(--muted);cursor:pointer}
+.toolbar label.chk input{accent-color:var(--ember)}
+.toolbar .stat{margin-left:auto;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.18em;color:var(--faint)}
+
+/* ---------- 表格 ---------- */
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:1000px}
+thead th{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--faint);text-align:left;font-weight:500;
+  padding:14px 10px 10px;border-bottom:1px solid var(--line-hi);
+  position:sticky;top:53px;background:var(--bg);z-index:10}
+thead th.r{text-align:right}
+thead th.c{text-align:center}
+tr.itemrow{cursor:pointer;content-visibility:auto;contain-intrinsic-size:auto 54px;
+  transition:background .15s}
+tr.itemrow:hover{background:var(--bg-panel)}
+tr.itemrow td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.iname{font-weight:600;font-size:15px}
+.isub{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--faint);margin-top:2px}
+.isub .b-sk{color:var(--gold)}
+.isub .b-fx{color:var(--r-magic)}
+.isub .b-var{color:var(--r-set)}
+td.tnum{text-align:right;font-family:var(--mono);font-size:12.5px;color:var(--text)}
+td.tmod{font-size:12px;color:var(--faint)}
+td.tfam{font-size:13px;color:var(--muted)}
+.btn3d{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ember);
+  background:none;border:1px solid rgba(255,154,60,.35);border-radius:3px;
+  padding:5px 10px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn3d:hover{color:var(--bg);background:var(--ember);box-shadow:0 0 14px rgba(255,154,60,.35)}
+.dim{color:var(--faint)}
+#empty{display:none;text-align:center;color:var(--faint);padding:70px 0;font-family:var(--mono);
+  font-size:11px;letter-spacing:.22em}
+
+/* ---------- 类别配色 (品牌语义: 橙=BOSS 黄=Champion 白=普通 绿=宠物召唤 蓝=NPC) ---------- */
+.rk-BOSS{color:var(--ember)} .rk-CHAMP{color:var(--r-rare)} .rk-MON{color:var(--r-normal)}
+.rk-PET{color:var(--r-set)} .rk-NPC{color:var(--r-magic)}
+
+/* ---------- 详情弹窗 ---------- */
+#modal{display:none;position:fixed;inset:0;z-index:40;background:rgba(8,6,4,.78);
+  backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:22px}
+#modal.open{display:flex}
+.sheet{background:var(--bg-panel);border:1px solid var(--line-hi);border-radius:6px;
+  width:100%;max-width:980px;max-height:92vh;overflow:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  padding:20px 24px 16px;border-bottom:1px solid var(--line)}
+.sheet-head h2{font-size:19px;font-weight:700;line-height:1.35}
+.sheet-head .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);margin-top:3px}
+#mClose{background:none;border:none;color:var(--muted);font-size:26px;line-height:1;
+  cursor:pointer;padding:0 4px;font-family:var(--serif)}
+#mClose:hover{color:var(--ember-hi)}
+.sheet-body{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:22px 24px 26px}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:5px 0;
+  border-bottom:1px solid var(--line);font-size:13.5px}
+.kv .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--faint);
+  text-transform:uppercase;padding-top:3px;white-space:nowrap}
+.kv .v{text-align:right}
+.kv .v.mono{font-family:var(--mono);font-size:12.5px}
+.sec-h{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--faint);margin-top:18px;padding-bottom:4px}
+.skline{font-size:13.5px;line-height:1.75;display:flex;justify-content:space-between;gap:12px;
+  border-bottom:1px dotted var(--line);padding:3px 0}
+.skline .meta{font-family:var(--mono);font-size:10px;color:var(--faint);white-space:nowrap;padding-top:4px}
+.skline .aitag{color:var(--r-magic)}
+.fxline{font-size:13.5px;line-height:1.7;color:var(--gold)}
+.afxname{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--r-magic);
+  opacity:.75;margin-top:7px}
+.afxline{font-size:13.5px;line-height:1.7;color:var(--r-magic);padding-left:14px}
+.varnote{margin-top:14px;font-size:12.5px;color:var(--r-set)}
+.desc{margin-top:16px;font-family:var(--ital);font-style:italic;font-size:14.5px;
+  line-height:1.7;color:var(--gold);opacity:.9}
+.viewer{position:relative;background:#0b0906;border:1px solid var(--line);border-radius:4px;height:300px}
+.viewer canvas{width:100%;height:100%;border-radius:4px;display:block}
+.viewer .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;
+  text-align:center;padding:0 26px;line-height:2}
+.viewer-tip{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);margin-top:6px}
+
+/* ---------- 实战数值计算器 ---------- */
+.calc{margin-top:16px;border:1px solid var(--line);border-radius:4px;
+  background:var(--bg-panel2);padding:14px 16px}
+.calc .sec-h{margin-top:0}
+.calc-ctl{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
+.calc-ctl label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--muted);
+  white-space:nowrap}
+.calc-ctl label b{color:var(--ember-hi);font-weight:600}
+.calc-ctl input[type=range]{flex:1;accent-color:var(--ember);min-width:0}
+.calc-ctl select{font-family:var(--mono);font-size:11px;color:var(--text);
+  background:var(--bg-panel);border:1px solid var(--line);border-radius:3px;padding:4px 8px}
+.calc .curveset{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--faint)}
+
+@media (max-width:720px){
+  .wrap{padding:0 16px 40px}
+  .sheet-body{grid-template-columns:1fr}
+  thead th{position:static}
+  .toolbar{position:static}
+  .toolbar input[type=search]{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="ember-field" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+<div class="wrap">
+
+<header class="masthead">
+  <a class="brand" href="https://tl2-mod.chr.moe/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
+    <a href="https://tl2-mod.chr.moe/devlog/">开发日志</a>
+    <a href="https://tl2-mod.chr.moe/changelog/">更新日志</a>
+    <a href="https://tl2-mod.chr.moe/tools/" class="on">工具库</a>
+    <a href="https://tl2-mod.chr.moe/guides/">指南</a>
+    <a href="https://tl2-mod.chr.moe/support/">赞助</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="kicker">Vanilla TL2 + Challenger Continent · Bestiary <span class="dbg"></span></div>
+  <h1>怪物图鉴<span class="en">The Bestiary</span></h1>
+  <p class="lede">原版火炬之光2 <b>807</b> 种 + 挑战者大陆 <b>2354</b> 种,共 <b>3161</b> 条怪物 ——
+    数值、技能、抗性与 3D 模型。生成于 2026-07-19 19:17。</p>
+  <div class="legend">
+    <i class="lg-boss">BOSS</i><i class="lg-champ">Champion</i><i class="lg-mon">普通怪物</i>
+    <i class="lg-pet">宠物·召唤</i><i class="lg-npc">NPC·友方</i>
+    <span class="note">· 生命/伤害/护甲为等级曲线倍率(×1.0 = 基准),详情页可按等级与难度换算实战数值</span>
+  </div>
+</section>
+
+<div class="toolbar">
+  <input id="q" type="search" placeholder="搜索名称 / 内部名…">
+  <select id="fSrc"></select>
+  <select id="fCat"></select>
+  <select id="fFam"></select>
+  <select id="fSort">
+    <option value="rank">类别 · 生命 ↓</option>
+    <option value="hp_desc">生命 ↓</option><option value="dmg_desc">伤害 ↓</option>
+    <option value="lvl_desc">等级 ↓</option><option value="name">名称</option>
+  </select>
+  <label class="chk"><input id="fGlb" type="checkbox">仅有模型</label>
+  <span class="stat" id="stat"></span>
+</div>
+
+<div class="tablewrap">
+<table>
+  <thead><tr>
+    <th>名称</th><th style="width:90px">类别</th><th style="width:100px">家族</th>
+    <th style="width:120px">来源</th><th class="r" style="width:80px">等级</th>
+    <th class="r" style="width:86px">生命</th><th class="r" style="width:86px">伤害</th>
+    <th class="r" style="width:80px">护甲</th><th class="c" style="width:80px">3D</th>
+  </tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+</div>
+<div id="sentinel" style="height:40px"></div>
+<p id="empty">— 没有匹配的怪物 —</p>
+
+<footer class="site">
+  <span>EMBERWORKS · 余烬工坊 © 2026</span>
+  <span><b>MIKURO</b> · <a href="https://github.com/heiybb" rel="me">GITHUB</a> · <a href="https://tl2-mod.chr.moe/index.xml">RSS</a></span>
+</footer>
+</div>
+
+<!-- 详情 + 3D 弹窗 -->
+<div id="modal">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div>
+        <h2 id="mName"></h2>
+        <div class="sub" id="mSub"></div>
+      </div>
+      <button id="mClose">&times;</button>
+    </div>
+    <div class="sheet-body">
+      <div id="mStats"></div>
+      <div>
+        <div class="viewer">
+          <canvas id="gl"></canvas>
+          <div id="noModel" class="ph" style="display:none">无 3D 模型</div>
+          <div id="loading" class="ph" style="display:none">模型加载中…</div>
+        </div>
+        <p class="viewer-tip">拖动旋转 · 滚轮缩放 · 右键平移</p>
+        <div class="calc">
+          <div class="sec-h">实战数值 · <span class="curveset" id="cSet"></span></div>
+          <div class="calc-ctl">
+            <label>等级 <b id="cLvlV">30</b></label>
+            <input id="cLvl" type="range" min="1" max="105" value="30">
+            <select id="cDiff">
+              <option value="0">休闲</option><option value="1" selected>普通</option>
+              <option value="2">老兵</option><option value="3">精英</option>
+            </select>
+          </div>
+          <div id="cOut"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+const DATA = window.MON_DATA || [];
+const CURVES = window.MON_CURVES || {};
+const P = '';
+const RELEASE = true;
+const CAT_ORDER = {'BOSS':0,'Champion':1,'怪物':2,'宠物·召唤':3,'NPC·友方':4};
+const CAT_CLS = {'BOSS':'rk-BOSS','Champion':'rk-CHAMP','怪物':'rk-MON','宠物·召唤':'rk-PET','NPC·友方':'rk-NPC'};
+
+// ---- TL2 色码 |cAARRGGBB…|u → HTML (个别 MOD 用 6 位 |cRRGGBB 变体); 字面 \n → 空格
+function esc(s){return (s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function tlColor(s){
+  return esc(s).replace(/\|c([0-9a-fA-F]{8}|[0-9a-fA-F]{6})/g,(_,h)=>{
+    const hex=h.length===8?h.slice(2):h;
+    const r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+    return Math.max(r,g,b)<70?'<span>':`<span style="color:#${hex}">`;
+  }).replace(/\|u/g,'</span>').replace(/\\n/g,' · ');
+}
+function plain(s){return (s??'').replace(/\|c(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6})|\|u/g,'').replace(/\\n/g,' ');}
+
+// ---- 倍率格式化: 100 → ×1  2200 → ×22  90~100 → ×0.9~1
+function mult(v){const m=v/100;return '×'+(+m.toFixed(2)).toString();}
+function multRange(pair){
+  const a=+(pair[0]/100).toFixed(2),b=+(pair[1]/100).toFixed(2);
+  return a===b?'×'+a:'×'+a+'~'+b;
+}
+function lvlText(d){
+  const [a,b]=d.lvl;
+  if(!a&&!b)return '<span class="dim">随区域</span>';
+  if(a&&!b)return `≥${a}`;
+  if(!a&&b)return `≤${b}`;
+  return a===b?String(a):`${a}~${b}`;
+}
+
+// ---- 筛选控件 (来源保持数据顺序: 原版最前)
+const srcs=[...new Set(DATA.map(d=>d.src))];
+fSrc.innerHTML='<option value="">全部来源</option>'+srcs.map(m=>`<option>${esc(m)}</option>`).join('');
+const cats=[...new Set(DATA.map(d=>d.cat))].sort((a,b)=>(CAT_ORDER[a]??9)-(CAT_ORDER[b]??9));
+fCat.innerHTML='<option value="">全部类别</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+const fams=[...new Set(DATA.map(d=>d.fam).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh'));
+fFam.innerHTML='<option value="">全部家族</option>'+fams.map(f=>`<option>${esc(f)}</option>`).join('');
+
+let view=[], cursor=0; const CHUNK=150;
+function rowHTML(d){
+  const btn=d.glb?`<button class="btn3d" data-id="${d.id}">预览</button>`
+                 :'<span class="dim" style="font-family:var(--mono);font-size:10px">—</span>';
+  const badges=(d.sk&&d.sk.length?` <span class="b-sk">技能${d.skTotal||d.sk.length}</span>`:'')+
+               (d.fx&&d.fx.length?` <span class="b-fx">特性${d.fx.length}</span>`:'')+
+               (d.var>1?` <span class="b-var">×${d.var}变体</span>`:'');
+  return `<tr class="itemrow" data-id="${d.id}">
+    <td><div class="iname ${CAT_CLS[d.cat]||''}">${tlColor(d.name)}</div>
+        <div class="isub">${RELEASE?'':esc(d.intName)}${badges}</div></td>
+    <td><span class="${CAT_CLS[d.cat]||''}">${d.cat}</span></td>
+    <td class="tfam">${esc(d.fam)||'<span class="dim">—</span>'}</td>
+    <td class="tmod">${esc(d.src)}</td>
+    <td class="tnum">${lvlText(d)}</td>
+    <td class="tnum" title="生命倍率 ${multRange(d.hp)}">${mult(d.hp[1])}</td>
+    <td class="tnum" title="伤害倍率 ${multRange(d.dmg)}">${mult(d.dmg[1])}</td>
+    <td class="tnum">${mult(d.ar[1])}</td>
+    <td style="text-align:center">${btn}</td></tr>`;
+}
+function renderMore(){
+  if(cursor>=view.length)return;
+  rows.insertAdjacentHTML('beforeend',view.slice(cursor,cursor+CHUNK).map(rowHTML).join(''));
+  cursor+=CHUNK;
+}
+function apply(){
+  const q=(document.getElementById('q').value||'').trim().toLowerCase();
+  const fs=fSrc.value, fc=fCat.value, ff=fFam.value, fg=fGlb.checked, sort=fSort.value;
+  view=DATA.filter(d=>
+    (!fs||d.src===fs)&&(!fc||d.cat===fc)&&(!ff||d.fam===ff)&&(!fg||d.glb)&&
+    (!q||plain(d.name).toLowerCase().includes(q)||(d.intName||'').toLowerCase().includes(q)));
+  view.sort((a,b)=>{
+    if(sort==='hp_desc')return b.hp[1]-a.hp[1];
+    if(sort==='dmg_desc')return b.dmg[1]-a.dmg[1];
+    if(sort==='lvl_desc')return Math.max(b.lvl[0],b.lvl[1])-Math.max(a.lvl[0],a.lvl[1])||b.hp[1]-a.hp[1];
+    if(sort==='name')return plain(a.name).localeCompare(plain(b.name),'zh');
+    return (CAT_ORDER[a.cat]??9)-(CAT_ORDER[b.cat]??9)||b.hp[1]-a.hp[1];
+  });
+  rows.innerHTML=''; cursor=0; renderMore();
+  stat.textContent=`${view.length} / ${DATA.length}`;
+  empty.style.display=view.length?'none':'block';
+}
+new IntersectionObserver(es=>es[0].isIntersecting&&renderMore()).observe(sentinel);
+['q','fSrc','fCat','fFam','fSort','fGlb'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener(el.tagName==='INPUT'&&el.type!=='checkbox'?'input':'change',apply);
+});
+apply();
+
+// ---- 等级曲线插值 (CURVED:false 分段线性; INFER_PASSED_END 末段斜率外推)
+function interp(pts,x){
+  if(!pts||!pts.length)return 0;
+  if(x<=pts[0][0])return pts[0][1];
+  for(let i=1;i<pts.length;i++){
+    if(x<=pts[i][0]){
+      const [x0,y0]=pts[i-1],[x1,y1]=pts[i];
+      return y0+(y1-y0)*(x-x0)/((x1-x0)||1);
+    }
+  }
+  const [xa,ya]=pts[pts.length-2]||pts[0],[xb,yb]=pts[pts.length-1];
+  return yb+(yb-ya)/((xb-xa)||1)*(x-xb);
+}
+const nf=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+let calcD=null;
+function runCalc(){
+  if(!calcD)return;
+  const d=calcD, diff=+cDiff.value;
+  const set=CURVES[d.src==='原版'?'va':'cc'];
+  const rk=d.champ?'c':'n';
+  cSet.textContent=(d.src==='原版'?'原版曲线':'挑战者曲线')+(d.champ?' · Champion 档':'');
+  if(!set){cOut.innerHTML='';return;}
+  // 滑条上限跟随曲线集 (原版 105 级 / 挑战者 180 级)
+  const hpPts=(set.hp&&set.hp[rk]&&set.hp[rk][diff])||[];
+  const maxL=hpPts.length?hpPts[hpPts.length-1][0]:105;
+  if(+cLvl.max!==maxL){cLvl.max=maxL;if(+cLvl.value>maxL)cLvl.value=maxL;}
+  const lvl=+cLvl.value;
+  cLvlV.textContent=lvl;
+  const g=(stat)=>interp((set[stat]&&set[stat][rk]&&set[stat][rk][diff])||[],lvl);
+  const hp=[d.hp[0]/100*g('hp'),d.hp[1]/100*g('hp')];
+  const dm=[d.dmg[0]/100*g('dmg'),d.dmg[1]/100*g('dmg')];
+  const ar=d.ar[1]/100*g('ar');
+  const xp=d.xp/100*g('xp');
+  const row=(k,v)=>`<div class="kv"><span class="k">${k}</span><span class="v mono">${v}</span></div>`;
+  cOut.innerHTML=
+    row('生命',hp[0].toFixed(0)===hp[1].toFixed(0)?nf.format(hp[1]):`${nf.format(hp[0])} ~ ${nf.format(hp[1])}`)+
+    row('单次伤害',`${nf.format(dm[0])} - ${nf.format(dm[1])}`)+
+    row('护甲',nf.format(ar))+
+    row('击杀经验',nf.format(xp));
+}
+cLvl.addEventListener('input',runCalc);
+cDiff.addEventListener('change',runCalc);
+
+// ---- three.js 查看器 (单例渲染器)
+let renderer,scene,camera,controls,raf,gltfCache=new Map();
+function initGL(){
+  const canvas=document.getElementById('gl');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(45,1,0.01,1000);
+  controls=new OrbitControls(camera,canvas);
+  controls.autoRotate=true; controls.autoRotateSpeed=2.5; controls.enableDamping=true;
+  scene.add(new THREE.HemisphereLight(0xffe7cf,0x40352a,2.2));
+  const d1=new THREE.DirectionalLight(0xffffff,2.0); d1.position.set(3,5,4); scene.add(d1);
+  const d2=new THREE.DirectionalLight(0xffb070,0.7); d2.position.set(-4,-2,-3); scene.add(d2);
+}
+function resizeGL(){
+  const c=renderer.domElement,w=c.clientWidth,h=c.clientHeight;
+  if(c.width!==w||c.height!==h){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+}
+function animate(){
+  raf=requestAnimationFrame(animate); resizeGL(); controls.update(); renderer.render(scene,camera);
+}
+let currentModel=null;
+async function loadGlbBuffer(url){
+  if(location.protocol==='file:')
+    throw new Error('file:// 无法加载模型, 请运行: python extract_monsters.py --serve-only');
+  const r=await fetch(P+url);
+  if(!r.ok)throw new Error(r.status+' '+url);
+  return await r.arrayBuffer();
+}
+async function showModel(url){
+  if(!renderer)initGL();
+  if(currentModel){scene.remove(currentModel);currentModel=null;}
+  noModel.textContent='无 3D 模型';
+  noModel.style.display=url?'none':'flex';
+  loading.style.display=url?'flex':'none';
+  cancelAnimationFrame(raf); animate();
+  if(!url)return;
+  try{
+    let gltf=gltfCache.get(url);
+    if(!gltf){
+      const buf=await loadGlbBuffer(url);
+      gltf=await new GLTFLoader().parseAsync(buf,'');
+      gltfCache.set(url,gltf);
+    }
+    const model=gltf.scene.clone(true);
+    model.traverse(o=>{
+      if(o.isMesh){
+        if(!o.geometry.attributes.normal)o.geometry.computeVertexNormals();
+        o.material.side=THREE.DoubleSide;
+      }});
+    const box=new THREE.Box3().setFromObject(model);
+    const size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+    model.position.sub(center);
+    const r=Math.max(size.x,size.y,size.z)||1;
+    camera.position.set(r*1.4,r*0.8,r*1.4); camera.near=r/100; camera.far=r*20;
+    camera.updateProjectionMatrix();
+    controls.target.set(0,0,0); controls.update();
+    scene.add(model); currentModel=model;
+  }catch(e){console.error(e);noModel.textContent=e.message||'模型加载失败';noModel.style.display='flex';}
+  loading.style.display='none';
+}
+const EL_NAMES=['火焰','冰霜','电击','毒素'];
+function openModal(d){
+  mName.innerHTML=`<span class="${CAT_CLS[d.cat]||''}">${tlColor(d.name)}</span>`;
+  mSub.textContent=RELEASE?`${d.src}`:`${d.intName} · ${d.src} / ${d.file}`;
+  const rows=[];
+  const add=(k,v)=>v&&rows.push(`<div class="kv"><span class="k">${k}</span><span class="v">${v}</span></div>`);
+  add('类别',`<span class="${CAT_CLS[d.cat]||''}">${d.cat}</span>${d.uniq?' <span class="dim" style="font-size:11px">(独立命名)</span>':''}`);
+  add('家族',esc(d.fam)||null);
+  add('来源',esc(d.src));
+  if(!RELEASE)add('单位类型',`<span class="dim" style="font-family:var(--mono);font-size:11px">${esc(d.ut)}</span>`);
+  add('出现等级',lvlText(d));
+  add('体型',d.scale&&d.scale!==1?`×${d.scale}`:null);
+  add('攻速',d.asp&&d.asp!==100?`${d.asp}%`:null);
+  add('移速',(d.spd[0]||d.spd[1])?`走 ${d.spd[0]} · 跑 ${d.spd[1]} m/s`:null);
+  rows.push('<div class="sec-h">数值倍率 (×1.0 = 等级曲线基准)</div>');
+  add('生命',`<span class="mono">${multRange(d.hp)}</span>`);
+  add('伤害',`<span class="mono">${multRange(d.dmg)}</span>`);
+  add('护甲',`<span class="mono">${multRange(d.ar)}</span>`);
+  add('元素护甲',d.el.some(x=>x!==100)?d.el.map((x,i)=>`${EL_NAMES[i]}${mult(x)}`).join(' · '):'全部 ×1');
+  add('击杀经验',`<span class="mono">${mult(d.xp)}</span>`);
+  if(d.sk&&d.sk.length){
+    rows.push(`<div class="sec-h">技能 (${d.skTotal||d.sk.length})</div>`);
+    d.sk.forEach(s=>{
+      const meta=[s.lv>0?`Lv${s.lv}`:'',s.ch>0&&s.ch<100?`${s.ch}%几率`:'',
+                  s.ai?'<span class="aitag">AI触发</span>':''].filter(Boolean).join(' · ');
+      rows.push(`<div class="skline"><span>${tlColor(s.n)}</span><span class="meta">${meta}</span></div>`);
+    });
+    if((d.skTotal||0)>d.sk.length)
+      rows.push(`<div class="skline"><span class="dim">… 以及另外 ${d.skTotal-d.sk.length} 个技能</span></div>`);
+  }
+  if(d.fx&&d.fx.length){
+    rows.push('<div class="sec-h">特性</div>');
+    d.fx.forEach(l=>rows.push(`<div class="fxline">${tlColor(l)}</div>`));
+  }
+  if(d.afx&&d.afx.length){
+    rows.push('<div class="sec-h">词缀</div>');
+    d.afx.forEach(a=>{
+      if(a.n)rows.push(`<div class="afxname">${tlColor(a.n)}</div>`);
+      a.fx.forEach(l=>rows.push(`<div class="afxline">${tlColor(l)}</div>`));
+    });
+  }
+  if(d.var>1)rows.push(`<div class="varnote">该条目折叠了 ${d.var} 个同名变体(装备 / 技能 / 体型随机),数值取变体区间。</div>`);
+  if(d.desc)rows.push(`<div class="desc">${tlColor(d.desc)}</div>`);
+  mStats.innerHTML=rows.join('');
+  modal.classList.add('open');
+  calcD=d;
+  runCalc();
+  showModel(d.glb);
+}
+function closeModal(){
+  modal.classList.remove('open');
+  cancelAnimationFrame(raf);
+  if(currentModel){scene.remove(currentModel);currentModel=null;}
+}
+mClose.onclick=closeModal;
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+rows.addEventListener('click',e=>{
+  const tr=e.target.closest('tr.itemrow'); if(!tr)return;
+  openModal(DATA[+tr.dataset.id]);
+});
+// #m=<id> 直达详情
+const mh=location.hash.match(/#m=(\d+)/);
+if(mh&&DATA[+mh[1]])openModal(DATA[+mh[1]]);
+</script>
+</body>
+</html>
