@@ -410,3 +410,154 @@ footer.site a:hover{color:var(--ember-hi)}
   .sec p.lede{grid-column:1}
   .masthead{flex-direction:column;gap:14px;align-items:flex-start}
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   战斗数值指南 · 富组件(Combat-numbers guide components)
+   全部作用域限定在 .combat 容器内 —— 复用全站 tokens / .sec / .chip /
+   .diamond-rule / blockquote / table,只补主题尚无的:算例卡 · 属性卡 ·
+   步骤流程 · 减免链 · 元素行 · 飘字示例 · 图例 · 流程图说明 · 双方对照面板。
+   scoped 使这些规则既不污染其它页面,又能压过 .article-body 的通用样式。
+   ═══════════════════════════════════════════════════════════════ */
+.combat{
+  /* 游戏内飘字真实颜色(主题稀有度色之外的语义色) */
+  --dmg-purple:#ff0aff; --dmg-red:#ff2929; --dmg-blue:#0a8eff; --dmg-orange:#ff9900;
+}
+/* 开篇英文伴题 + 导语(替代源页 hero,与文章头 .article-head 衔接) */
+.combat .g-en{font-family:var(--ital);font-style:italic;font-size:21px;color:var(--gold);letter-spacing:.04em;margin:0 0 4px}
+.combat .g-en span{font-family:var(--serif);font-style:normal;font-size:13px;color:var(--muted);letter-spacing:.4em;margin-left:14px;vertical-align:2px}
+.combat .g-lede{max-width:620px;color:var(--muted);font-size:15px;margin:0}
+.combat .g-lede b{color:var(--text);font-weight:600}
+/* 分节标题:在 .article-body 内重申 .sec 外观,压过 .article-body h2 的左边框 */
+.combat .sec h2{font-family:var(--serif);font-weight:900;font-size:29px;color:#ece2cd;letter-spacing:.02em;line-height:1.3;margin:0;padding:0;border:0}
+.combat h3.mini{font-size:16px;font-weight:700;color:#ece2cd;margin:26px 0 12px;font-family:var(--serif)}
+.combat .prose{color:var(--muted);font-size:14.5px}
+.combat .prose p{margin:0 0 16px}
+.combat .prose p b{color:var(--text);font-weight:600}
+.combat .em{color:var(--ember);font-weight:600}
+/* 表格:复用 .article-body 的表样式,仅补数字色与横向滚动 */
+.combat .tbl-wrap{overflow-x:auto}
+.combat td .n{font-family:var(--mono);font-size:12.5px;color:var(--r-magic);font-variant-numeric:tabular-nums}
+/* 提示框 */
+.combat .callout{border:1px dashed var(--line-hi);border-radius:8px;padding:16px 20px;margin:22px 0;background:rgba(255,154,60,.04);color:var(--muted);font-size:14px;line-height:1.85}
+.combat .callout b{color:var(--gold)}
+/* 属性卡 */
+.combat .attr-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 4px}
+.combat .attr{position:relative;background:var(--bg-panel);border:1px solid var(--line);border-radius:8px;padding:20px 22px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.combat .attr:hover{border-color:var(--line-hi);box-shadow:0 0 28px rgba(255,140,50,.07)}
+.combat .attr .ah{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.combat .attr .ah h4{font-size:19px;font-weight:700;margin:0}
+.combat .attr .ah .en{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase}
+.combat .attr .role{font-size:12.5px;color:var(--muted);font-style:italic;font-family:var(--ital);margin-bottom:12px}
+.combat .attr hr{border:0;border-top:1px solid var(--line);margin:10px 0}
+.combat .attr ul{list-style:none;font-size:13px;line-height:2;margin:0}
+.combat .attr ul li{margin:0}
+.combat .attr ul li::before{content:"◆ ";font-size:8px;vertical-align:2px;color:var(--faint)}
+.combat .attr .val{font-family:var(--mono);font-size:12px;color:inherit;font-variant-numeric:tabular-nums}
+.combat .attr.str h4,.combat .attr.str .val{color:var(--flame)} .combat .attr.str ul li{color:#e8916d}
+.combat .attr.dex h4,.combat .attr.dex .val{color:var(--r-set)} .combat .attr.dex ul li{color:#a7dd9c}
+.combat .attr.foc h4,.combat .attr.foc .val{color:var(--r-magic)} .combat .attr.foc ul li{color:#a2c8ff}
+.combat .attr.vit h4,.combat .attr.vit .val{color:var(--r-rare)} .combat .attr.vit ul li{color:#f0dd8f}
+/* 步骤流程 */
+.combat .flow{list-style:none;counter-reset:step;margin:20px 0;padding:0}
+.combat .flow>li{position:relative;display:grid;grid-template-columns:38px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);margin:0}
+.combat .flow>li:last-child{border-bottom:0}
+.combat .flow>li::before{counter-increment:step;content:counter(step);font-family:var(--disp);font-size:16px;color:var(--ember);width:32px;height:32px;border:1px solid var(--line-hi);border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#231a10,#140f0a 75%)}
+.combat .flow .st-t{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px}
+.combat .flow .st-t .en{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;margin-left:8px}
+.combat .flow .st-d{font-size:13.5px;color:var(--muted);line-height:1.75}
+.combat .flow .branch{margin-top:8px;display:flex;flex-wrap:wrap;gap:8px}
+/* 减免链 */
+.combat .chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:24px 0 8px;font-family:var(--mono)}
+.combat .chain .node{flex:1;min-width:120px;background:var(--bg-panel);border:1px solid var(--line-hi);border-radius:7px;padding:13px 15px;position:relative}
+.combat .chain .node .cn-t{font-size:12.5px;color:var(--ember-hi);letter-spacing:.08em;margin-bottom:5px;font-weight:600}
+.combat .chain .node .cn-d{font-family:var(--serif);font-size:12px;color:var(--muted);line-height:1.6}
+.combat .chain .arw{display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:18px;padding:0 8px;flex:0 0 auto}
+/* 五元素行 */
+.combat .elem-row{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.combat .elem{flex:1;min-width:88px;text-align:center;border:1px solid var(--line);border-radius:7px;padding:14px 8px;background:var(--bg-panel);border-color:color-mix(in srgb,var(--ec) 30%,var(--line))}
+.combat .elem .ei{font-size:22px;line-height:1;margin-bottom:8px;color:var(--ec)}
+.combat .elem .el-n{font-size:13px;font-weight:600;color:var(--ec)}
+.combat .elem .el-e{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase;margin-top:3px}
+.combat .elem.phys{--ec:#c9c4bb} .combat .elem.fire{--ec:#ff7a3c} .combat .elem.ice{--ec:#57c7ff} .combat .elem.elec{--ec:#ffd84d} .combat .elem.pois{--ec:#7bd06a}
+/* 飘字示例 */
+.combat .float-demo{display:flex;flex-wrap:wrap;gap:16px;margin:22px 0}
+.combat .fd{flex:1;min-width:160px;border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center;background:radial-gradient(300px 120px at 50% 30%,rgba(255,140,50,.04),transparent 70%),var(--bg-panel)}
+.combat .fd .num{font-family:var(--disp);font-size:38px;font-weight:700;line-height:1;text-shadow:0 0 18px currentColor}
+.combat .fd .num small{font-size:16px;display:block;margin-bottom:2px;letter-spacing:.1em}
+.combat .fd .lbl{font-size:13px;color:var(--text);font-weight:600;margin-top:12px}
+.combat .fd .desc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6}
+.combat .fd.purple .num{color:var(--dmg-purple)} .combat .fd.red .num{color:var(--dmg-red)} .combat .fd.blue .num{color:var(--dmg-blue)} .combat .fd.orange .num{color:var(--dmg-orange)}
+/* 图例 */
+.combat .legend{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--faint);border:1px dashed var(--line-hi);border-radius:6px;padding:12px 16px;margin:0 0 8px;line-height:2}
+.combat .legend em{font-style:normal}
+.combat .legend .p{color:var(--dmg-purple)} .combat .legend .r{color:var(--dmg-red)} .combat .legend .b{color:var(--dmg-blue)} .combat .legend .o{color:var(--dmg-orange)}
+/* 算例卡 */
+.combat .calc{border:1px solid var(--line-hi);border-radius:8px;margin:24px 0;overflow:hidden;background:linear-gradient(160deg,#13100c,#0c0a08)}
+.combat .calc .ct{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);padding:13px 22px;border-bottom:1px solid var(--line);background:rgba(216,178,106,.05);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.combat .calc .ct .setup{color:var(--faint);letter-spacing:.1em;font-size:9.5px;text-align:right;text-transform:none}
+.combat .calc .cbody{padding:4px 22px 14px}
+.combat .calc .step{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;padding:11px 0;border-bottom:1px dashed var(--line)}
+.combat .calc .step:last-child{border-bottom:0}
+.combat .calc .desc{font-size:13.5px;color:var(--muted);line-height:1.55}
+.combat .calc .desc b{color:var(--text);font-weight:600}
+.combat .calc .desc .k{color:var(--ember)}
+.combat .calc .eq{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+.combat .calc .eq .in{color:var(--faint)}
+.combat .calc .eq .out{color:var(--ember-hi);font-size:13.5px}
+.combat .calc .step.final .desc{color:var(--text);font-weight:600}
+.combat .calc .step.final .eq .out{font-size:22px;font-family:var(--disp);text-shadow:0 0 18px currentColor}
+.combat .calc .step.final.purple .eq .out{color:var(--dmg-purple)}
+.combat .calc .step.final.red .eq .out{color:var(--dmg-red)}
+.combat .calc .step.final.blue .eq .out{color:var(--dmg-blue)}
+.combat .calc .cnote{font-size:12.5px;color:var(--faint);padding:0 22px 15px;font-style:italic;font-family:var(--ital);line-height:1.7}
+.combat .calc .cnote b{color:var(--gold);font-style:normal;font-family:var(--serif);font-weight:600}
+.combat .calc .cnote .dim{font-style:normal}
+/* 属性速查算例 */
+.combat .quickcalc{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;margin:20px 0 4px;font-size:13.5px}
+.combat .quickcalc div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.combat .quickcalc .qk{color:var(--text)}
+.combat .quickcalc .qv{font-family:var(--mono);font-size:12.5px;color:var(--r-magic);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* 流程图(内联 SVG,替代 mermaid) */
+.combat .mermaid-wrap{overflow-x:auto;margin:24px 0 6px;padding:4px 0}
+.combat .mermaid-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.combat .mermaid-cap{font-size:12.5px;color:var(--faint);font-style:italic;font-family:var(--ital);line-height:1.7;margin:2px 0 12px;padding:0 4px}
+/* 实战对照:双方面板 */
+.combat .versus{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0 10px}
+.combat .cbt{position:relative;background:var(--bg-panel);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.combat .cbt .cbt-hd{padding:15px 20px 13px;border-bottom:1px solid var(--line)}
+.combat .cbt .cbt-role{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.combat .cbt .cbt-name{font-size:19px;font-weight:700;margin:4px 0 2px;font-family:var(--serif)}
+.combat .cbt .cbt-name .glyph{margin-right:8px}
+.combat .cbt .cbt-sub{font-size:12px;color:var(--muted);font-style:italic;font-family:var(--ital)}
+.combat .cbt .cbt-body{padding:8px 20px 18px}
+.combat .cbt .grp-t{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:15px 0 4px;padding-top:4px}
+.combat .cbt .mini-attrs{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;margin:2px 0}
+.combat .cbt .sline{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline}
+.combat .cbt .mini-attrs .sline:nth-last-child(-n+2){border-bottom:0}
+.combat .cbt .sline .sk{color:var(--text)}
+.combat .cbt .sline .sk small{color:var(--faint);font-family:var(--mono);font-size:9px;letter-spacing:.1em;margin-left:5px;text-transform:uppercase}
+.combat .cbt .sline .sv{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.combat .cbt .sline .sv .dim{color:var(--faint)}
+.combat .cbt.player{border-color:rgba(255,154,60,.30)}
+.combat .cbt.player .cbt-hd{background:linear-gradient(155deg,rgba(255,154,60,.09),transparent 70%)}
+.combat .cbt.player .cbt-name{color:var(--ember)}
+.combat .cbt.player .sline .sv{color:var(--ember-hi)}
+.combat .cbt.boss{border-color:rgba(197,108,240,.26)}
+.combat .cbt.boss .cbt-hd{background:linear-gradient(155deg,rgba(197,108,240,.13),transparent 70%)}
+.combat .cbt.boss .cbt-name{color:#d29bf5}
+.combat .cbt.boss .sline .sv{color:#d29bf5}
+.combat .cbt .res-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px}
+.combat .res{font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 8px;border:1px solid;border-radius:4px;white-space:nowrap;color:var(--ec,var(--muted));border-color:color-mix(in srgb,var(--ec,var(--line-hi)) 34%,var(--line))}
+.combat .res.fire{--ec:#ff7a3c} .combat .res.ice{--ec:#57c7ff} .combat .res.elec{--ec:#ffd84d} .combat .res.pois{--ec:#7bd06a} .combat .res.phys{--ec:#c9c4bb}
+.combat .cc-list{font-size:12px;color:var(--muted);line-height:1.95;margin-top:2px}
+.combat .cc-list b{color:#d29bf5;font-weight:600;font-family:var(--mono);font-size:11px}
+/* 富组件断点(≤720:.sec/.num 复用全站已有的 720 规则) */
+@media (max-width:720px){
+  .combat .attr-grid{grid-template-columns:1fr}
+  .combat .calc .step{grid-template-columns:1fr}
+  .combat .calc .eq{text-align:left}
+  .combat .quickcalc{grid-template-columns:1fr}
+  .combat .chain{flex-direction:column}
+  .combat .chain .arw{transform:rotate(90deg);padding:4px 0}
+  .combat .versus{grid-template-columns:1fr}
+}
