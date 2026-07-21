@@ -22,11 +22,11 @@ Only four slot types accept them — **weapon / helmet / gloves / shield** — a
 
 | Gem | CD reduction | How to get |
 |---|---|---|
-| 青莲·聚灵 (Spirit Gathering) | 1% – 5% | Transmute 9× 青莲玉髓 (Jade Marrow); random 1–5%, higher rolls are rarer |
-| 青莲·凝华 (Condensed Essence) | 6% – 11% | Transmute 9× same-value 聚灵; random 6–11%, higher rolls are rarer |
-| 青莲·太虚 (Great Void) | 15%, plus all damage +50% | Transmute 9× 11% 凝华 (fixed result) |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 青莲·聚灵 (Spirit Gathering) | 1% – 5% | Transmute 9× 青莲玉髓 (Jade Marrow); random 1–5%, higher rolls are rarer |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 青莲·凝华 (Condensed Essence) | 6% – 11% | Transmute 9× same-value 聚灵; random 6–11%, higher rolls are rarer |
+| <img class="gem-px" src="/img/gems/taixu.png" alt=""> 青莲·太虚 (Great Void) | 15%, plus all damage +50% | Transmute 9× 11% 凝华 (fixed result) |
 
-- Upgrade chain: **9× Jade Marrow → 聚灵 (random 1–5%) → 9× same tier → 凝华 (random 6–11%) → 9× 11% 凝华 → 太虚**; low rolls never become junk — any 9 same-tier 聚灵 can be re-melted for another gamble
+- Upgrade chain: **<img class="gem-px" src="/img/gems/jade.png" alt=""> 9× Jade Marrow → 聚灵 (random 1–5%) → 9× same tier → 凝华 (random 6–11%) → 9× 11% 凝华 → 太虚**; low rolls never become junk — any 9 same-tier 聚灵 can be re-melted for another gamble
 - Jade Marrow drops randomly from monsters (stackable); transmute at the alchemist — the recipe is learned automatically the first time you insert the right materials
 - Multiple gems stack multiplicatively: actual cooldown = base × ∏(1 − gem% ÷ 100)
 
@@ -34,18 +34,18 @@ Only four slot types accept them — **weapon / helmet / gloves / shield** — a
 
 | Gem | Effect | Per gem | Cap | Slots |
 |---|---|---|---|---|
-| 青莲·金刚 (Vajra) | Damage-reduction cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
-| 青莲·风影 (Wind Shadow) | Dodge-chance cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
-| 青莲·玄武 (Black Tortoise) | Block-chance cap break (vanilla 75%) | +2.5% | 85% (4 gems) | weapon / shield / gloves |
-| 青莲·裂魂 (Soulrend) | Critical-damage cap break (vanilla 500%) | +20% | uncapped | any |
-| 青莲·嗜血 (Bloodthirst) | On crit, leech damage as life | 10% | — | any |
+| <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 (Vajra) | Damage-reduction cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
+| <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 (Wind Shadow) | Dodge-chance cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
+| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 (Black Tortoise) | Block-chance cap break (vanilla 75%) | +2.5% | 85% (4 gems) | weapon / shield / gloves |
+| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 (Soulrend) | Critical-damage cap break (vanilla 500%) | +20% | uncapped | any |
+| <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 (Bloodthirst) | On crit, leech damage as life | 10% | — | any |
 
 ### Beast Taunt
 
 | Item | Description |
 |---|---|
-| 青莲·御兽嘲讽项圈 (Beast Taunt Collar) | Pet collar equipment; your pet must wear it to respond to the taunt command |
-| 魔典:御兽·嘲讽令 (Tome: Beast Taunt Command) | Use to learn an active skill: enemies within 10m switch to attacking your pet for 4 seconds |
+| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 (Beast Taunt Collar) | Pet collar equipment; your pet must wear it to respond to the taunt command |
+| <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 (Tome: Beast Taunt Command) | Use to learn an active skill: enemies within 10m switch to attacking your pet for 4 seconds |
 
 > Drop channels for the cap-break gems and the Beast Taunt pair are still being tuned — actual in-game drops are authoritative. Per-tier transmute odds and design rationale: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
 

@@ -343,6 +343,11 @@ section.block{margin-top:88px}
 .article-body td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--muted)}
 .article-body td:first-child{color:var(--text);font-weight:600}
 .article-body img{max-width:100%;border-radius:8px;border:1px solid var(--line)}
+/* 内联物品位图图标(游戏 64×64 icon 缩放内嵌于表格/正文) */
+.article-body img.gem-px{
+  width:30px;height:30px;vertical-align:-9px;margin-right:8px;
+  border:0;border-radius:6px;display:inline-block;
+}
 .article-body figure{margin:30px 0}
 .article-body figcaption{
   font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.1em;
