@@ -18,7 +18,7 @@ Farm the jade, forge the stone. A whole family of gems rooted in **Qinglian Jade
 | **Gathered Spirit / Condensed Essence / Great Void** | Skill cooldown | 1%–11% ／ 15% | — | — | 2 per item (4 on two-handers) | Weapon / helmet / gloves / shield |
 | **Qinglian · Vajra** | Damage-reduction cap | +2.5% | 75% | **95%** | 8 | Any |
 | **Qinglian · Windshade** | Dodge cap | +2.5% | 75% | **95%** | 8 | Any |
-| **Qinglian · Xuanwu** | Block cap | +2.5% | 75% | **85%** | **4** | Weapon / shield / gloves |
+| **Qinglian · Xuanwu** | Block cap | +2.5% | 75% | **85%** | **4** | Weapon / helmet / gloves / shield |
 | **Qinglian · Soulrend** | Crit-damage cap | +20% | 500% | **uncapped** | ∞ | Any |
 | **Qinglian · Bloodthirst** | Crit lifesteal | 10% | — | — | ∞ | Any |
 | **Qinglian · Beast-Taunt Collar** | Pet pulls aggro, 10m ／ 4s | — | — | — | — | Pet |
@@ -50,7 +50,7 @@ All forging happens at the Enchanter, and feeding in the correct materials the f
 
 ### Socketing rules for the haste stones: only four slot types
 
-The cap stones (Vajra / Windshade / Soulrend / Bloodthirst) take any slot, and Xuanwu is limited to weapon/shield/gloves; the **haste stones** only accept weapons, helmets, gloves and shields, and each item has its own cap — **stacking sockets won't help; quality will**.
+The cap stones (Vajra / Windshade / Soulrend / Bloodthirst) take any slot, and Xuanwu is limited to weapon/helmet/gloves/shield (the same four as the haste stones); the **haste stones** only accept weapons, helmets, gloves and shields, and each item has its own cap — **stacking sockets won't help; quality will**.
 
 | Slot | Two-hand weapon | One-hand weapon | Helmet | Gloves | Shield |
 |---|---|---|---|---|---|

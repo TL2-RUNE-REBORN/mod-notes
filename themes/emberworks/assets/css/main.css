@@ -348,6 +348,11 @@ section.block{margin-top:88px}
   width:30px;height:30px;vertical-align:-9px;margin-right:8px;
   border:0;border-radius:6px;display:inline-block;
 }
+/* 正文高亮(规则约束/部位限制等需要一眼看到的短语)—— 低饱和余烬橙,克制不刺眼 */
+.article-body mark{
+  background:rgba(255,154,60,.13);color:var(--ember-hi);
+  padding:1px 6px;border-radius:4px;border:1px solid rgba(255,154,60,.28);
+}
 .article-body figure{margin:30px 0}
 .article-body figcaption{
   font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.1em;

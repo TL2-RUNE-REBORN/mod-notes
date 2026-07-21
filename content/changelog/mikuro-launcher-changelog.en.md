@@ -18,7 +18,7 @@ Item tooltips can now display up to 10 sockets. The vanilla UI only drew 5 rows 
 
 ### Azure Lotus gems · Cooldown line (haste gems)
 
-Only four slot types accept them — **weapon / helmet / gloves / shield** — and each item counts at most **2 gems** (two-handed weapons **4**). Stacking sockets is useless; quality beats quantity.
+Only four slot types accept them — <mark>weapon / helmet / gloves / shield</mark> — and each item counts at most **2 gems** (two-handed weapons **4**). Stacking sockets is useless; quality beats quantity.
 
 | Gem | CD reduction | How to get |
 |---|---|---|
@@ -28,7 +28,7 @@ Only four slot types accept them — **weapon / helmet / gloves / shield** — a
 
 - Upgrade chain: **<img class="gem-px" src="/img/gems/jade.png" alt=""> 9× Jade Marrow → 聚灵 (random 1–5%) → 9× same tier → 凝华 (random 6–11%) → 9× 11% 凝华 → 太虚**; low rolls never become junk — any 9 same-tier 聚灵 can be re-melted for another gamble
 - Jade Marrow drops randomly from monsters (stackable); transmute at the alchemist — the recipe is learned automatically the first time you insert the right materials
-- Multiple gems stack multiplicatively: actual cooldown = base × ∏(1 − gem% ÷ 100)
+- Multiple gems stack multiplicatively: actual cooldown = base × ∏(1 − gem% ÷ 100). Example: three 5% gems → base × 0.95 × 0.95 × 0.95 ≈ 0.857, about **−14.3%** total (not an additive −15%)
 
 ### Azure Lotus gems · Cap-break & specials
 
@@ -36,7 +36,7 @@ Only four slot types accept them — **weapon / helmet / gloves / shield** — a
 |---|---|---|---|---|
 | <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 (Vajra) | Damage-reduction cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
 | <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 (Wind Shadow) | Dodge-chance cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
-| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 (Black Tortoise) | Block-chance cap break (vanilla 75%) | +2.5% | 85% (4 gems) | weapon / shield / gloves |
+| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 (Black Tortoise) | Block-chance cap break (vanilla 75%) | +2.5% | 85% (4 gems) | <mark>weapon / helmet / gloves / shield</mark> |
 | <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 (Soulrend) | Critical-damage cap break (vanilla 500%) | +20% | uncapped | any |
 | <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 (Bloodthirst) | On crit, leech damage as life | 10% | — | any |
 
