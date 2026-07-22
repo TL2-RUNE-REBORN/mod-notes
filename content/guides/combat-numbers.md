@@ -601,4 +601,44 @@ summary: "四属性 → 派生战力 → 造成伤害 → 承受伤害(护甲平
   <div class="prose"><p>所以"一次攻击"从来不是一个固定数字,而是一<b>组</b>可能:大多数时候普通命中,偶尔暴击翻倍跳蓝字,双持还有几率<b>双击</b>再叠一份,偶尔失手<b>擦伤</b>跳紫字 —— 再各自过<b>护甲平减 + 周目乘数</b>才落到血条。这就是你盯着同一只怪、伤害数字却一直在跳的全部原因。</p></div>
   <blockquote>规则是抽象的,一场仗是具体的。同一套公式,换个 BOSS、换套配点,数字全变 —— 但流向永远是这一条。</blockquote>
 </section>
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+<!-- Ⅸ 武器DPS与元素技能实例 -->
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅸ</span>
+    <h2>实例拆解:武器 DPS 与元素技能 <span class="en">Weapon DPS &amp; Elemental Skills</span></h2>
+    <p class="lede">前面讲的是"拿到伤害之后怎么算";这一节讲伤害怎么<b>生出来</b> —— 武器那个"每秒伤害"从哪来、5 个元素怎么并行、以及像<b>冰封球</b>这种"X% 武器 DPS"技能怎么把武器伤害折算成技能的元素。拿一把<b>塔拉夏的元素</b>法杖 + <b>冰封球</b>当靶子,数字全对得上。</p>
+  </header>
+  <h3 class="mini">① 武器"每秒伤害 DPS" = 五通道平均之和 ÷ 攻击间隔</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>元素通道</th><th>伤害范围</th><th>平均 (min+max)/2</th></tr></thead>
+      <tbody>
+        <tr><td>物理</td><td>3388–4744</td><td><span class="n">4066</span></td></tr>
+        <tr><td><span style="color:#ffd84d">电</span></td><td>3813–5337</td><td><span class="n">4575</span></td></tr>
+        <tr><td><span style="color:#ff7a3c">火</span></td><td>3813–5337</td><td><span class="n">4575</span></td></tr>
+        <tr><td><span style="color:#57c7ff">冰</span></td><td>3813–5337</td><td><span class="n">4575</span></td></tr>
+        <tr><td><span style="color:#7bd06a">毒</span></td><td>4320–6048</td><td><span class="n">5184</span></td></tr>
+        <tr><td><b>合计 / 每击</b></td><td>—</td><td><span class="n"><b>22975</b></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose"><p><b>DPS = 22975 ÷ 0.64 ≈ 35898</b> —— 正是工具提示那个 <b>35897</b>(差个 1,因为 .64 是取整显示,真实攻击间隔 ≈0.6401s)。所以 DPS 就是"一击打出的<b>全部元素伤害平均</b> × 每秒攻击次数";攻速越快、每通道越高,DPS 越大。</p></div>
+  <h3 class="mini">② 元素伤害不是"附加",是 5 条并行通道</h3>
+  <div class="prose"><p>你平砍一下,引擎给<b>每个通道各在自己的 [MIN, MAX] 里 roll 一个值</b>(物理 roll 3388–4744、冰 roll 3813–5337……),打包成一个含 5 个数的攻击包;每通道各吃各的加成(这把杖 <b>+15% 毒</b>只放大毒那一份);命中后<b>每通道被目标对应元素的护甲各自减免</b>(冰伤被冰护甲减、火伤被火护甲减,互不干扰);目标掉血 = 5 通道减免后<b>之和</b>。所以一把彩虹杖 = 5 份伤害一起飞出去,对方每种抗性各挡各的。</p></div>
+  <h3 class="mini">③ "X% 武器 DPS"技能(冰封球)怎么折算</h3>
+  <div class="calc">
+    <div class="ct">算例 · 冰封球(15 级)用这把杖打出的冰伤<span class="setup">50% 武器DPS + 25824 固定 · 均为护甲前</span></div>
+    <div class="cbody">
+      <div class="step"><div class="desc"><b>①</b> 造成 <b>50% 武器 DPS</b> 冰系 —— ★把武器<b>全 5 元素</b>收进 DPS 再折算成冰</div><div class="eq">35897 × 0.5 = <span class="out">17948 冰</span></div></div>
+      <div class="step"><div class="desc"><b>②</b> + 技能<b>固定冰伤</b>(那个 <b>*</b> = 随玩家等级涨,值 = MIN+(MAX−MIN)×等级/500,不是随机)</div><div class="eq"><span class="in">+25824 冰</span></div></div>
+      <div class="step"><div class="desc"><b>③</b> 合计基础冰伤 / 发</div><div class="eq"><span class="out">~43772 冰</span></div></div>
+      <div class="step"><div class="desc"><b>④</b> × <b>专注</b>技能加成 —— +200 专注 → 约 <b>+100%</b>(专注 0.5%/点)</div><div class="eq"><span class="in">×~2.0</span> → ~87500</div></div>
+      <div class="step"><div class="desc"><b>⑤</b> × 冰系伤害%装备 —— 这把是 +15% <b>毒</b>不是冰,冰这里不加</div><div class="eq"><span class="in">×1.0</span></div></div>
+      <div class="step final"><div class="desc">一发冰封球的冰伤(<b>再过目标 冰护甲平减 + 冰抗% + 护盾才落地</b>)</div><div class="eq"><span class="out">~87500 冰</span></div></div>
+    </div>
+    <div class="cnote"><b>关键:</b> "50% 武器 DPS"会把这把彩虹杖的<b>物理 / 电 / 火 / 毒那几份都收进 DPS、再统统折算成冰</b> —— 所以拿它放冰封球,打的是<b>纯冰</b>。元素技能的主放大器是<b>专注</b>(放大元素 / 技能伤害);<b>+25% 施法速度</b>放大的是<b>频率</b>不是单发(放得更快 → 每秒总冰伤更高)。最后跟平砍一样,过目标的<b>冰护甲(平减)</b>才落到血条。<span style="font-size:12px;color:var(--faint)">(④ 的确切叠法有细节,这里给量级;②那步是等级插值不是随机 roll。)</span></div>
+  </div>
+  <blockquote>武器给你"每秒能打多少",技能决定"这一下打成什么元素、再加多少固定量"。DPS 是地基,五元素通道是骨架,"%武器DPS"技能就是把地基折过来的那只手。</blockquote>
+</section>
 </div>
