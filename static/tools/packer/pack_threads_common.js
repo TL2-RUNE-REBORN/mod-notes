@@ -41,6 +41,39 @@ export function patchTextDecoderForSAB() {
   TextDecoder.prototype.decode = patched;
 }
 
+// ── stale-SAB 视图竞态修复(引擎级 grow 可见性)────────────────────────────
+// 实证(佣兵 mod 二分):兄弟 worker 对 shared WebAssembly.Memory 执行
+// memory.grow 后,本 worker 的 `memory.buffer` getter 可能仍返回【旧长度】的
+// SharedArrayBuffer(V8 的 per-isolate buffer 缓存尚未刷新)。shim 恰在此刻
+// 把文件字节写进"新长出的区间"(fd_read 目标 Vec 刚触发 grow 分配)→ 旧
+// SAB 越界 → 线程炸("memory access out of bounds")。
+//
+// 修复钩子:`memory.grow(0)` —— 合法的 no-op grow,强制本 isolate 走 grow
+// 路径同步 underlying size 并重建 buffer 缓存,之后的 getter 保证新鲜。
+// shim(browser_wasi_shim)所有内存访问都经 `this.inst.exports.memory.buffer`
+// 现取视图,所以拦截点只有一个:给 shim 一个"包装 instance",其
+// exports.memory 换成每次 buffer 都先 grow(0) 的代理。真 exports 的其余成员
+// (_start / wasi_thread_start / …)原样透传。
+//
+// 只用于 SHARED memory(threads 构建)。非共享 memory 千万别包:普通 memory
+// 的 grow(0) 也会 detach 旧 buffer,反而把单线程 shim 的活视图搞死。
+export function wrapInstanceFreshMemory(instance, memory) {
+  const memProxy = {
+    // shim 只读 buffer;grow 透传以防未来用到
+    grow: (d) => memory.grow(d),
+    get buffer() {
+      memory.grow(0); // force per-isolate buffer-cache refresh
+      return memory.buffer;
+    },
+  };
+  const exports = {};
+  for (const k of Object.keys(instance.exports)) {
+    exports[k] = k === "memory" ? memProxy : instance.exports[k];
+  }
+  if (!("memory" in exports)) exports.memory = memProxy;
+  return { exports };
+}
+
 // ── 大小写不敏感目录树(仿 Windows FS 语义;TL2 的 BASEFILE 引用是小写)──
 export class CIMap extends Map {
   get(k) { return super.get(String(k).toUpperCase()); }

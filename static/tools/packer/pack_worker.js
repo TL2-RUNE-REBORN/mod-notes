@@ -35,7 +35,7 @@ import {
 } from "./vendor/browser_wasi_shim/index.js";
 import {
   patchTextDecoderForSAB, CIMap, ciDir, viewFile,
-  parseMemLimits, sabifyEntries,
+  parseMemLimits, sabifyEntries, wrapInstanceFreshMemory,
 } from "./pack_threads_common.js";
 
 patchTextDecoderForSAB(); // threads 模式下 wasm 内存是 SAB;单线程零影响
@@ -250,7 +250,11 @@ async function runPack(modEntries, outName, forceSingle = false, convertThreads 
   const instance = await WebAssembly.instantiate(module, imports);
   let rc = 0;
   try {
-    rc = wasi.start(instance); // 同步阻塞——所以整段逻辑住在 worker 里
+    // threads 模式给 shim 一个 fresh-memory 包装实例:兄弟 worker grow 后
+    // 本 isolate 的 memory.buffer 可能是旧长度视图(引擎缓存),shim 写新长
+    // 出的区间会越界 —— 包装让每次取 buffer 前先 grow(0) 强制刷新。
+    const shimInst = threaded ? wrapInstanceFreshMemory(instance, memory) : instance;
+    rc = wasi.start(shimInst); // 同步阻塞——所以整段逻辑住在 worker 里
   } finally {
     if (pool) pool.terminate(); // rayon 常驻线程随池一起回收
   }

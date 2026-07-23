@@ -20,7 +20,7 @@
 import {
   WASI, File as WFile, PreopenDirectory, OpenFile, ConsoleStdout,
 } from "./vendor/browser_wasi_shim/index.js";
-import { patchTextDecoderForSAB, CIMap, treeFromMeta } from "./pack_threads_common.js";
+import { patchTextDecoderForSAB, CIMap, treeFromMeta, wrapInstanceFreshMemory } from "./pack_threads_common.js";
 
 patchTextDecoderForSAB();
 
@@ -57,7 +57,9 @@ self.onmessage = async (ev) => {
         // rayon 只从主线程 build_global 派生线程;嵌套派生返回 EAGAIN
         wasi: { "thread-spawn": () => -11 },
       });
-      wasi.initialize(instance); // 只挂 inst(模块无 _initialize),不跑入口
+      // fresh-memory 包装:本 worker 的 shim 在别的线程 grow 后立即写新区间
+      // (fd_read 的目标 Vec 往往刚触发 grow)—— 必须强制刷新 buffer 视图。
+      wasi.initialize(wrapInstanceFreshMemory(instance, m.memory)); // 只挂 inst,不跑入口
       self.postMessage({ type: "ready" });
     } catch (e) {
       log("[pool] init 失败:" + String(e && e.stack || e), "bad");
