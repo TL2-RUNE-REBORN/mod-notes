@@ -242,8 +242,8 @@ summary: "四属性 → 派生战力 → 造成伤害 → 承受伤害(护甲平
     <tbody>
       <tr><td>武器攻击</td><td>武器伤害合成 → 五元素</td><td>能被闪避 + 格挡;近战按挥砍弧命中</td></tr>
       <tr><td>技能直伤</td><td>弹道 / 范围命中</td><td><b>命中之后和武器攻击完全同一条链</b> —— 只是前面产生方式不同</td></tr>
-      <tr><td>持续伤害 DOT<br><span style="color:var(--muted);font-weight:400;font-size:12px">燃烧 / 中毒 / 触电 / 冰缓</span></td><td>命中时先 roll <b>元素抗性</b>,中了才挂上</td><td><b>不是当场算完</b> —— 挂上之后<b>每一帧跳一次伤害</b>,持续几秒。着火的怪头顶不停跳数字,就是这个</td></tr>
-      <tr><td>控制效果<br><span style="color:var(--muted);font-weight:400;font-size:12px">击晕 / 减速 / 定身 / 击退</span></td><td>命中时 roll <b>对应抗性</b></td><td>不直接扣血,是施加状态。你面板上的"<b>减速抗性 / 定身抗性</b>"挡的就是这类,<b>挡不了直接伤害</b></td></tr>
+      <tr><td>持续伤害 DOT<br><span style="color:var(--muted);font-weight:400;font-size:13.5px">燃烧 / 中毒 / 触电 / 冰缓</span></td><td>命中时先 roll <b>元素抗性</b>,中了才挂上</td><td><b>不是当场算完</b> —— 挂上之后<b>每一帧跳一次伤害</b>,持续几秒。着火的怪头顶不停跳数字,就是这个</td></tr>
+      <tr><td>控制效果<br><span style="color:var(--muted);font-weight:400;font-size:13.5px">击晕 / 减速 / 定身 / 击退</span></td><td>命中时 roll <b>对应抗性</b></td><td>不直接扣血,是施加状态。你面板上的"<b>减速抗性 / 定身抗性</b>"挡的就是这类,<b>挡不了直接伤害</b></td></tr>
       <tr><td>反弹伤害</td><td>受击时按反弹%弹回攻击者</td><td>沿同一条扣血通道打回去</td></tr>
     </tbody>
   </table>
@@ -397,7 +397,7 @@ summary: "四属性 → 派生战力 → 造成伤害 → 承受伤害(护甲平
   </div>
   <div class="callout">
     <b>★"命中"其实过两道关(逆向实证):</b> 第一关你的<b>命中率</b>对上对方<b>闪避</b>;第二关你自己还背着一条<span class="em">失手率(Miss Chance)</span> —— <b>两道都过</b>才算"结实命中"。装备 / 致盲 / 诅咒能拉高你的失手率,让你更常打空。★对<b>玩家</b>而言,没过这两关<b>多半是降级成"擦伤"</b>(打中了但伤害被砍小、跳<span style="color:var(--dmg-purple)">紫</span>字),而<b>整发落空</b>(碰都没碰到)是更早一层的过滤。所以 Ⅴ 里手枪那"又小又紫的 2 点"= 一次擦伤,<b>不是脱靶</b>。
-    <br><span class="dim" style="font-size:12px">模组向:第二关那条 stat 叫 <b>MISS CHANCE</b>(攻击方自身),不是对方的属性。</span>
+    <br><span class="dim" style="font-size:13.5px">模组向:第二关那条 stat 叫 <b>MISS CHANCE</b>(攻击方自身),不是对方的属性。</span>
   </div>
 </section>
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
@@ -464,7 +464,7 @@ summary: "四属性 → 派生战力 → 造成伤害 → 承受伤害(护甲平
   </div>
   <div class="callout">
     <b>★护甲 / 抗性是"减一坨",不是"减百分比"(逆向实证):</b> 直觉里护甲像"减 X% 伤害",但 TL2 的护甲其实是<span class="em">直接从这一击里扣掉一块固定值</span>(像盾吸收),再落到血条。扣掉的量 = <b>你护甲的 50%~100% 随机</b> × 攻击方的一个"咬合系数",所以<b>同护甲、同一发,每次扣的都不一样</b>(伤害数字一直跳就是它)。<br>★由此推出一条反直觉的结论:护甲对<b>小额高频</b>伤害超值(可能几乎全免),对<b>单发巨伤</b>杯水车薪 —— 跟"减百分比"到处等效的想法正相反。真正的<b>百分比</b>减伤是另一层(见下条),上限 −75%。元素"抗性"= 每个元素各有一条自己的护甲,走完全相同的这套平减。
-    <br><span class="dim" style="font-size:12px">模组向:逆向挖穿了这个"咬合系数"—— 它<b>不是一个通用常数</b>,而是 <b>SOAKSCALEPCT</b>(每个技能自带,实测 <b>20~80%</b>,主旋钮)× 武器 <b>SECONDARY_DMG_PCT</b>(0/25/33/50/100)× 伤害标量。所以不同技能"咬"护甲的深浅是<b>刻意调出来的</b>:同一身护甲,挨这个技能掉得多、挨那个少。</span>
+    <br><span class="dim" style="font-size:13.5px">模组向:逆向挖穿了这个"咬合系数"—— 它<b>不是一个通用常数</b>,而是 <b>SOAKSCALEPCT</b>(每个技能自带,实测 <b>20~80%</b>,主旋钮)× 武器 <b>SECONDARY_DMG_PCT</b>(0/25/33/50/100)× 伤害标量。所以不同技能"咬"护甲的深浅是<b>刻意调出来的</b>:同一身护甲,挨这个技能掉得多、挨那个少。</span>
   </div>
   <div class="callout">
     <b>护甲之后还有一层"承伤%":</b> 平减完,再乘一个<b>百分比承伤</b>(装备 / buff / 词缀堆的"受到伤害 −X%"),玩家<b>硬上限 −75%</b>(想突破得动引擎)。最后若身上有<b>技能护盾缓冲</b>,先吸这层再扣血。顺序固定:<b>格挡 → 平减护甲 → 承伤% → 护盾缓冲 → 扣血</b>。
@@ -570,7 +570,7 @@ summary: "四属性 → 派生战力 → 造成伤害 → 承受伤害(护甲平
       <div class="step"><div class="desc"><b>⑧</b> × 周目交换乘数(普通 <b>1.0×</b>;噩梦最低 0.075×)</div><div class="eq"><span class="in">×1.0</span></div></div>
       <div class="step final blue"><div class="desc">落到大区长血条 · <b>蓝字</b>暴击(每击在跳,因护甲随机)</div><div class="eq"><span class="out">350–525</span> <span class="in">− 护甲一坨</span></div></div>
     </div>
-    <div class="cnote"><b>蓝字 = 暴击。</b> 每一步都是真公式:+70% 来自<b>力量×0.5%</b>、12.9% 来自<b>敏捷</b>的暴击曲线、×2.06 = <b>力量暴伤(+56%)+ 基础 50%</b>。护甲是<b>平减</b>(减一坨,effArmor 每击 50–100 随机 × 该技能<b>咬合比例 SOAKSCALEPCT</b>),所以数字一直跳。⑧ 普通周目影响小;<b>噩梦周目</b>那 <b>×0.075</b> 才是让 BOSS 变肉的关键。<span class="dim" style="font-size:12px">(逆向挖穿:咬合系数 = <b>SOAKSCALEPCT</b>(该技能 20~80%,主旋钮)× 武器 SECONDARY_DMG_PCT × 伤害标量 —— <b>每攻击自带,没有通用常数</b>,所以填的是"真旋钮名"而非一个假数。)</span></div>
+    <div class="cnote"><b>蓝字 = 暴击。</b> 每一步都是真公式:+70% 来自<b>力量×0.5%</b>、12.9% 来自<b>敏捷</b>的暴击曲线、×2.06 = <b>力量暴伤(+56%)+ 基础 50%</b>。护甲是<b>平减</b>(减一坨,effArmor 每击 50–100 随机 × 该技能<b>咬合比例 SOAKSCALEPCT</b>),所以数字一直跳。⑧ 普通周目影响小;<b>噩梦周目</b>那 <b>×0.075</b> 才是让 BOSS 变肉的关键。<span class="dim" style="font-size:13.5px">(逆向挖穿:咬合系数 = <b>SOAKSCALEPCT</b>(该技能 20~80%,主旋钮)× 武器 SECONDARY_DMG_PCT × 伤害标量 —— <b>每攻击自带,没有通用常数</b>,所以填的是"真旋钮名"而非一个假数。)</span></div>
   </div>
   <div class="calc">
     <div class="ct">算例 · 大区长电弧闪电打向玩家<span class="setup">电系 100–125 · 普通周目 · 玩家 3420 HP · 裸抗</span></div>
@@ -637,7 +637,7 @@ summary: "四属性 → 派生战力 → 造成伤害 → 承受伤害(护甲平
       <div class="step"><div class="desc"><b>⑤</b> × 冰系伤害%装备 —— 这把是 +15% <b>毒</b>不是冰,冰这里不加</div><div class="eq"><span class="in">×1.0</span></div></div>
       <div class="step final"><div class="desc">一发冰封球的冰伤(<b>再过目标 冰护甲平减 + 冰抗% + 护盾才落地</b>)</div><div class="eq"><span class="out">~87500 冰</span></div></div>
     </div>
-    <div class="cnote"><b>关键:</b> "50% 武器 DPS"会把这把彩虹杖的<b>物理 / 电 / 火 / 毒那几份都收进 DPS、再统统折算成冰</b> —— 所以拿它放冰封球,打的是<b>纯冰</b>。元素技能的主放大器是<b>专注</b>(放大元素 / 技能伤害);<b>+25% 施法速度</b>放大的是<b>频率</b>不是单发(放得更快 → 每秒总冰伤更高)。最后跟平砍一样,过目标的<b>冰护甲(平减)</b>才落到血条。<span style="font-size:12px;color:var(--faint)">(④ 的确切叠法有细节,这里给量级;②那步是等级插值不是随机 roll。)</span></div>
+    <div class="cnote"><b>关键:</b> "50% 武器 DPS"会把这把彩虹杖的<b>物理 / 电 / 火 / 毒那几份都收进 DPS、再统统折算成冰</b> —— 所以拿它放冰封球,打的是<b>纯冰</b>。元素技能的主放大器是<b>专注</b>(放大元素 / 技能伤害);<b>+25% 施法速度</b>放大的是<b>频率</b>不是单发(放得更快 → 每秒总冰伤更高)。最后跟平砍一样,过目标的<b>冰护甲(平减)</b>才落到血条。<span style="font-size:13.5px;color:var(--faint)">(④ 的确切叠法有细节,这里给量级;②那步是等级插值不是随机 roll。)</span></div>
   </div>
   <blockquote>武器给你"每秒能打多少",技能决定"这一下打成什么元素、再加多少固定量"。DPS 是地基,五元素通道是骨架,"%武器DPS"技能就是把地基折过来的那只手。</blockquote>
 </section>

@@ -29,7 +29,7 @@
   --mono:'JetBrains Mono',Consolas,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:15px;
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:17px;
   line-height:1.75;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(1100px 460px at 50% -8%, rgba(255,138,48,.10), transparent 60%),
@@ -66,18 +66,18 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
 /* ---------- 主站页头 / 页脚 ---------- */
 .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
   padding:30px 0 18px;border-bottom:1px solid var(--line)}
-.brand{font-family:var(--disp);font-size:17px;letter-spacing:.22em;color:var(--text);
+.brand{font-family:var(--disp);font-size:19px;letter-spacing:.22em;color:var(--text);
   text-decoration:none;white-space:nowrap}
 .brand b{color:var(--ember);font-weight:700}
 nav.site{display:flex;gap:26px;flex-wrap:wrap}
-nav.site a{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-decoration:none;
+nav.site a{font-family:var(--mono);font-size:12.5px;letter-spacing:.2em;text-decoration:none;
   color:var(--muted);padding-bottom:4px;border-bottom:1px solid transparent;
   transition:color .2s,border-color .2s;white-space:nowrap}
 nav.site a:hover{color:var(--ember-hi)}
 nav.site a.on{color:var(--ember);border-bottom-color:var(--ember)}
 footer.site{margin-top:80px;padding-top:26px;border-top:1px solid var(--line);
   display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;color:var(--faint);
   text-transform:uppercase}
 footer.site b{color:var(--muted);font-weight:500}
 footer.site a{color:var(--muted);text-decoration:none}
@@ -85,16 +85,16 @@ footer.site a:hover{color:var(--ember-hi)}
 
 /* ---------- 标题区 ---------- */
 .hero{padding:44px 0 8px}
-.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.32em;
   text-transform:uppercase;color:var(--ember)}
 .kicker .dbg{color:var(--flame);font-weight:600}
 .hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,40px);
   line-height:1.25;margin-top:10px;color:var(--text)}
 .hero h1 .en{font-family:var(--ital);font-style:italic;font-weight:500;
   font-size:.62em;color:var(--gold);margin-left:14px;letter-spacing:.02em}
-.hero .lede{color:var(--muted);margin-top:6px;font-size:14px}
+.hero .lede{color:var(--muted);margin-top:6px;font-size:15.5px}
 .hero .lede b{color:var(--gold);font-weight:600}
-.legend{margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+.legend{margin-top:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
   color:var(--faint);display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 .legend i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
 .legend i::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;
@@ -109,22 +109,22 @@ footer.site a:hover{color:var(--ember-hi)}
   background:linear-gradient(rgba(16,14,11,.96),rgba(16,14,11,.92));
   backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
 .toolbar input[type=search],.toolbar select{
-  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text);
+  font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--text);
   background:var(--bg-panel);border:1px solid var(--line);border-radius:3px;
   padding:7px 10px;outline:none;transition:border-color .2s}
 .toolbar input[type=search]{width:220px}
 .toolbar input[type=search]:focus,.toolbar select:focus{border-color:var(--ember)}
 .toolbar select option{background:var(--bg-panel)}
 .toolbar label.chk{display:flex;align-items:center;gap:6px;font-family:var(--mono);
-  font-size:10.5px;letter-spacing:.14em;color:var(--muted);cursor:pointer}
+  font-size:12px;letter-spacing:.14em;color:var(--muted);cursor:pointer}
 .toolbar label.chk input{accent-color:var(--ember)}
-.toolbar .stat{margin-left:auto;font-family:var(--mono);font-size:10.5px;
+.toolbar .stat{margin-left:auto;font-family:var(--mono);font-size:12px;
   letter-spacing:.18em;color:var(--faint)}
 
 /* ---------- 表格 ---------- */
 .tablewrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:1000px}
-thead th{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+thead th{font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
   color:var(--faint);text-align:left;font-weight:500;
   padding:14px 10px 10px;border-bottom:1px solid var(--line-hi);
   position:sticky;top:53px;background:var(--bg);z-index:10}
@@ -134,21 +134,21 @@ tr.itemrow{cursor:pointer;content-visibility:auto;contain-intrinsic-size:auto 54
   transition:background .15s}
 tr.itemrow:hover{background:var(--bg-panel)}
 tr.itemrow td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
-.iname{font-weight:600;font-size:15px}
-.isub{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--faint);margin-top:2px}
+.iname{font-weight:600;font-size:17px}
+.isub{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--faint);margin-top:2px}
 .isub .b-sk{color:var(--gold)}
 .isub .b-fx{color:var(--r-magic)}
 .isub .b-var{color:var(--r-set)}
-td.tnum{text-align:right;font-family:var(--mono);font-size:12.5px;color:var(--text)}
-td.tmod{font-size:12px;color:var(--faint)}
-td.tfam{font-size:13px;color:var(--muted)}
-.btn3d{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ember);
+td.tnum{text-align:right;font-family:var(--mono);font-size:14px;color:var(--text)}
+td.tmod{font-size:13.5px;color:var(--faint)}
+td.tfam{font-size:14.5px;color:var(--muted)}
+.btn3d{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;color:var(--ember);
   background:none;border:1px solid rgba(255,154,60,.35);border-radius:3px;
   padding:5px 10px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn3d:hover{color:var(--bg);background:var(--ember);box-shadow:0 0 14px rgba(255,154,60,.35)}
 .dim{color:var(--faint)}
 #empty{display:none;text-align:center;color:var(--faint);padding:70px 0;font-family:var(--mono);
-  font-size:11px;letter-spacing:.22em}
+  font-size:12.5px;letter-spacing:.22em}
 
 /* ---------- 类别配色 (品牌语义: 橙=BOSS 黄=Champion 白=普通 绿=宠物召唤 蓝=NPC) ---------- */
 .rk-BOSS{color:var(--ember)} .rk-CHAMP{color:var(--r-rare)} .rk-MON{color:var(--r-normal)}
@@ -163,50 +163,50 @@ td.tfam{font-size:13px;color:var(--muted)}
   box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
   padding:20px 24px 16px;border-bottom:1px solid var(--line)}
-.sheet-head h2{font-size:19px;font-weight:700;line-height:1.35}
-.sheet-head .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);margin-top:3px}
-#mClose{background:none;border:none;color:var(--muted);font-size:26px;line-height:1;
+.sheet-head h2{font-size:21px;font-weight:700;line-height:1.35}
+.sheet-head .sub{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--faint);margin-top:3px}
+#mClose{background:none;border:none;color:var(--muted);font-size:28px;line-height:1;
   cursor:pointer;padding:0 4px;font-family:var(--serif)}
 #mClose:hover{color:var(--ember-hi)}
 .sheet-body{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding:22px 24px 26px}
 .kv{display:flex;justify-content:space-between;gap:14px;padding:5px 0;
-  border-bottom:1px solid var(--line);font-size:13.5px}
-.kv .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--faint);
+  border-bottom:1px solid var(--line);font-size:15px}
+.kv .k{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--faint);
   text-transform:uppercase;padding-top:3px;white-space:nowrap}
 .kv .v{text-align:right}
-.kv .v.mono{font-family:var(--mono);font-size:12.5px}
-.sec-h{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+.kv .v.mono{font-family:var(--mono);font-size:14px}
+.sec-h{font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;
   color:var(--faint);margin-top:18px;padding-bottom:4px}
-.skline{font-size:13.5px;line-height:1.75;display:flex;justify-content:space-between;gap:12px;
+.skline{font-size:15px;line-height:1.75;display:flex;justify-content:space-between;gap:12px;
   border-bottom:1px dotted var(--line);padding:3px 0}
-.skline .meta{font-family:var(--mono);font-size:10px;color:var(--faint);white-space:nowrap;padding-top:4px}
+.skline .meta{font-family:var(--mono);font-size:11.5px;color:var(--faint);white-space:nowrap;padding-top:4px}
 .skline .aitag{color:var(--r-magic)}
-.fxline{font-size:13.5px;line-height:1.7;color:var(--gold)}
-.afxname{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--r-magic);
+.fxline{font-size:15px;line-height:1.7;color:var(--gold)}
+.afxname{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--r-magic);
   opacity:.75;margin-top:7px}
-.afxline{font-size:13.5px;line-height:1.7;color:var(--r-magic);padding-left:14px}
-.varnote{margin-top:14px;font-size:12.5px;color:var(--r-set)}
-.desc{margin-top:16px;font-family:var(--ital);font-style:italic;font-size:14.5px;
+.afxline{font-size:15px;line-height:1.7;color:var(--r-magic);padding-left:14px}
+.varnote{margin-top:14px;font-size:14px;color:var(--r-set)}
+.desc{margin-top:16px;font-family:var(--ital);font-style:italic;font-size:16px;
   line-height:1.7;color:var(--gold);opacity:.9}
 .viewer{position:relative;background:#0b0906;border:1px solid var(--line);border-radius:4px;height:300px}
 .viewer canvas{width:100%;height:100%;border-radius:4px;display:block}
 .viewer .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;
+  color:var(--faint);font-family:var(--mono);font-size:12px;letter-spacing:.2em;
   text-align:center;padding:0 26px;line-height:2}
-.viewer-tip{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--faint);margin-top:6px}
+.viewer-tip{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--faint);margin-top:6px}
 
 /* ---------- 实战数值计算器 ---------- */
 .calc{margin-top:16px;border:1px solid var(--line);border-radius:4px;
   background:var(--bg-panel2);padding:14px 16px}
 .calc .sec-h{margin-top:0}
 .calc-ctl{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
-.calc-ctl label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--muted);
+.calc-ctl label{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted);
   white-space:nowrap}
 .calc-ctl label b{color:var(--ember-hi);font-weight:600}
 .calc-ctl input[type=range]{flex:1;accent-color:var(--ember);min-width:0}
-.calc-ctl select{font-family:var(--mono);font-size:11px;color:var(--text);
+.calc-ctl select{font-family:var(--mono);font-size:12.5px;color:var(--text);
   background:var(--bg-panel);border:1px solid var(--line);border-radius:3px;padding:4px 8px}
-.calc .curveset{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--faint)}
+.calc .curveset{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint)}
 
 @media (max-width:720px){
   .wrap{padding:0 16px 40px}
@@ -363,7 +363,7 @@ fFam.innerHTML='<option value="">全部家族</option>'+fams.map(f=>`<option>${e
 let view=[], cursor=0; const CHUNK=150;
 function rowHTML(d){
   const btn=d.glb?`<button class="btn3d" data-id="${d.id}">预览</button>`
-                 :'<span class="dim" style="font-family:var(--mono);font-size:10px">—</span>';
+                 :'<span class="dim" style="font-family:var(--mono);font-size:11.5px">—</span>';
   const badges=(d.sk&&d.sk.length?` <span class="b-sk">技能${d.skTotal||d.sk.length}</span>`:'')+
                (d.fx&&d.fx.length?` <span class="b-fx">特性${d.fx.length}</span>`:'')+
                (d.var>1?` <span class="b-var">×${d.var}变体</span>`:'');
@@ -518,10 +518,10 @@ function openModal(d){
   mSub.textContent=RELEASE?`${d.src}`:`${d.intName} · ${d.src} / ${d.file}`;
   const rows=[];
   const add=(k,v)=>v&&rows.push(`<div class="kv"><span class="k">${k}</span><span class="v">${v}</span></div>`);
-  add('类别',`<span class="${CAT_CLS[d.cat]||''}">${d.cat}</span>${d.uniq?' <span class="dim" style="font-size:11px">(独立命名)</span>':''}`);
+  add('类别',`<span class="${CAT_CLS[d.cat]||''}">${d.cat}</span>${d.uniq?' <span class="dim" style="font-size:12.5px">(独立命名)</span>':''}`);
   add('家族',esc(d.fam)||null);
   add('来源',esc(d.src));
-  if(!RELEASE)add('单位类型',`<span class="dim" style="font-family:var(--mono);font-size:11px">${esc(d.ut)}</span>`);
+  if(!RELEASE)add('单位类型',`<span class="dim" style="font-family:var(--mono);font-size:12.5px">${esc(d.ut)}</span>`);
   add('出现等级',lvlText(d));
   add('体型',d.scale&&d.scale!==1?`×${d.scale}`:null);
   add('攻速',d.asp&&d.asp!==100?`${d.asp}%`:null);
