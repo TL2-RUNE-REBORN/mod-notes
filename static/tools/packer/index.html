@@ -552,7 +552,7 @@ els.fallback.addEventListener("change", () => {
     const rel = (f.webkitRelativePath || "").split("/").slice(1).join("/");
     if (!rel) continue;
     const relU = rel.toUpperCase();
-    if (relU === "MOD.DAT" || relU.startsWith("MEDIA/")) files.push({ rel, file: f });
+    if ((relU === "MOD.DAT" || relU.startsWith("MEDIA/")) && !skipReadInput(rel)) files.push({ rel, file: f });
   }
   finishScan(files, folderName);
 });
@@ -573,11 +573,16 @@ async function scanFSA(dirHandle) {
   }
   finishScan(files, dirHandle.name);
 }
+// .BINDAT/.BINLAYOUT 是编译产物,由源 .DAT/.LAYOUT 承载;打包器从不当输入用
+// (collect_media_files 直接跳过它们)。不读进内存 → 省内存省时间,输出不变。
+// ⚠️ 只跳这两类:.PNG 可能是 DDS 的编译输入,绝不能跳。
+const skipReadInput = n => { const u = n.toUpperCase(); return u.endsWith(".BINDAT") || u.endsWith(".BINLAYOUT"); };
+
 async function collectDir(dirHandle, prefix, out) {
   for await (const [name, handle] of dirHandle.entries()) {
     const rel = prefix + "/" + name;
     if (handle.kind === "directory") await collectDir(handle, rel, out);
-    else {
+    else if (!skipReadInput(name)) {
       out.push({ rel, file: await handle.getFile() });
       if ((out.length & 63) === 0) els.iFiles.textContent = `扫描中 … ${out.length} 个文件`;
     }
