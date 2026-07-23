@@ -54,11 +54,9 @@ const FILETIME_EPOCH_DELTA = 116444736000000000n; // 100ns ticks, 1601→1970
 // 消息 forceSingle 强制单线程(自检 A/B 对照与回退用)。
 const CAN_THREAD = typeof SharedArrayBuffer !== "undefined" && !!self.crossOriginIsolated;
 const PACK_THREADS = CAN_THREAD ? Math.min(navigator.hardwareConcurrency || 4, 8) : 1;
-// convert 档位:pack_threads.wasm 的全局分配器已换成【自旋锁 dlmalloc】
-// (wasi 默认分配器的 futex 锁在多线程高频分配下唤醒风暴,崩到 0.10x;自旋
-// 锁在真实负载是正收益)。当前甜点 = 2(佣兵实测 convert 1464→886ms);
-// 更高档位需要 16-shard 每线程堆,其纯计算负载已验证 3.4x@8,但与 shim fs
-// 并发 grow 存在引擎级竞态,暂不启用(详见 wasm crate shard_alloc.rs)。
+// convert 档位:全局分配器 = 自旋锁 dlmalloc + canary(甜点 2)。mimalloc
+// 每线程 heap 后端已建成(探针 2.7x@8)但真管线 convert 多线程在其上挂死
+// (根因未收口,wasm crate mi_alloc.rs 有全记录),feature 门后待攻。
 const CONVERT_THREADS = CAN_THREAD ? 2 : 1;
 const THREADS = CAN_THREAD ? PACK_THREADS + (CONVERT_THREADS >= 2 ? CONVERT_THREADS : 0) : 1;
 
