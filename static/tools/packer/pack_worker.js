@@ -102,8 +102,8 @@ function loadWasm() {
 let basePromise = null;
 function loadBase() {
   if (!basePromise) basePromise = (async () => {
-    post("stage", { stage: "加载 base UNITS 数据 …" });
-    const gz = await fetch("./base_units_bundle.bin.gz").then(r => {
+    post("stage", { stage: "加载 base 数据(UNITS 模板 + 关卡几何)…" });
+    const gz = await fetch("./full_base_bundle.bin.gz").then(r => {
       if (!r.ok) throw new Error("base bundle fetch " + r.status);
       return r.arrayBuffer();
     });
@@ -122,7 +122,7 @@ function loadBase() {
       const dl = dv.getUint32(p, true); p += 4;
       entries.set(path, { bytes: u8.subarray(p, p + dl) }); p += dl;
     }
-    log(`base UNITS bundle:${n} 个文件(gz ${gz.byteLength >> 10} KB)`);
+    log(`base bundle:${n} 个文件(UNITS 模板 + LEVELSETS + 碰撞几何,gz ${gz.byteLength >> 10} KB)`);
     return buildTree(entries); // 只读,可跨 pack 复用
   })();
   return basePromise;
@@ -151,7 +151,7 @@ async function runPack(modEntries, outName) {
   ];
   const wasi = new WASI(
     ["pack", "/mod", "/out/" + outName],
-    ["MPP_BACKEND=none", "TL2_MEDIA_DIR=/base"],
+    ["MPP_BACKEND=re", "TL2_MEDIA_DIR=/base"],
     fds, { debug: false },
   );
 
@@ -331,7 +331,14 @@ self.onmessage = async (ev) => {
       self.postMessage({ type: "done", name: msg.outName, size: out.length, sha, ms, data: out.buffer }, [out.buffer]);
     }
   } catch (e) {
+    const raw = String(e && e.message || e);
+    // 浏览器 4GB 线性内存上限:巨型整合组件(关卡/MPP 资产极多)会撞穿
+    const oom = /memory|out of memory|unreachable|RuntimeError|allocation|os error 48/i.test(raw);
     log("错误:" + (e && e.stack || e), "bad");
-    post("error", { message: String(e && e.message || e) });
+    post("error", {
+      message: oom
+        ? "超出浏览器 4GB 内存上限 —— 这个 mod 太大(关卡 / MPP 资产过多)。请改用桌面版打包器。原始错误:" + raw
+        : raw,
+    });
   }
 };

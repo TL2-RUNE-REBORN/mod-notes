@@ -401,13 +401,10 @@ footer.site a:hover{color:var(--ember-hi)}
   <ul class="notes-list">
     <li><span class="chip opt">本地</span><span>打包全程在浏览器的 <b>WebAssembly 沙箱</b>内完成,任何文件都不会上传;页面资源加载完后断网也能打包。</span></li>
     <li><span class="chip add">一致</span><span><b>BINDAT / BINLAYOUT / RAW 编译与 .MOD 容器封装</b>与桌面版 <code>tl2-mikuro-mod-packer</code> 同一套代码,内容逐字节一致。manifest 中的文件时间戳按浏览器可见的毫秒精度写入(桌面版为 100ns 精度),该字段的微小差异不影响游戏加载与 MOD 激活。</span></li>
-    <li><span class="chip opt">继承</span><span>附带全量 Runic <b>base UNITS 模板</b>(7731 个文件,gzip 760 KB),<code>BASEFILE</code> 单位继承链在浏览器内完整解析——装备 / 单位类 mod 的编译结果与桌面版一致。</span></li>
-    <li><span class="chip del">边界</span><span>整棵 mod 目录会读入内存;数百 MB 的巨型整合组件建议直接用桌面版打包器。</span></li>
+    <li><span class="chip opt">继承</span><span>附带全量 Runic <b>base 数据</b>(UNITS 模板 + LEVELSETS + 碰撞几何,10269 个文件,gzip ≈ 3 MB),<code>BASEFILE</code> 单位继承链与 <b>MPP 走格</b>都在浏览器内完整烘焙——编译结果与桌面版一致。</span></li>
+    <li><span class="chip set">MPP</span><span><b>关卡寻路走格在浏览器内生成</b>(<code>--mpp re</code>):走格只需 base 碰撞几何(9 MB,已附带),不碰 160 MB 的渲染网格。新地图 / 改地图类 mod 直接可用。</span></li>
+    <li><span class="chip del">边界</span><span>整棵 mod 目录读入内存打包;<b>数百 MB 的巨型整合组件</b>(关卡资产超多、MPP 极重)可能超出浏览器 4 GB 内存上限,请用桌面版。普通 mod 不受影响。</span></li>
   </ul>
-
-  <div class="mpp-warn">
-    <b>MPP 关卡寻路数据不生成</b>(等价于桌面版 <code>--mpp none</code>)。含关卡 <code>LAYOUT</code> 的 mod(新地图 / 改地图)请用桌面版打包——MPP 烘焙需要 base 游戏的关卡几何,网页版只附带了 UNITS 模板。纯数值 / 单位 / 物品 / 技能类 mod 不受影响。
-  </div>
 </section>
 
 <!-- ═══ Ⅲ 内置自检 ═══ -->
