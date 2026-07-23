@@ -40,7 +40,7 @@ summary: "Mikuro 启动器(含 MIKURO 游戏增强)的版本变更记录。"
 | <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 | 全伤减免 + 减伤上限突破(原版 75%) | +2.5% | 95%(8 颗到顶) | 不限 |
 | <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 | 闪避 + 闪避上限突破(原版 75%) | +2.5% | 95%(8 颗到顶) | 不限 |
 | <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 | 格挡 + 格挡上限突破(原版 75%) | +2.5% | 85%(4 颗到顶) | <mark>武器 / 头盔 / 护手 / 盾</mark> |
-| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 | 暴击伤害 + 暴伤上限突破(原版 500%) | +20% | 不封顶 | 不限 |
+| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 | 暴击伤害 + 暴伤上限突破(原版 500%) | +25% | 不封顶 | 不限 |
 | <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 | 暴击时吸取伤害为生命 | 2.5% | — | 不限 |
 
 ### 御兽嘲讽

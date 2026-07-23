@@ -21,7 +21,7 @@ Farm the jade, forge the stone. A whole family of gems rooted in **Qinglian Jade
 | **Qinglian · Vajra** | Damage reduction + reduction cap | +2.5% | 75% | **95%** | 8 | Any |
 | **Qinglian · Windshade** | Dodge chance + dodge cap | +2.5% | 75% | **95%** | 8 | Any |
 | **Qinglian · Xuanwu** | Block chance + block cap | +2.5% | 75% | **85%** | **4** | Weapon / helmet / gloves / shield |
-| **Qinglian · Soulrend** | Critical damage + crit-damage cap | +20% | 500% | **uncapped** | ∞ | Any |
+| **Qinglian · Soulrend** | Critical damage + crit-damage cap | +25% | 500% | **uncapped** | ∞ | Any |
 | **Qinglian · Bloodthirst** | Crit lifesteal | 2.5% | — | — | ∞ | Any |
 | **Qinglian · Beast-Taunt Collar** | Pet pulls aggro, 10m ／ 4s | — | — | — | — | Pet |
 
