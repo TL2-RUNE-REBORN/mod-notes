@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>.MOD 打包器 网页版 — 余烬工坊</title>
+<meta name="description" content="浏览器内把火炬之光2 mod 文件夹打包成 .MOD:与桌面版打包器同一套 Rust 代码编译成 WebAssembly,纯本地、零上传、零安装。">
+<meta name="theme-color" content="#100e0b">
+<link rel="preconnect" href="https://fonts.loli.net">
+<link href="https://fonts.loli.net/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="icon" href="https://tl2-mod.chr.moe/favicon.ico" sizes="16x16 32x32 48x48">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   EMBERWORKS · 余烬工坊 — 完整设计系统样式表(内联)
+   来源:tl2-mod.chr.moe 线上主题(2026-07 定稿)
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:        #100e0b;
+  --bg-panel:  #191410;
+  --bg-panel2: #1f1813;
+  --line:      #2c241b;
+  --line-hi:   #453724;
+  --text:      #d9cdb6;
+  --muted:     #94856d;
+  --faint:     #675b48;
+
+  --ember:     #ff9a3c;
+  --ember-hi:  #ffc26b;
+  --flame:     #e0592e;
+  --gold:      #d8b26a;
+  --r-magic:   #6fa8ff;
+  --r-rare:    #ffd24a;
+  --r-set:     #7cc96e;
+  --r-normal:  #bdb4a4;
+
+  --serif: 'Noto Serif SC','Palatino Linotype',Georgia,serif;
+  --disp:  'Cinzel','Noto Serif SC',serif;
+  --ital:  'Cormorant Garamond','Noto Serif SC',serif;
+  --mono:  'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--serif);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1100px 460px at 50% -8%, rgba(255,138,48,.10), transparent 60%),
+    radial-gradient(700px 300px at 82% 4%,  rgba(224,89,46,.05),  transparent 65%);
+}
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:0 32px 100px}
+::selection{background:rgba(255,154,60,.25)}
+
+.ember-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ember-field b{
+  position:absolute;bottom:-8px;width:4px;height:4px;border-radius:50%;
+  background:var(--ember-hi);opacity:0;filter:blur(.4px);
+  box-shadow:0 0 8px rgba(255,154,60,.65);
+  animation:ember-rise var(--t,12s) linear var(--w,0s) infinite;
+}
+.ember-field b:nth-child(1){left:4%;   --t:13s;--w:0s;  --dx:26px}
+.ember-field b:nth-child(2){left:11%;  --t:17s;--w:5s;  --dx:-18px;width:3px;height:3px}
+.ember-field b:nth-child(3){left:18%;  --t:11s;--w:2.5s;--dx:34px;width:2px;height:2px}
+.ember-field b:nth-child(4){left:25%;  --t:16s;--w:9s;  --dx:-24px}
+.ember-field b:nth-child(5){left:31%;  --t:10s;--w:1.8s;--dx:16px;width:2px;height:2px}
+.ember-field b:nth-child(6){left:38%;  --t:14s;--w:6s;  --dx:-28px;width:3px;height:3px}
+.ember-field b:nth-child(7){left:45%;  --t:12s;--w:4s;  --dx:20px;width:3px;height:3px}
+.ember-field b:nth-child(8){left:51%;  --t:18s;--w:0.5s;--dx:-30px;width:2px;height:2px}
+.ember-field b:nth-child(9){left:57%;  --t:11s;--w:7.5s;--dx:24px}
+.ember-field b:nth-child(10){left:63%; --t:15s;--w:3s;  --dx:-16px;width:3px;height:3px}
+.ember-field b:nth-child(11){left:69%; --t:10s;--w:5.5s;--dx:28px;width:2px;height:2px}
+.ember-field b:nth-child(12){left:75%; --t:16s;--w:1.2s;--dx:-22px}
+.ember-field b:nth-child(13){left:81%; --t:12s;--w:8s;  --dx:18px;width:3px;height:3px}
+.ember-field b:nth-child(14){left:87%; --t:14s;--w:2s;  --dx:-26px;width:2px;height:2px}
+.ember-field b:nth-child(15){left:93%; --t:13s;--w:6.8s;--dx:30px}
+.ember-field b:nth-child(16){left:97%; --t:17s;--w:4.5s;--dx:-14px;width:2px;height:2px}
+.ember-field b:nth-child(2n){background:var(--gold);box-shadow:0 0 8px rgba(216,178,106,.55)}
+@keyframes ember-rise{
+  0%{transform:translate3d(0,0,0);opacity:0}
+  6%{opacity:.75}
+  50%{opacity:.4}
+  100%{transform:translate3d(var(--dx,20px),-78vh,0) scale(.55);opacity:0}
+}
+
+.kicker{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--ember);
+}
+.kicker::before{content:"—— ";color:var(--faint);letter-spacing:0}
+.diamond-rule{display:flex;align-items:center;gap:14px;margin:80px 0 0;color:var(--faint)}
+.diamond-rule::before,.diamond-rule::after{content:"";flex:1;border-top:1px solid var(--line)}
+.diamond-rule span{font-size:11px;letter-spacing:.4em;color:var(--line-hi)}
+
+.chip{
+  display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  padding:2px 9px 1px;border:1px solid;border-radius:3px;vertical-align:1px;
+  text-transform:uppercase;white-space:nowrap;
+}
+.chip.add {color:var(--ember); border-color:rgba(255,154,60,.4); background:rgba(255,154,60,.07)}
+.chip.del {color:var(--flame);  border-color:rgba(224,89,46,.4);  background:rgba(224,89,46,.07)}
+.chip.opt {color:var(--r-set);  border-color:rgba(124,201,110,.35);background:rgba(124,201,110,.06)}
+
+.masthead{
+  display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding:30px 0 18px;border-bottom:1px solid var(--line);
+}
+.brand{font-family:var(--disp);font-size:17px;letter-spacing:.22em;color:var(--text);
+  text-decoration:none;white-space:nowrap}
+.brand b{color:var(--ember);font-weight:700}
+nav.site{display:flex;gap:26px;flex-wrap:wrap}
+nav.site a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-decoration:none;
+  color:var(--muted);padding-bottom:4px;border-bottom:1px solid transparent;
+  transition:color .2s,border-color .2s;white-space:nowrap;
+}
+nav.site a:hover{color:var(--ember-hi)}
+nav.site a.on{color:var(--ember);border-bottom-color:var(--ember)}
+
+.hero{padding:64px 0 0}
+.hero h1{
+  font-family:var(--disp);font-weight:700;font-size:52px;line-height:1.08;
+  letter-spacing:.02em;margin:20px 0 6px;color:#efe6d2;
+  text-shadow:0 0 60px rgba(255,154,60,.18);
+}
+.hero h1 em{font-style:normal;color:var(--ember)}
+.hero .sub{
+  font-family:var(--ital);font-style:italic;font-size:22px;color:var(--gold);
+  letter-spacing:.04em;
+}
+.hero .sub .zh{
+  font-family:var(--serif);font-style:normal;font-size:13px;color:var(--muted);
+  letter-spacing:.55em;margin-left:16px;vertical-align:2px;
+}
+.hero p.lede{max-width:640px;margin:26px 0 0;color:var(--muted);font-size:15.5px}
+.hero p.lede b{color:var(--text);font-weight:600}
+
+.embers{position:relative;height:0}
+.embers b{
+  position:absolute;width:4px;height:4px;border-radius:50%;
+  background:var(--ember-hi);filter:blur(.5px);opacity:0;
+  animation:rise 7s linear infinite;
+}
+.embers b:nth-child(1){left:12%;top:-30px;animation-delay:0s}
+.embers b:nth-child(2){left:38%;top:-10px;animation-delay:2.2s;width:3px;height:3px}
+.embers b:nth-child(3){left:64%;top:-40px;animation-delay:4s}
+.embers b:nth-child(4){left:86%;top:-16px;animation-delay:1.2s;width:2px;height:2px}
+.embers b:nth-child(5){left:52%;top:-24px;animation-delay:5.4s;width:2px;height:2px}
+@keyframes rise{
+  0%{transform:translateY(0);opacity:0}
+  12%{opacity:.85}
+  70%{opacity:.35}
+  100%{transform:translateY(-160px) translateX(14px);opacity:0}
+}
+
+section.block{margin-top:88px}
+.sec{display:grid;grid-template-columns:44px 1fr;gap:0 14px;margin-bottom:30px}
+.sec .num{
+  font-family:var(--disp);color:var(--ember);font-size:15px;
+  padding-top:9px;letter-spacing:.1em;
+}
+.sec h2{
+  font-family:var(--serif);font-weight:900;font-size:30px;color:#ece2cd;
+  letter-spacing:.02em;line-height:1.3;
+}
+.sec .en{
+  font-family:var(--ital);font-style:italic;font-weight:500;font-size:17px;
+  color:var(--faint);margin-left:14px;letter-spacing:.05em;
+}
+.sec p.lede{grid-column:2;max-width:600px;color:var(--muted);margin-top:8px;font-size:14.5px}
+.sec p.lede b{color:var(--text)}
+
+.rarity-note{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--faint);
+  border:1px dashed var(--line-hi);border-radius:6px;padding:12px 16px;margin:0 0 30px;
+  line-height:2.1;
+}
+
+footer.site{
+  margin-top:100px;padding-top:26px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);
+  text-transform:uppercase;
+}
+footer.site b{color:var(--muted);font-weight:500}
+footer.site a{color:var(--muted);text-decoration:none}
+footer.site a:hover{color:var(--ember-hi)}
+
+@media (max-width:720px){
+  .wrap{padding:0 20px 80px}
+  .hero h1{font-size:38px}
+  .sec{grid-template-columns:1fr}
+  .sec .num{display:none}
+  .sec p.lede{grid-column:1}
+  .masthead{flex-direction:column;gap:14px;align-items:flex-start}
+}
+
+/* ═══════════════ 打包器页面专属(全部取自上方 tokens)═══════════════ */
+.packer{
+  position:relative;background:var(--bg-panel);border:1px solid var(--line);
+  border-radius:8px;padding:28px 30px;overflow:hidden;
+}
+.packer::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(420px 160px at 10% 0%,rgba(255,154,60,.06),transparent 70%);
+}
+.packer > *{position:relative;z-index:1}
+
+.step-cap{
+  font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--gold);
+  text-transform:uppercase;margin:0 0 14px;
+}
+.packer .hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+
+.btn{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ember);background:rgba(255,154,60,.06);
+  border:1px solid rgba(255,154,60,.45);border-radius:5px;
+  padding:13px 28px;cursor:pointer;
+  transition:color .2s,border-color .2s,box-shadow .25s;
+}
+.btn:hover:not(:disabled){color:var(--ember-hi);border-color:var(--ember);box-shadow:0 0 22px rgba(255,154,60,.18)}
+.btn:disabled{color:var(--faint);border-color:var(--line);background:none;cursor:not-allowed}
+.btn.ghost{color:var(--muted);border-color:var(--line-hi);background:none}
+.btn.ghost:hover:not(:disabled){color:var(--ember-hi);border-color:var(--ember);box-shadow:none}
+.btn.dl{
+  color:#100e0b;background:linear-gradient(160deg,var(--ember-hi),var(--ember));
+  border-color:var(--ember);font-weight:600;
+}
+.btn.dl:hover:not(:disabled){color:#100e0b;box-shadow:0 0 30px rgba(255,154,60,.35)}
+
+.pick-hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--faint);margin-top:12px}
+.pick-hint b{color:var(--muted);font-weight:500}
+
+.modinfo{
+  display:grid;grid-template-columns:130px 1fr;gap:6px 18px;
+  font-size:13.5px;color:var(--muted);margin-top:6px;
+}
+.modinfo dt{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);
+  text-transform:uppercase;padding-top:3px;
+}
+.modinfo dd{color:var(--text)}
+.modinfo dd small{color:var(--faint);font-size:12px}
+.modinfo .ok{color:var(--r-set)}
+.modinfo .miss{color:var(--flame)}
+.modinfo input{
+  font-family:var(--mono);font-size:12.5px;color:var(--ember-hi);
+  background:rgba(255,154,60,.05);border:1px solid var(--line-hi);border-radius:4px;
+  padding:5px 10px;width:min(340px,100%);outline:none;
+}
+.modinfo input:focus{border-color:rgba(255,154,60,.5)}
+
+.stage{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gold);
+  margin:0 0 10px;min-height:18px;
+}
+.progress{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.progress i{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,var(--ember),var(--ember-hi));
+  border-radius:2px;transition:width .2s;
+}
+.progress.busy i{width:38%!important;animation:slide 1.2s ease-in-out infinite alternate}
+@keyframes slide{0%{margin-left:0}100%{margin-left:62%}}
+
+.log{
+  background:#0c0a08;border:1px solid var(--line);border-radius:8px;
+  padding:16px 20px;font-family:var(--mono);font-size:12px;line-height:1.9;
+  color:#c8bda9;max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-all;
+}
+.log:empty{display:none}
+.log .ok{color:var(--r-set)}
+.log .bad{color:var(--flame)}
+.log .g{color:var(--gold)}
+
+.result{
+  display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:20px;
+}
+.result .meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);line-height:2}
+.result .meta b{color:var(--r-set);font-weight:500}
+.result .meta .sha{color:var(--faint);font-size:10px;word-break:break-all}
+
+.notes-list{list-style:none;margin:0;color:var(--muted);font-size:14.5px}
+.notes-list li{padding:12px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:86px 1fr;gap:16px;align-items:baseline}
+.notes-list li:last-child{border-bottom:0}
+.notes-list li .chip{text-align:center}
+.notes-list b{color:var(--text);font-weight:600}
+.notes-list code{
+  font-family:var(--mono);font-size:12px;color:var(--r-magic);
+  background:rgba(111,168,255,.07);padding:1px 6px;border-radius:3px;
+}
+.mpp-warn{
+  border:1px dashed rgba(224,89,46,.45);border-radius:6px;
+  padding:14px 18px;margin-top:22px;color:var(--muted);font-size:13.5px;line-height:1.9;
+}
+.mpp-warn b{color:var(--flame);font-weight:600}
+.mpp-warn code{font-family:var(--mono);font-size:12px;color:var(--r-magic)}
+
+.selftest-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.selftest-verdict{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
+.selftest-verdict.pass{color:var(--r-set)}
+.selftest-verdict.fail{color:var(--flame)}
+.flavor{
+  font-family:var(--ital);font-style:italic;font-size:14px;color:var(--gold);
+  opacity:.85;margin-top:26px;
+}
+@media (max-width:720px){
+  .notes-list li{grid-template-columns:1fr;gap:4px}
+  .modinfo{grid-template-columns:1fr;gap:2px 0}
+  .modinfo dt{padding-top:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="ember-field" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+
+<div class="wrap">
+
+<header class="masthead">
+  <a class="brand" href="https://tl2-mod.chr.moe/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
+    <a href="https://tl2-mod.chr.moe/devlog/">开发日志</a>
+    <a href="https://tl2-mod.chr.moe/changelog/">更新日志</a>
+    <a href="https://tl2-mod.chr.moe/tools/" class="on">工具库</a>
+    <a href="https://tl2-mod.chr.moe/guides/">指南</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="embers"><b></b><b></b><b></b><b></b><b></b></div>
+  <span class="kicker">MIKURO · IN-BROWSER MOD PACKER</span>
+  <h1>.MOD 打包器<em>网页版</em></h1>
+  <div class="sub">Pack in the Browser <span class="zh">零 上 传 · 零 安 装</span></div>
+  <p class="lede">选一个 mod 文件夹,浏览器就地把 <b>DAT / LAYOUT</b> 编译成引擎二进制格式并封装成 <b>.MOD</b>——与桌面版打包器<b>同一套 Rust 代码</b>编译成 WebAssembly,输出一致。文件全程留在你的电脑里,不经过任何服务器。</p>
+</div>
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+
+<!-- ═══ Ⅰ 打包 ═══ -->
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅰ</span>
+    <h2>打包 <span class="en">Pack</span></h2>
+    <p class="lede">mod 文件夹需包含 <b>MOD.DAT</b> 与 <b>MEDIA/</b>(与桌面版打包器的输入完全相同)。</p>
+  </header>
+
+  <div class="packer">
+    <p class="step-cap">01 · 选择 Mod 文件夹</p>
+    <button class="btn" id="pick">选择 MOD 文件夹</button>
+    <input type="file" id="pickFallback" webkitdirectory multiple hidden>
+    <p class="pick-hint" id="pickHint">Chrome / Edge 直接选文件夹;Firefox 等浏览器走目录上传(同样只在本地读取)。</p>
+
+    <div id="infoBlock" hidden>
+      <hr class="hr">
+      <p class="step-cap">02 · 确认信息</p>
+      <dl class="modinfo">
+        <dt>MOD 名称</dt><dd id="iTitle">—</dd>
+        <dt>文件</dt><dd id="iFiles">—</dd>
+        <dt>结构检查</dt><dd id="iCheck">—</dd>
+        <dt>输出文件名</dt><dd><input id="outName" spellcheck="false"></dd>
+      </dl>
+      <hr class="hr">
+      <p class="step-cap">03 · 打包</p>
+      <button class="btn" id="pack">打包为 .MOD</button>
+    </div>
+
+    <div id="runBlock" hidden>
+      <hr class="hr">
+      <p class="stage" id="stage"></p>
+      <div class="progress" id="progress"><i id="progressBar"></i></div>
+      <div class="log" id="log"></div>
+      <div class="result" id="result" hidden>
+        <button class="btn dl" id="download">下载 .MOD</button>
+        <div class="meta" id="resultMeta"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Ⅱ 说明与边界 ═══ -->
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅱ</span>
+    <h2>说明与边界 <span class="en">Notes &amp; Limits</span></h2>
+  </header>
+
+  <div class="rarity-note">
+    词缀色阶 ——
+    <em style="color:var(--ember)">■ 传奇橙 = 关键保证</em> ·
+    <em style="color:var(--r-set)">■ 套装绿 = 正常状态</em> ·
+    <em style="color:var(--flame)">■ 焰红 = 边界警示</em>
+  </div>
+
+  <ul class="notes-list">
+    <li><span class="chip opt">本地</span><span>打包全程在浏览器的 <b>WebAssembly 沙箱</b>内完成,任何文件都不会上传;页面资源加载完后断网也能打包。</span></li>
+    <li><span class="chip add">一致</span><span><b>BINDAT / BINLAYOUT / RAW 编译与 .MOD 容器封装</b>与桌面版 <code>tl2-mikuro-mod-packer</code> 同一套代码,内容逐字节一致。manifest 中的文件时间戳按浏览器可见的毫秒精度写入(桌面版为 100ns 精度),该字段的微小差异不影响游戏加载与 MOD 激活。</span></li>
+    <li><span class="chip opt">继承</span><span>附带全量 Runic <b>base UNITS 模板</b>(7731 个文件,gzip 760 KB),<code>BASEFILE</code> 单位继承链在浏览器内完整解析——装备 / 单位类 mod 的编译结果与桌面版一致。</span></li>
+    <li><span class="chip del">边界</span><span>整棵 mod 目录会读入内存;数百 MB 的巨型整合组件建议直接用桌面版打包器。</span></li>
+  </ul>
+
+  <div class="mpp-warn">
+    <b>MPP 关卡寻路数据不生成</b>(等价于桌面版 <code>--mpp none</code>)。含关卡 <code>LAYOUT</code> 的 mod(新地图 / 改地图)请用桌面版打包——MPP 烘焙需要 base 游戏的关卡几何,网页版只附带了 UNITS 模板。纯数值 / 单位 / 物品 / 技能类 mod 不受影响。
+  </div>
+</section>
+
+<!-- ═══ Ⅲ 内置自检 ═══ -->
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅲ</span>
+    <h2>内置自检 <span class="en">Self-test</span></h2>
+    <p class="lede">用内置的「天煞星宠物 MOD」样例验证你当前浏览器里的整条打包链:输出须与桌面版参照<b>逐字节一致</b>(SHA-256),并验证文件时间戳注入链路。</p>
+  </header>
+
+  <div class="packer">
+    <div class="selftest-row">
+      <button class="btn ghost" id="selftest">运行内置自检</button>
+      <span class="selftest-verdict" id="selftestVerdict"></span>
+    </div>
+    <div class="log" id="selftestLog" style="margin-top:18px"></div>
+    <p class="flavor">"同一座熔炉,换了一扇窗。"</p>
+  </div>
+</section>
+
+<footer class="site">
+  <span>EMBERWORKS · 余烬工坊 © 2026</span>
+  <span><b>MIKURO</b> · <a href="https://github.com/heiybb" rel="me">GITHUB</a> · <a href="https://tl2-mod.chr.moe/tools/">工具库</a></span>
+</footer>
+
+</div>
+
+<script type="module">
+/* ── 主线程:UI + 目录选择;打包与自检全部在 module worker 里跑 ── */
+const $ = id => document.getElementById(id);
+const els = {
+  pick: $("pick"), fallback: $("pickFallback"), hint: $("pickHint"),
+  info: $("infoBlock"), iTitle: $("iTitle"), iFiles: $("iFiles"), iCheck: $("iCheck"),
+  outName: $("outName"), pack: $("pack"),
+  run: $("runBlock"), stage: $("stage"), progress: $("progress"), bar: $("progressBar"),
+  log: $("log"), result: $("result"), resultMeta: $("resultMeta"), download: $("download"),
+  selftest: $("selftest"), stVerdict: $("selftestVerdict"), stLog: $("selftestLog"),
+};
+
+let picked = null;      // { files:[{rel,file}], folderName, meta:{name,title}, hasModDat, hasMedia }
+let outBlob = null, outUrl = null, outFileName = null;
+let activeLog = els.log; // worker 日志当前写到哪个 <div>
+
+const worker = new Worker("./pack_worker.js", { type: "module" });
+worker.onerror = e => {
+  appendLog(activeLog, "worker 加载失败:" + (e.message || e), "bad");
+  setBusy(false);
+};
+worker.onmessage = ev => {
+  const m = ev.data;
+  if (m.type === "log") appendLog(activeLog, m.line, m.cls);
+  else if (m.type === "stage") { els.stage.textContent = m.stage; els.progress.classList.add("busy"); }
+  else if (m.type === "progress") {
+    els.progress.classList.remove("busy");
+    els.bar.style.width = m.total ? Math.round(m.done / m.total * 100) + "%" : "0%";
+    els.stage.textContent = `读取文件 ${m.done}/${m.total} · ${(m.bytes / 1048576).toFixed(1)} MB`;
+  }
+  else if (m.type === "done") {
+    els.progress.classList.remove("busy");
+    els.bar.style.width = "100%";
+    els.stage.textContent = "完成";
+    outBlob = new Blob([m.data], { type: "application/octet-stream" });
+    if (outUrl) URL.revokeObjectURL(outUrl);
+    outUrl = URL.createObjectURL(outBlob);
+    outFileName = m.name;
+    els.resultMeta.innerHTML =
+      `<b>${m.name}</b> · ${m.size.toLocaleString()} 字节 · ${m.ms} ms<br>` +
+      `<span class="sha">SHA-256 ${m.sha}</span>`;
+    els.result.hidden = false;
+    setBusy(false);
+  }
+  else if (m.type === "selftest") {
+    els.stVerdict.textContent = m.summary;
+    els.stVerdict.className = "selftest-verdict " + (m.pass ? "pass" : "fail");
+    setBusy(false);
+  }
+  else if (m.type === "error") {
+    els.progress.classList.remove("busy");
+    els.stage.textContent = "打包失败";
+    if (activeLog === els.stLog) {
+      els.stVerdict.textContent = "FAIL · " + m.message;
+      els.stVerdict.className = "selftest-verdict fail";
+    }
+    setBusy(false);
+  }
+};
+
+function appendLog(el, line, cls) {
+  const span = document.createElement(cls ? "span" : "div");
+  if (cls) {
+    span.className = cls;
+    const wrap = document.createElement("div");
+    wrap.appendChild(span);
+    span.textContent = line;
+    el.appendChild(wrap);
+  } else {
+    span.textContent = line;
+    el.appendChild(span);
+  }
+  el.scrollTop = el.scrollHeight;
+}
+function setBusy(b) {
+  for (const x of [els.pick, els.pack, els.selftest]) x.disabled = b;
+}
+
+/* ── MOD.DAT 元数据(镜像桌面版 read_mod_metadata:UTF-16LE 严格→UTF-8 回退)── */
+function parseModDat(bytes) {
+  let text;
+  if (bytes.length % 2 === 0) {
+    text = new TextDecoder("utf-16le").decode(bytes);
+    if (!/<[A-Z]+>/.test(text)) text = new TextDecoder("utf-8").decode(bytes);
+  } else {
+    text = new TextDecoder("utf-8").decode(bytes);
+  }
+  text = text.replace(/^﻿/, "");
+  const get = k => {
+    const m = text.match(new RegExp("<STRING>" + k + ":([^\\r\\n]+)"));
+    return m ? m[1].trim() : null;
+  };
+  return { name: get("MOD_FILE_NAME"), title: get("DISPLAYNAME") || get("MOD_TITLE") };
+}
+const sanitize = s => (s || "").replace(/[\\/:*?"<>|\x00-\x1f]/g, "_").trim() || "MOD";
+
+/* ── 目录选择:File System Access 优先,webkitdirectory 兜底 ── */
+const hasFSA = "showDirectoryPicker" in window;
+if (!hasFSA) els.hint.innerHTML = "当前浏览器不支持文件夹选择器,将走<b>目录上传</b>(同样只在本地读取,不上传)。";
+
+els.pick.addEventListener("click", async () => {
+  if (hasFSA) {
+    let dir;
+    try { dir = await window.showDirectoryPicker(); }
+    catch (e) { if (e && e.name === "AbortError") return; throw e; }
+    await scanFSA(dir);
+  } else {
+    els.fallback.click();
+  }
+});
+
+els.fallback.addEventListener("change", () => {
+  const list = [...els.fallback.files];
+  if (!list.length) return;
+  const folderName = (list[0].webkitRelativePath || "").split("/")[0] || "MOD";
+  const files = [];
+  for (const f of list) {
+    const rel = (f.webkitRelativePath || "").split("/").slice(1).join("/");
+    if (!rel) continue;
+    const relU = rel.toUpperCase();
+    if (relU === "MOD.DAT" || relU.startsWith("MEDIA/")) files.push({ rel, file: f });
+  }
+  finishScan(files, folderName);
+});
+
+async function scanFSA(dirHandle) {
+  els.stage.textContent = "";
+  els.iFiles.textContent = "扫描中 …";
+  els.info.hidden = false;
+  const files = [];
+  // 顶层只认 MOD.DAT + MEDIA/,其余(已打好的 .MOD、图源等)不进内存
+  for await (const [name, handle] of dirHandle.entries()) {
+    const nameU = name.toUpperCase();
+    if (handle.kind === "file" && nameU === "MOD.DAT") {
+      files.push({ rel: name, file: await handle.getFile() });
+    } else if (handle.kind === "directory" && nameU === "MEDIA") {
+      await collectDir(handle, name, files);
+    }
+  }
+  finishScan(files, dirHandle.name);
+}
+async function collectDir(dirHandle, prefix, out) {
+  for await (const [name, handle] of dirHandle.entries()) {
+    const rel = prefix + "/" + name;
+    if (handle.kind === "directory") await collectDir(handle, rel, out);
+    else {
+      out.push({ rel, file: await handle.getFile() });
+      if ((out.length & 63) === 0) els.iFiles.textContent = `扫描中 … ${out.length} 个文件`;
+    }
+  }
+}
+
+async function finishScan(files, folderName) {
+  const modDatEntry = files.find(f => f.rel.toUpperCase() === "MOD.DAT");
+  const hasMedia = files.some(f => f.rel.toUpperCase().startsWith("MEDIA/"));
+  let meta = { name: null, title: null };
+  if (modDatEntry) {
+    try { meta = parseModDat(new Uint8Array(await modDatEntry.file.arrayBuffer())); }
+    catch (_) { /* 保底走文件夹名 */ }
+  }
+  const totalBytes = files.reduce((s, f) => s + f.file.size, 0);
+  picked = { files, folderName, meta, hasModDat: !!modDatEntry, hasMedia };
+
+  els.info.hidden = false;
+  els.iTitle.textContent = meta.title || meta.name || folderName;
+  els.iFiles.textContent = `${files.length} 个文件 · ${(totalBytes / 1048576).toFixed(1)} MB(仅 MOD.DAT + MEDIA/)`;
+  els.iCheck.innerHTML =
+    (picked.hasModDat ? `<span class="ok">✓ MOD.DAT</span>` : `<span class="miss">✗ MOD.DAT(将用文件夹名,header 为空)</span>`) +
+    " · " +
+    (hasMedia ? `<span class="ok">✓ MEDIA/</span>` : `<span class="miss">✗ MEDIA/</span>`);
+  els.outName.value = sanitize(meta.name || folderName) + ".MOD";
+  els.pack.disabled = !hasMedia;
+  if (!hasMedia) els.iFiles.textContent += " —— 所选文件夹里没有 MEDIA/,请确认选的是 mod 根目录";
+  els.run.hidden = true;
+  els.result.hidden = true;
+}
+
+/* ── 打包 ── */
+els.pack.addEventListener("click", () => {
+  if (!picked || !picked.files.length) return;
+  let name = sanitize(els.outName.value.replace(/\.MOD$/i, "")) + ".MOD";
+  els.outName.value = name;
+  els.run.hidden = false;
+  els.result.hidden = true;
+  els.log.textContent = "";
+  activeLog = els.log;
+  setBusy(true);
+  els.bar.style.width = "0%";
+  worker.postMessage({ op: "pack", files: picked.files, outName: name });
+});
+
+els.download.addEventListener("click", () => {
+  if (!outUrl) return;
+  const a = document.createElement("a");
+  a.href = outUrl;
+  a.download = outFileName;
+  a.click();
+});
+
+/* ── 自检 ── */
+els.selftest.addEventListener("click", () => {
+  els.stLog.textContent = "";
+  els.stVerdict.textContent = "运行中 …";
+  els.stVerdict.className = "selftest-verdict";
+  activeLog = els.stLog;
+  setBusy(true);
+  worker.postMessage({ op: "selftest" });
+});
+
+/* 调试钩子:允许控制台直接喂一组 {rel, file} 走完整 UI 流程(排查用户问题用) */
+window.__emberPacker = { finishScan, els };
+</script>
+</body>
+</html>
