@@ -48,6 +48,8 @@ One switch — "**MIKURO Game Enhancement**" — injects the MIKURO runtime into
 - **Haste gem socket gating** — cooldown-reduction gems can only be socketed into weapons / helmets / gloves, matching their description (fixes "sockets anywhere, works anyway").
 - **Multiplayer-safe** — enhancements activate only in single-player or when you host, so they never break multiplayer validation.
 
+The enhancement also mounts a **companion content MOD** that adds Azure Lotus gems, sockets 5→10, Beast Taunt and more to the game — full mechanics and acquisition: **[MIKURO Runtime MOD](/en/tools/mikuro-runtime-mod/)**.
+
 <blockquote>
 The enhancement layer and the loot filter live in the same `d3d9.dll` proxy — one switch turns on the whole suite.
 <cite>— one toggle, the full kit</cite>
