@@ -2,7 +2,7 @@
   <div class="head">
     <div class="gem">{{ partial "gem-icon.html" .Params.icon }}</div>
     <div>
-      <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      <h3><a href="{{ .Params.link | default .RelPermalink }}">{{ .Title }}</a></h3>
       {{ with .Params.typeline }}<div class="type">{{ . }}</div>{{ end }}
     </div>
   </div>

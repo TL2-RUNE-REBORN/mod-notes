@@ -415,22 +415,20 @@ footer.site a:hover{color:var(--ember-hi)}
   </ul>
 </section>
 
-<!-- ═══ Ⅲ 内置自检 ═══ -->
+<!-- ═══ Ⅲ 怎么用 ═══ -->
 <section class="block">
   <header class="sec">
     <span class="num">Ⅲ</span>
-    <h2>内置自检 <span class="en">Self-test</span></h2>
-    <p class="lede">用内置的「天煞星宠物 MOD」样例验证你当前浏览器里的整条打包链:输出须与桌面版参照<b>逐字节一致</b>(SHA-256),并验证文件时间戳注入链路。</p>
+    <h2>怎么用 <span class="en">How to use</span></h2>
+    <p class="lede">与桌面版打包器同一套 Rust 代码编译成 <b>WebAssembly</b>,把 <code>DAT</code> / <code>LAYOUT</code> 编译成引擎二进制并封装成 <code>.MOD</code>——全程在你的浏览器本地完成,文件不上传、无需安装。</p>
   </header>
 
-  <div class="packer">
-    <div class="selftest-row">
-      <button class="btn ghost" id="selftest">运行内置自检</button>
-      <span class="selftest-verdict" id="selftestVerdict"></span>
-    </div>
-    <div class="log" id="selftestLog" style="margin-top:18px"></div>
-    <p class="flavor">"同一座熔炉,换了一扇窗。"</p>
-  </div>
+  <ul class="notes-list">
+    <li><span class="chip opt">① 选</span><span>点 <b>选择 MOD 文件夹</b>,选中 mod 根目录(需含 <code>MOD.DAT</code> 与 <code>MEDIA/</code>)。Chrome / Edge 用原生文件夹选择器;Firefox 等自动改走目录上传(同样只在本地读取)。</span></li>
+    <li><span class="chip opt">② 确认</span><span>核对 <b>MOD 名称</b> 与 <b>输出文件名</b>(自动从 <code>MOD.DAT</code> 的 <code>MOD_FILE_NAME</code> 读出)。</span></li>
+    <li><span class="chip add">③ 打包</span><span>点 <b>打包为 .MOD</b>,完成后直接下载。含关卡的 mod 会一并烘 MPP 走格;巨型整合组件请用桌面版。</span></li>
+  </ul>
+  <p class="flavor">"同一座熔炉,换了一扇窗。"</p>
 </section>
 
 <footer class="site">
@@ -449,7 +447,6 @@ const els = {
   outName: $("outName"), pack: $("pack"),
   run: $("runBlock"), stage: $("stage"), progress: $("progress"), bar: $("progressBar"),
   log: $("log"), result: $("result"), resultMeta: $("resultMeta"), download: $("download"),
-  selftest: $("selftest"), stVerdict: $("selftestVerdict"), stLog: $("selftestLog"),
 };
 
 let picked = null;      // { files:[{rel,file}], folderName, meta:{name,title}, hasModDat, hasMedia }
@@ -501,18 +498,9 @@ worker.onmessage = ev => {
     els.result.hidden = false;
     setBusy(false);
   }
-  else if (m.type === "selftest") {
-    els.stVerdict.textContent = m.summary;
-    els.stVerdict.className = "selftest-verdict " + (m.pass ? "pass" : "fail");
-    setBusy(false);
-  }
   else if (m.type === "error") {
     els.progress.classList.remove("busy");
     els.stage.textContent = "打包失败";
-    if (activeLog === els.stLog) {
-      els.stVerdict.textContent = "FAIL · " + m.message;
-      els.stVerdict.className = "selftest-verdict fail";
-    }
     setBusy(false);
   }
 };
@@ -532,7 +520,7 @@ function appendLog(el, line, cls) {
   el.scrollTop = el.scrollHeight;
 }
 function setBusy(b) {
-  for (const x of [els.pick, els.pack, els.selftest]) x.disabled = b;
+  for (const x of [els.pick, els.pack]) x.disabled = b;
 }
 
 /* ── MOD.DAT 元数据(镜像桌面版 read_mod_metadata:UTF-16LE 严格→UTF-8 回退)── */
@@ -659,16 +647,6 @@ els.download.addEventListener("click", () => {
   a.href = outUrl;
   a.download = outFileName;
   a.click();
-});
-
-/* ── 自检 ── */
-els.selftest.addEventListener("click", () => {
-  els.stLog.textContent = "";
-  els.stVerdict.textContent = "运行中 …";
-  els.stVerdict.className = "selftest-verdict";
-  activeLog = els.stLog;
-  setBusy(true);
-  worker.postMessage({ op: "selftest" });
 });
 
 /* 调试钩子:允许控制台直接喂一组 {rel, file} 走完整 UI 流程(排查用户问题用) */
