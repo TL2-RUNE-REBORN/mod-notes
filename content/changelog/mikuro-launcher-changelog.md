@@ -33,13 +33,15 @@ summary: "Mikuro 启动器(含 MIKURO 游戏增强)的版本变更记录。"
 
 ### 青莲灵石 · 上限突破与特效
 
+> **突破系四颗现已「属性 + 上限」双效**:每颗在提供 +X% 该属性的同时,把对应上限也抬高等量的 +X%(下表「每颗」列即这一数值,属性与上限同增),让上限恰好容纳——镶上即见效,不必先堆到原版上限才有用。
+
 | 灵石 | 效果 | 每颗 | 上限 | 镶嵌部位 |
 |---|---|---|---|---|
-| <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 | 减伤上限突破(原版 75%) | +2.5% | 95%(8 颗到顶) | 不限 |
-| <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 | 闪避上限突破(原版 75%) | +2.5% | 95%(8 颗到顶) | 不限 |
-| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 | 格挡上限突破(原版 75%) | +2.5% | 85%(4 颗到顶) | <mark>武器 / 头盔 / 护手 / 盾</mark> |
-| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 | 暴击伤害上限突破(原版 500%) | +20% | 不封顶 | 不限 |
-| <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 | 暴击时吸取伤害为生命 | 10% | — | 不限 |
+| <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 | 全伤减免 + 减伤上限突破(原版 75%) | +2.5% | 95%(8 颗到顶) | 不限 |
+| <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 | 闪避 + 闪避上限突破(原版 75%) | +2.5% | 95%(8 颗到顶) | 不限 |
+| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 | 格挡 + 格挡上限突破(原版 75%) | +2.5% | 85%(4 颗到顶) | <mark>武器 / 头盔 / 护手 / 盾</mark> |
+| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 | 暴击伤害 + 暴伤上限突破(原版 500%) | +20% | 不封顶 | 不限 |
+| <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 | 暴击时吸取伤害为生命 | 2.5% | — | 不限 |
 
 ### 御兽嘲讽
 

@@ -13,14 +13,16 @@ Farm the jade, forge the stone. A whole family of gems rooted in **Qinglian Jade
 
 ### The full table
 
+> The four cap-break stones are dual-effect — stat + cap: each grants +X% of the stat *and* raises its cap by the same +X% (the "Per stone" column below is that shared value; stat and cap rise together), effective the moment you socket it.
+
 | Lingshi | Effect | Per stone | Vanilla cap | New cap | Stones to cap | Slots |
 |---|---|---|---|---|---|---|
 | **Gathered Spirit / Condensed Essence / Great Void** | Skill cooldown | 1%–11% ／ 15% | — | — | 2 per item (4 on two-handers) | Weapon / helmet / gloves / shield |
-| **Qinglian · Vajra** | Damage-reduction cap | +2.5% | 75% | **95%** | 8 | Any |
-| **Qinglian · Windshade** | Dodge cap | +2.5% | 75% | **95%** | 8 | Any |
-| **Qinglian · Xuanwu** | Block cap | +2.5% | 75% | **85%** | **4** | Weapon / helmet / gloves / shield |
-| **Qinglian · Soulrend** | Crit-damage cap | +20% | 500% | **uncapped** | ∞ | Any |
-| **Qinglian · Bloodthirst** | Crit lifesteal | 10% | — | — | ∞ | Any |
+| **Qinglian · Vajra** | Damage reduction + reduction cap | +2.5% | 75% | **95%** | 8 | Any |
+| **Qinglian · Windshade** | Dodge chance + dodge cap | +2.5% | 75% | **95%** | 8 | Any |
+| **Qinglian · Xuanwu** | Block chance + block cap | +2.5% | 75% | **85%** | **4** | Weapon / helmet / gloves / shield |
+| **Qinglian · Soulrend** | Critical damage + crit-damage cap | +20% | 500% | **uncapped** | ∞ | Any |
+| **Qinglian · Bloodthirst** | Crit lifesteal | 2.5% | — | — | ∞ | Any |
 | **Qinglian · Beast-Taunt Collar** | Pet pulls aggro, 10m ／ 4s | — | — | — | — | Pet |
 
 Plus two affix-less material/utility items: **Qinglian Jade Marrow** (the forging root) and the **Grimoire: Beast · Taunt Writ**.

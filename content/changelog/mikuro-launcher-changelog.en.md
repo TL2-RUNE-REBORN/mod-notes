@@ -32,13 +32,15 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 
 ### Azure Lotus gems · Cap-break & specials
 
+> **The four cap-break gems now do double duty — stat + cap:** each grants +X% of the stat *and* raises its cap by the same +X% (the "Per gem" column below is that shared value; stat and cap rise together), so the raised cap exactly holds the stat — effective the moment you socket it, no need to first stack up to the vanilla cap.
+
 | Gem | Effect | Per gem | Cap | Slots |
 |---|---|---|---|---|
-| <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 (Vajra) | Damage-reduction cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
-| <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 (Wind Shadow) | Dodge-chance cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
-| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 (Black Tortoise) | Block-chance cap break (vanilla 75%) | +2.5% | 85% (4 gems) | <mark>weapon / helmet / gloves / shield</mark> |
-| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 (Soulrend) | Critical-damage cap break (vanilla 500%) | +20% | uncapped | any |
-| <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 (Bloodthirst) | On crit, leech damage as life | 10% | — | any |
+| <img class="gem-px" src="/img/gems/jingang.png" alt=""> 青莲·金刚 (Vajra) | Damage reduction + reduction cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
+| <img class="gem-px" src="/img/gems/fengying.png" alt=""> 青莲·风影 (Wind Shadow) | Dodge chance + dodge cap break (vanilla 75%) | +2.5% | 95% (8 gems) | any |
+| <img class="gem-px" src="/img/gems/xuanwu.png" alt=""> 青莲·玄武 (Black Tortoise) | Block chance + block cap break (vanilla 75%) | +2.5% | 85% (4 gems) | <mark>weapon / helmet / gloves / shield</mark> |
+| <img class="gem-px" src="/img/gems/liehun.png" alt=""> 青莲·裂魂 (Soulrend) | Critical damage + crit-damage cap break (vanilla 500%) | +20% | uncapped | any |
+| <img class="gem-px" src="/img/gems/shixue.png" alt=""> 青莲·嗜血 (Bloodthirst) | On crit, leech damage as life | 2.5% | — | any |
 
 ### Beast Taunt
 
