@@ -99,3 +99,12 @@ defaultContentLanguageInSubdir = false
 [outputs]
   home = ['html', 'rss']
   section = ['html']
+
+# 本地 hugo server 也给打包器发 COOP/COEP(与线上 static/_headers 对齐),
+# 否则本地测不了 wasm threads(crossOriginIsolated=false)。只影响 hugo server。
+[server]
+  [[server.headers]]
+    for = '/tools/packer/**'
+    [server.headers.values]
+      Cross-Origin-Opener-Policy = 'same-origin'
+      Cross-Origin-Embedder-Policy = 'require-corp'

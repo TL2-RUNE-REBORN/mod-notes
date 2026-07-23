@@ -5,6 +5,15 @@
 // wasm32-wasip1),经 @bjorn3/browser_wasi_shim@0.3.0(vendored)提供
 // 内存文件系统。打包全程在本地浏览器内完成,不上传任何文件。
 //
+// 多线程(2026-07):页面跨源隔离(COOP/COEP)时改用 pack_threads.wasm
+// (wasm32-wasip1-threads 构建,shared memory),DAT/LAYOUT 编译与容器压缩
+// 由 rayon 在 wasi-threads 上真并行——线程 worker 池在 _start 前预建
+// (父阻塞后新 Worker 永远起不来,Emscripten PTHREAD_POOL 同款约束),
+// `wasi::thread-spawn` 只向池成员 postMessage。文件字节 SAB 化,整个池
+// 零拷贝共享一份;/out 只有主实例写。输出与单线程/桌面版逐字节一致
+// (rayon 保序 collect;native 侧 stream_parity 四路对账通过)。
+// 非隔离环境自动回退单线程 pack.wasm,行为与旧版完全相同。
+//
 // 三个 preopen:
 //   /mod  — 用户选择的 mod_root(MOD.DAT + MEDIA/)
 //   /base — 附带的 Runic base UNITS 数据(BASEFILE 继承解析用,只读)
@@ -13,7 +22,7 @@
 // 两个关键兼容层:
 //   CIMap        — Windows FS 是大小写不敏感的;TL2 的 BASEFILE 引用是小写
 //                  (media/units/items/base.dat)而附带 base 文件是大写路径,
-//                  没有它 BASEFILE 继承会断。
+//                  没有它 BASEFILE 继承会断。(现居 pack_threads_common.js)
 //   fileWithMtime — shim 0.3.0 的 Filestat.write_bytes 用了错位 offset
 //                  (atim@38 / mtim@46 / ctim@52,mtim 与 ctim 还互相重叠),
 //                  wasip1 标准布局是 40/48/56。时间戳全 0 时错位读不出差别,
@@ -21,27 +30,38 @@
 //                  (→ manifest FILETIME),必须覆写 stat() 按标准 offset 写。
 // ═══════════════════════════════════════════════════════════════════════════
 import {
-  WASI, File as WFile, Directory, PreopenDirectory, OpenFile, ConsoleStdout,
+  WASI, File as WFile, PreopenDirectory, OpenFile, ConsoleStdout,
   wasi as W,
 } from "./vendor/browser_wasi_shim/index.js";
+import {
+  patchTextDecoderForSAB, CIMap, ciDir, viewFile,
+  parseMemLimits, sabifyEntries,
+} from "./pack_threads_common.js";
+
+patchTextDecoderForSAB(); // threads 模式下 wasm 内存是 SAB;单线程零影响
 
 const post = (type, extra) => self.postMessage(Object.assign({ type }, extra));
 const log = (line, cls) => post("log", { line, cls });
 
 const FILETIME_EPOCH_DELTA = 116444736000000000n; // 100ns ticks, 1601→1970
 
-// ── 大小写不敏感 Map(仿 Windows FS 语义)─────────────────────────────────
-class CIMap extends Map {
-  get(k) { return super.get(String(k).toUpperCase()); }
-  has(k) { return super.has(String(k).toUpperCase()); }
-  set(k, v) { return super.set(String(k).toUpperCase(), v); }
-  delete(k) { return super.delete(String(k).toUpperCase()); }
-}
-const ciDir = () => { const c = new CIMap(); const d = new Directory(c); d.contents = c; return d; };
+// ── 多线程能力检测 ─────────────────────────────────────────────────────────
+// 跨源隔离 + SAB 可用才有戏。两个池分开配(与 wasm 侧 TL2_THREADS /
+// TL2_CONVERT_THREADS 一一对应):
+//   PACK_THREADS    — 容器段(读+crc+zlib):任务大、分配少,near-linear,给足;
+//   CONVERT_THREADS — 编译段(DAT/LAYOUT):分配密集,wasm 分配器是全局单锁,
+//                     多线程会倒退 —— 实测正收益的档位再开,先保守。
+// 消息 forceSingle 强制单线程(自检 A/B 对照与回退用)。
+const CAN_THREAD = typeof SharedArrayBuffer !== "undefined" && !!self.crossOriginIsolated;
+const PACK_THREADS = CAN_THREAD ? Math.min(navigator.hardwareConcurrency || 4, 8) : 1;
+// convert 档位实测曲线(14.6k 文件合成 mod):1→2762ms / 2→2212ms / 4→3110ms
+// —— 2 是甜点位(再高分配器单锁竞争反噬)。换 per-thread 分配器后可再升。
+const CONVERT_THREADS = CAN_THREAD ? 2 : 1;
+const THREADS = CAN_THREAD ? PACK_THREADS + (CONVERT_THREADS >= 2 ? CONVERT_THREADS : 0) : 1;
 
-// ── File + mtime(标准 offset 的 filestat)──────────────────────────────────
+// ── File + mtime(标准 offset 的 filestat;data 直接持 view,零拷贝)────────
 function fileWithMtime(bytes, mtimeNs) {
-  const f = new WFile(bytes);
+  const f = viewFile(bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes));
   if (mtimeNs && mtimeNs > 0n) {
     f.stat = function () {
       return {
@@ -82,21 +102,21 @@ function buildTree(entries) {
   return root;
 }
 
-// ── 静态资产(module + base 树只加载一次,跨多次打包复用)────────────────────
-let wasmPromise = null;
-function loadWasm() {
-  if (!wasmPromise) wasmPromise = (async () => {
-    post("stage", { stage: "加载 pack.wasm …" });
-    try { return await WebAssembly.compileStreaming(fetch("./pack.wasm")); }
-    catch (_) {
-      const b = await fetch("./pack.wasm").then(r => {
-        if (!r.ok) throw new Error("pack.wasm fetch " + r.status);
-        return r.arrayBuffer();
-      });
-      return WebAssembly.compile(b);
-    }
+// ── 静态资产(module + base 只加载一次,跨多次打包复用)────────────────────
+// 单线程与多线程是两个 wasm 文件,各自缓存;多线程版附带 memory limits。
+const wasmPromises = {};
+function loadWasm(threaded) {
+  const key = threaded ? "mt" : "st";
+  if (!wasmPromises[key]) wasmPromises[key] = (async () => {
+    const url = threaded ? "./pack_threads.wasm" : "./pack.wasm";
+    post("stage", { stage: `加载 ${threaded ? "pack_threads" : "pack"}.wasm …` });
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(url + " fetch " + r.status);
+    const bytes = await r.arrayBuffer();
+    const module = await WebAssembly.compile(bytes);
+    return { module, limits: threaded ? parseMemLimits(bytes) : null };
   })();
-  return wasmPromise;
+  return wasmPromises[key];
 }
 
 let basePromise = null;
@@ -122,26 +142,64 @@ function loadBase() {
       const dl = dv.getUint32(p, true); p += 4;
       entries.set(path, { bytes: u8.subarray(p, p + dl) }); p += dl;
     }
+    // 隔离环境:字节进 SAB(线程池零拷贝共享);否则普通 buffer(同样省碎片)。
+    const { buf, meta } = sabifyEntries(entries, CAN_THREAD);
     log(`base bundle:${n} 个文件(UNITS 模板 + LEVELSETS + 碰撞几何,gz ${gz.byteLength >> 10} KB)`);
-    return buildTree(entries); // 只读,可跨 pack 复用
+    return { tree: buildTree(entries), buf, meta }; // 只读,可跨 pack 复用
   })();
   return basePromise;
 }
 
+// ── wasi-threads 线程池(在 _start 阻塞前预建;spawn 只 postMessage)──────
+let tidCounter = 0;
+async function spawnThreadPool(n, initMsg) {
+  const workers = [];
+  const ready = [];
+  for (let i = 0; i < n; i++) {
+    const w = new Worker("./pack_thread_worker.js", { type: "module" });
+    workers.push(w);
+    ready.push(new Promise((res, rej) => {
+      w.onmessage = e => {
+        if (e.data && e.data.type === "ready") res();
+        else if (e.data && e.data.type === "init-error") rej(new Error(e.data.err));
+      };
+      w.onerror = e => rej(new Error("pack_thread_worker: " + (e.message || "加载失败")));
+    }));
+    w.postMessage(initMsg);
+  }
+  await Promise.all(ready);
+  const idle = workers.slice();
+  return {
+    spawn(startArg) {
+      const w = idle.pop();
+      if (!w) return -11; // EAGAIN:池耗尽(阻塞中无法再造 worker)
+      const tid = ++tidCounter;
+      w.postMessage({ op: "start", tid, startArg });
+      return tid;
+    },
+    terminate() { for (const w of workers) w.terminate(); },
+  };
+}
+
 // ── 跑一次 pack ─────────────────────────────────────────────────────────────
 // modEntries: Map rel → {bytes, mtimeMs?/mtimeNs?};outName: "xxx.MOD"
-async function runPack(modEntries, outName) {
-  const [wasmMod, baseTree] = await Promise.all([loadWasm(), loadBase()]);
+async function runPack(modEntries, outName, forceSingle = false, convertThreads = CONVERT_THREADS) {
+  const poolSize = PACK_THREADS + (convertThreads >= 2 ? convertThreads : 0);
+  const threaded = !forceSingle && CAN_THREAD && poolSize >= 2;
+  const [{ module, limits }, base] = await Promise.all([loadWasm(threaded), loadBase()]);
 
   post("stage", { stage: "构建内存文件系统 …" });
+  // 多线程:mod 字节也进 SAB,池成员共享同一份(主树的 File 直接持同一 view)
+  let modMeta = null, modBuf = null;
+  if (threaded) ({ buf: modBuf, meta: modMeta } = sabifyEntries(modEntries, true));
   const modTree = buildTree(modEntries);
   const modDir = new PreopenDirectory("/mod", modTree.contents);
   if (modDir.dir) modDir.dir.contents = modTree.contents; // shim 可能拷成普通 Map,强制回 CIMap
   const outCI = new CIMap();
   const outDir = new PreopenDirectory("/out", outCI);
   if (outDir.dir) outDir.dir.contents = outCI;
-  const baseDir = new PreopenDirectory("/base", baseTree.contents);
-  if (baseDir.dir) baseDir.dir.contents = baseTree.contents;
+  const baseDir = new PreopenDirectory("/base", base.tree.contents);
+  if (baseDir.dir) baseDir.dir.contents = base.tree.contents;
 
   const fds = [
     new OpenFile(new WFile([])),                       // stdin
@@ -149,17 +207,50 @@ async function runPack(modEntries, outName) {
     ConsoleStdout.lineBuffered(m => log("[wasm] " + m)), // stderr(converted:/packed: 进度都在这)
     modDir, outDir, baseDir,
   ];
+  const env = ["MPP_BACKEND=re", "TL2_MEDIA_DIR=/base"];
+
+  // 多线程装配:shared memory + 预建线程池 + TL2_THREADS。任何一步失败都
+  // 整体回退单线程重跑(输出字节一致,只是慢)。
+  let pool = null, memory = null;
+  const imports = {};
+  if (threaded) {
+    try {
+      post("stage", { stage: `预建线程池(${poolSize} workers)…` });
+      memory = new WebAssembly.Memory({ initial: limits.mn, maximum: limits.mx, shared: true });
+      pool = await spawnThreadPool(poolSize, {
+        op: "init", module, memory,
+        modMeta, modBuf, baseMeta: base.meta, baseBuf: base.buf,
+      });
+      env.push("TL2_THREADS=" + PACK_THREADS);
+      if (convertThreads >= 2) env.push("TL2_CONVERT_THREADS=" + convertThreads);
+      imports.env = { memory };
+      imports.wasi = { "thread-spawn": (a) => pool.spawn(a) };
+      post("mode", { threads: PACK_THREADS, isolated: true });
+    } catch (e) {
+      log("线程池初始化失败,回退单线程:" + (e && e.message || e), "bad");
+      if (pool) pool.terminate();
+      return runPack(modEntries, outName, true);
+    }
+  } else {
+    post("mode", { threads: 1, isolated: CAN_THREAD });
+  }
+
   const wasi = new WASI(
     ["pack", "/mod", "/out/" + outName],
-    ["MPP_BACKEND=re", "TL2_MEDIA_DIR=/base"],
+    env,
     fds, { debug: false },
   );
+  imports.wasi_snapshot_preview1 = wasi.wasiImport;
 
-  post("stage", { stage: "打包中(DAT/LAYOUT 编译 + 容器组装)…" });
+  post("stage", { stage: threaded ? `打包中(压缩 ×${PACK_THREADS}${convertThreads >= 2 ? " · 编译 ×" + convertThreads : ""} 并行)…` : "打包中(DAT/LAYOUT 编译 + 容器组装)…" });
   const t0 = performance.now();
-  const instance = await WebAssembly.instantiate(wasmMod, { wasi_snapshot_preview1: wasi.wasiImport });
+  const instance = await WebAssembly.instantiate(module, imports);
   let rc = 0;
-  rc = wasi.start(instance); // 同步阻塞——所以整段逻辑住在 worker 里
+  try {
+    rc = wasi.start(instance); // 同步阻塞——所以整段逻辑住在 worker 里
+  } finally {
+    if (pool) pool.terminate(); // rayon 常驻线程随池一起回收
+  }
   const ms = Math.round(performance.now() - t0);
   if (rc !== 0) throw new Error("pack.wasm 退出码 " + rc);
 
@@ -230,12 +321,12 @@ const bytesEq = (a, b) => a.length === b.length && a.every((x, i) => x === b[i])
 //   源文件的 mtime(合成 RAW 在桌面版 ft=0,自然不注入),输出必须与参照
 //   逐字节一致(SHA-256)——同时验证打包流水线、mtime 注入链路和与桌面版
 //   filetime_of 完全相同的 f64 换算(桌面输出的 ft 落在 f64 可达网格上,
-//   注入回去是不动点)。
+//   注入回去是不动点)。多线程模式下跑的就是并行编译+并行压缩全链路。
 // Test B(毫秒精度):按真实用户路径注入固定的 File.lastModified 毫秒值,
 //   manifest 中每个源文件条目的 FILETIME 必须等于 f64 路径复算的期望值,
 //   合成条目保持 0,数据段解压内容逐文件与参照一致。
 async function selftest() {
-  log("── 内置自检 · 天煞星宠物 MOD 样例 ──");
+  log(`── 内置自检 · 天煞星宠物 MOD 样例(${CAN_THREAD ? PACK_THREADS + " 线程" : "单线程"})──`);
   const [modJson, refBuf] = await Promise.all([
     fetch("./selftest/pet_mod.json").then(r => { if (!r.ok) throw new Error("pet_mod.json " + r.status); return r.json(); }),
     fetch("./selftest/ref_pet.MOD").then(r => { if (!r.ok) throw new Error("ref_pet.MOD " + r.status); return r.arrayBuffer(); }),
@@ -296,7 +387,7 @@ async function selftest() {
   post("selftest", {
     pass: passA && passB,
     summary: passA && passB
-      ? `PASS · Test A 与桌面版参照逐字节一致(${a.data.length} B,SHA-256 相同);Test B mtime 链路 ${srcOk}/${srcTotal} 命中`
+      ? `PASS · Test A 与桌面版参照逐字节一致(${a.data.length} B,SHA-256 相同);Test B mtime 链路 ${srcOk}/${srcTotal} 命中${CAN_THREAD ? ` · ${PACK_THREADS} 线程` : ""}`
       : `FAIL · Test A ${passA ? "PASS" : "FAIL"} / Test B ${passB ? "PASS" : "FAIL"}(详见日志)`,
     shaA, size: a.data.length,
   });
@@ -323,7 +414,7 @@ self.onmessage = async (ev) => {
       // argv 里只放 ASCII 占位名:shim 0.3.0 的 args_sizes_get 按 UTF-16 code units
       // 计长、args_get 按 UTF-8 写入,中文输出名会被截断成无效 UTF-8 → Rust
       // env::args() panic。容器内容与外部文件名无关,真实名字只用于下载。
-      const { data, ms } = await runPack(entries, "OUTPUT.MOD");
+      const { data, ms } = await runPack(entries, "OUTPUT.MOD", !!msg.forceSingle, msg.convertThreads ?? CONVERT_THREADS);
       const sha = await sha256hex(data);
       log(`打包完成:${data.length} 字节 / ${ms} ms`);
       log(`SHA256:${sha}`);
@@ -342,3 +433,6 @@ self.onmessage = async (ev) => {
     });
   }
 };
+
+// 能力上报(页面状态行)
+post("mode", { threads: THREADS, isolated: CAN_THREAD });

@@ -1,0 +1,8 @@
+# Cloudflare Pages custom headers (published verbatim from static/).
+#
+# /tools/packer/ 需要跨源隔离(crossOriginIsolated)才能用 SharedArrayBuffer /
+# wasm threads —— 多线程打包的硬前提。只限打包器路径,避免 COEP 波及全站
+# 其他页面的跨源子资源。
+/tools/packer/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp

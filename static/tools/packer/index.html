@@ -302,6 +302,12 @@ footer.site a:hover{color:var(--ember-hi)}
 .mpp-warn b{color:var(--flame);font-weight:600}
 .mpp-warn code{font-family:var(--mono);font-size:12px;color:var(--r-magic)}
 
+.thread-status{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 22px;padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.thread-status.mt{color:var(--r-set)}
+.thread-status b{font-weight:600;color:inherit}
 .selftest-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .selftest-verdict{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
 .selftest-verdict.pass{color:var(--r-set)}
@@ -352,6 +358,7 @@ footer.site a:hover{color:var(--ember-hi)}
   </header>
 
   <div class="packer">
+    <p class="thread-status" id="threadStatus">ENGINE · 检测中 …</p>
     <p class="step-cap">01 · 选择 Mod 文件夹</p>
     <button class="btn" id="pick">选择 MOD 文件夹</button>
     <input type="file" id="pickFallback" webkitdirectory multiple hidden>
@@ -403,6 +410,7 @@ footer.site a:hover{color:var(--ember-hi)}
     <li><span class="chip add">一致</span><span><b>BINDAT / BINLAYOUT / RAW 编译与 .MOD 容器封装</b>与桌面版 <code>tl2-mikuro-mod-packer</code> 同一套代码,内容逐字节一致。manifest 中的文件时间戳按浏览器可见的毫秒精度写入(桌面版为 100ns 精度),该字段的微小差异不影响游戏加载与 MOD 激活。</span></li>
     <li><span class="chip opt">继承</span><span>附带全量 Runic <b>base 数据</b>(UNITS 模板 + LEVELSETS + 碰撞几何,10269 个文件,gzip ≈ 3 MB),<code>BASEFILE</code> 单位继承链与 <b>MPP 走格</b>都在浏览器内完整烘焙——编译结果与桌面版一致。</span></li>
     <li><span class="chip set">MPP</span><span><b>关卡寻路走格在浏览器内生成</b>(<code>--mpp re</code>):走格只需 base 碰撞几何(9 MB,已附带),不碰 160 MB 的渲染网格。新地图 / 改地图类 mod 直接可用。</span></li>
+    <li><span class="chip opt">多线程</span><span>页面开启跨源隔离后走 <b>wasm threads</b>:DAT/LAYOUT 编译与容器压缩由 rayon 真并行(与桌面版同一套并行代码),大 mod 打包时间约为单线程的 <b>1/4 ~ 1/6</b>。输出仍与单线程/桌面版逐字节一致;不支持的环境自动回退单线程。</span></li>
     <li><span class="chip del">边界</span><span>整棵 mod 目录读入内存打包;<b>数百 MB 的巨型整合组件</b>(关卡资产超多、MPP 极重)可能超出浏览器 4 GB 内存上限,请用桌面版。普通 mod 不受影响。</span></li>
   </ul>
 </section>
@@ -453,9 +461,26 @@ worker.onerror = e => {
   appendLog(activeLog, "worker 加载失败:" + (e.message || e), "bad");
   setBusy(false);
 };
+// 线程池成员(rayon worker)的实时进度绕过被 _start 阻塞的主 worker,
+// 走 BroadcastChannel 直达页面(并行压缩/编译的 pack(par) 进度都在这)。
+const packLogBC = new BroadcastChannel("tl2-pack-log");
+packLogBC.onmessage = ev => appendLog(activeLog, ev.data.line, ev.data.cls);
+
 worker.onmessage = ev => {
   const m = ev.data;
   if (m.type === "log") appendLog(activeLog, m.line, m.cls);
+  else if (m.type === "mode") {
+    const el = $("threadStatus");
+    if (m.threads >= 2) {
+      el.classList.add("mt");
+      el.innerHTML = `ENGINE · <b>多线程 ×${m.threads}</b> — wasm threads + rayon,与桌面版同源并行`;
+    } else {
+      el.classList.remove("mt");
+      el.innerHTML = m.isolated
+        ? "ENGINE · 单线程(强制)"
+        : "ENGINE · 单线程 — 此环境无跨源隔离(SharedArrayBuffer 不可用),已自动回退";
+    }
+  }
   else if (m.type === "stage") { els.stage.textContent = m.stage; els.progress.classList.add("busy"); }
   else if (m.type === "progress") {
     els.progress.classList.remove("busy");
