@@ -1,10 +1,18 @@
 ---
 title: "Challenger Continent MOD Changelog"
-date: 2026-07-12T00:00:19+10:00
+date: 2026-07-24T21:46:59+10:00
 author: "Mikuro"
 summary: "Complete version change history of the Challenger Continent mod pack."
 ---
 
+
+## 2026-07-24
+Translation polish + a mercenary shield fix, plus a full repack. This release mainly rounds out the "Diablo Legacy" Chinese text — unifying wording and filling in a large batch of previously missing translations — and fixes the mercenary "Indestructible Shield." All MODs have been fully repacked; replacing the whole pack is recommended.
+
+- 🐛: The mercenary "Indestructible Shield" now lives up to its name — its HP cap was raised from 999999 to effectively unlimited, so it can no longer be broken in high-level / high-intensity fights; the shield effect is also no longer written to saves, removing save residue (mercenary system)
+- 💬: "Diablo Legacy" wording unified — every 机率 changed to 几率 ("chance", ~260 places across block / crit / interrupt / dodge, etc.), consistent with the rest of the in-game text
+- 💬: "Diablo Legacy" fills in a large batch of previously missing or untranslated affix and effect strings (~360 entries) — accuracy, melee/ranged weapon damage up/down, Vitality/Focus buffs, health/mana drain debuffs, dodge chance, life steal to owner on hit, fishing luck, swap items with pet, silence / stun resistance, and more
+- ♻️: All components fully rebuilt with the packer; replacing the whole pack is recommended
 
 ## 2026-07-12
 Crash-fix special, plus the launcher's "MIKURO Game Enhancement" update. This release focuses on three classes of crashes confirmed in real play; all MODs have been fully repacked — replacing the whole pack is recommended, and the launcher has been updated in step.
