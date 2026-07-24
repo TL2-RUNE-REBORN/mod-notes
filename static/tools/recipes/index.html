@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>熔铸配方图鉴 — 余烬工坊</title>
+<meta name="description" content="挑战者大陆全部熔铸配方图鉴:配料、产物与随机概率一目了然。">
+<meta name="theme-color" content="#100e0b">
+<link rel="preconnect" href="https://fonts.loli.net">
+<link href="https://fonts.loli.net/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="icon" href="https://tl2-mod.chr.moe/favicon.ico" sizes="16x16 32x32 48x48">
+<style>
+/* ══════════ EMBERWORKS · 余烬工坊 design tokens(与主站一致) ══════════ */
+:root{
+  --bg:#100e0b; --bg-panel:#191410; --bg-panel2:#1f1813;
+  --line:#2c241b; --line-hi:#453724;
+  --text:#d9cdb6; --muted:#94856d; --faint:#675b48;
+  --ember:#ff9a3c; --ember-hi:#ffc26b; --flame:#e0592e; --gold:#d8b26a;
+  --r-magic:#6fa8ff; --r-rare:#ffd24a; --r-set:#7cc96e; --r-normal:#bdb4a4;
+  --r-epic:#b48cff;
+  --serif:'Noto Serif SC','Palatino Linotype',Georgia,serif;
+  --disp:'Cinzel','Noto Serif SC',serif;
+  --ital:'Cormorant Garamond','Noto Serif SC',serif;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:15px;
+  line-height:1.75;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1100px 460px at 50% -8%, rgba(255,138,48,.10), transparent 60%),
+             radial-gradient(700px 300px at 82% 4%, rgba(224,89,46,.05), transparent 65%)}
+::selection{background:rgba(255,154,60,.25)}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 32px 60px}
+
+/* ---------- 全站余烬火星 ---------- */
+.ember-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ember-field b{position:absolute;bottom:-8px;width:4px;height:4px;border-radius:50%;
+  background:var(--ember-hi);opacity:0;filter:blur(.4px);
+  box-shadow:0 0 8px rgba(255,154,60,.65);
+  animation:ember-rise var(--t,12s) linear var(--w,0s) infinite}
+.ember-field b:nth-child(1){left:4%;--t:13s;--w:0s;--dx:26px}
+.ember-field b:nth-child(2){left:11%;--t:17s;--w:5s;--dx:-18px;width:3px;height:3px}
+.ember-field b:nth-child(3){left:18%;--t:11s;--w:2.5s;--dx:34px;width:2px;height:2px}
+.ember-field b:nth-child(4){left:25%;--t:16s;--w:9s;--dx:-24px}
+.ember-field b:nth-child(5){left:31%;--t:10s;--w:1.8s;--dx:16px;width:2px;height:2px}
+.ember-field b:nth-child(6){left:38%;--t:14s;--w:6s;--dx:-28px;width:3px;height:3px}
+.ember-field b:nth-child(7){left:45%;--t:12s;--w:4s;--dx:20px;width:3px;height:3px}
+.ember-field b:nth-child(8){left:51%;--t:18s;--w:0.5s;--dx:-30px;width:2px;height:2px}
+.ember-field b:nth-child(9){left:57%;--t:11s;--w:7.5s;--dx:24px}
+.ember-field b:nth-child(10){left:63%;--t:15s;--w:3s;--dx:-16px;width:3px;height:3px}
+.ember-field b:nth-child(11){left:69%;--t:10s;--w:5.5s;--dx:28px;width:2px;height:2px}
+.ember-field b:nth-child(12){left:75%;--t:16s;--w:1.2s;--dx:-22px}
+.ember-field b:nth-child(13){left:81%;--t:12s;--w:8s;--dx:18px;width:3px;height:3px}
+.ember-field b:nth-child(14){left:87%;--t:14s;--w:2s;--dx:-26px;width:2px;height:2px}
+.ember-field b:nth-child(15){left:93%;--t:13s;--w:6.8s;--dx:30px}
+.ember-field b:nth-child(16){left:97%;--t:17s;--w:4.5s;--dx:-14px;width:2px;height:2px}
+.ember-field b:nth-child(2n){background:var(--gold);box-shadow:0 0 8px rgba(216,178,106,.55)}
+@keyframes ember-rise{0%{transform:translate3d(0,0,0);opacity:0}6%{opacity:.75}
+  50%{opacity:.4}100%{transform:translate3d(var(--dx,20px),-78vh,0) scale(.55);opacity:0}}
+
+/* ---------- 主站页头 / 页脚 ---------- */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
+  padding:30px 0 18px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--disp);font-size:17px;letter-spacing:.22em;color:var(--text);
+  text-decoration:none;white-space:nowrap}
+.brand b{color:var(--ember);font-weight:700}
+nav.site{display:flex;gap:26px;flex-wrap:wrap}
+nav.site a{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-decoration:none;
+  color:var(--muted);padding-bottom:4px;border-bottom:1px solid transparent;
+  transition:color .2s,border-color .2s;white-space:nowrap}
+nav.site a:hover{color:var(--ember-hi)}
+nav.site a.on{color:var(--ember);border-bottom-color:var(--ember)}
+footer.site{margin-top:80px;padding-top:26px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);
+  text-transform:uppercase}
+footer.site b{color:var(--muted);font-weight:500}
+footer.site a{color:var(--muted);text-decoration:none}
+footer.site a:hover{color:var(--ember-hi)}
+
+/* ---------- 标题区 ---------- */
+.hero{padding:44px 0 8px;position:relative}
+.embers{position:absolute;inset:0;pointer-events:none}
+.embers b{position:absolute;bottom:10%;width:5px;height:5px;border-radius:50%;
+  background:var(--ember-hi);opacity:0;filter:blur(.5px);
+  box-shadow:0 0 10px rgba(255,154,60,.8);
+  animation:ember-rise var(--t,9s) linear var(--w,0s) infinite}
+.embers b:nth-child(1){left:8%;--t:9s;--w:.5s;--dx:22px}
+.embers b:nth-child(2){left:28%;--t:11s;--w:3s;--dx:-18px;width:4px;height:4px}
+.embers b:nth-child(3){left:55%;--t:8s;--w:1.5s;--dx:26px;width:3px;height:3px}
+.embers b:nth-child(4){left:74%;--t:12s;--w:5s;--dx:-20px;width:4px;height:4px}
+.embers b:nth-child(5){left:91%;--t:10s;--w:2.2s;--dx:16px;width:3px;height:3px}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--ember)}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,40px);
+  line-height:1.25;margin-top:10px;color:var(--text)}
+.hero h1 .en{font-family:var(--ital);font-style:italic;font-weight:500;
+  font-size:.62em;color:var(--gold);margin-left:14px;letter-spacing:.02em}
+.hero .lede{color:var(--muted);margin-top:6px;font-size:14px;max-width:760px}
+.hero .lede b{color:var(--gold);font-weight:600}
+.hero .lede .pr{font-family:var(--mono);font-size:12px;color:var(--r-magic)}
+
+/* ---------- 图例 ---------- */
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint)}
+.legend i{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+.legend i::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--d,#888)}
+.legend i.lg-fix::before{background:var(--r-set)}
+.legend i.lg-rand::before{background:var(--r-magic)}
+.legend i.lg-sock::before{background:var(--gold)}
+.legend i.lg-none::before{background:var(--flame)}
+
+/* ---------- 筛选工具条 ---------- */
+.toolbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:10px;
+  align-items:center;padding:14px 0 12px;margin-top:20px;
+  background:linear-gradient(rgba(16,14,11,.96),rgba(16,14,11,.92));
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.toolbar input[type=search],.toolbar select{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--text);
+  background:var(--bg-panel);border:1px solid var(--line);border-radius:3px;
+  padding:7px 10px;outline:none;transition:border-color .2s}
+.toolbar input[type=search]{width:250px}
+.toolbar input[type=search]:focus,.toolbar select:focus{border-color:var(--ember)}
+.toolbar select option{background:var(--bg-panel)}
+.toolbar label.chk{display:flex;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.14em;color:var(--muted);cursor:pointer;user-select:none}
+.toolbar label.chk input{accent-color:var(--ember)}
+.toolbar .stat{margin-left:auto;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.18em;color:var(--faint)}
+
+/* ---------- 分组区块 ---------- */
+.block{margin-top:44px}
+.sec{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-hi);
+  padding-bottom:10px;margin-bottom:6px}
+.sec .num{font-family:var(--disp);font-size:15px;color:var(--ember);letter-spacing:.1em}
+.sec h2{font-family:var(--serif);font-weight:700;font-size:21px}
+.sec .cnt{margin-left:auto;font-family:var(--mono);font-size:10px;
+  letter-spacing:.2em;color:var(--faint)}
+.diamond-rule{text-align:center;margin:56px 0 0;color:var(--faint);
+  font-size:11px;letter-spacing:1.1em;text-indent:1.1em}
+
+/* ---------- 配方卡 ---------- */
+.recipe{display:grid;grid-template-columns:250px 1fr;gap:0 22px;
+  border-bottom:1px solid var(--line);padding:16px 4px;
+  content-visibility:auto;contain-intrinsic-size:auto 96px;transition:background .15s}
+.recipe:hover{background:var(--bg-panel)}
+.rhead{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.rhead .ric{flex:0 0 44px;width:44px;height:44px;background:var(--bg-panel2);
+  border:1px solid var(--line-hi);border-radius:4px;display:flex;
+  align-items:center;justify-content:center;overflow:hidden}
+.rhead .ric img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated}
+.rhead .ric span{font-family:var(--disp);font-size:18px;color:var(--faint)}
+.rname{font-weight:600;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
+.rtags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.14em;padding:2px 7px;
+  border-radius:2px;border:1px solid;white-space:nowrap}
+.chip.c-rand{color:var(--r-magic);border-color:rgba(111,168,255,.35)}
+.chip.c-sock{color:var(--gold);border-color:rgba(216,178,106,.4)}
+.chip.c-hid{color:var(--muted);border-color:var(--line-hi)}
+.chip.c-avg{color:var(--faint);border-color:var(--line)}
+.rbody{display:flex;flex-direction:column;gap:8px;min-width:0}
+.flowline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.arrow{font-family:var(--mono);color:var(--ember);font-size:15px;flex:0 0 auto}
+
+/* 配料/产物 格子 */
+.slot{display:inline-flex;align-items:center;gap:8px;background:var(--bg-panel);
+  border:1px solid var(--line);border-radius:4px;padding:5px 10px 5px 6px;max-width:100%}
+.slot .ic{position:relative;width:34px;height:34px;flex:0 0 34px;background:var(--bg-panel2);
+  border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;
+  justify-content:center;overflow:visible}
+.slot .ic img{width:30px;height:30px;object-fit:contain;image-rendering:pixelated}
+.slot .ic .ph{font-family:var(--mono);font-size:13px;color:var(--faint)}
+.slot .ic .ct{position:absolute;right:-5px;bottom:-5px;font-family:var(--mono);
+  font-size:9.5px;line-height:1;padding:2px 4px;background:var(--bg);border:1px solid var(--line-hi);
+  border-radius:2px;color:var(--ember-hi)}
+.slot .nm{font-size:13px;line-height:1.35;overflow-wrap:anywhere}
+.slot .sub{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--faint)}
+.slot.ut{border-style:dashed}
+.slot.ut .nm{color:var(--muted)}
+.slot.base{border-color:rgba(216,178,106,.45)}
+.slot.base .sub{color:var(--gold)}
+
+/* 产物概率 */
+.res-fixed .nm{font-weight:600}
+.pr{font-family:var(--mono);font-size:11px;color:var(--r-magic);white-space:nowrap}
+.pr.sure{color:var(--r-set)}
+.pr.low{color:var(--muted)}
+.res-effect{font-size:13.5px;color:var(--gold)}
+.rollnote{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint)}
+
+/* 随机概率表(可折叠) */
+details.rand{border:1px solid var(--line);border-radius:4px;background:var(--bg-panel)}
+details.rand summary{list-style:none;cursor:pointer;display:flex;align-items:center;
+  gap:10px;padding:8px 12px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.14em;color:var(--r-magic)}
+details.rand summary::-webkit-details-marker{display:none}
+details.rand summary .tri{transition:transform .2s;color:var(--faint)}
+details.rand[open] summary .tri{transform:rotate(90deg)}
+details.rand summary .preview{display:flex;gap:4px;align-items:center}
+details.rand summary .preview img{width:22px;height:22px;object-fit:contain;image-rendering:pixelated}
+details.rand summary .preview i{font-style:normal;color:var(--faint);font-size:10px}
+.prtable{border-top:1px solid var(--line);max-height:420px;overflow-y:auto}
+.prow{display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;
+  padding:5px 12px;position:relative;border-bottom:1px solid rgba(44,36,27,.5)}
+.prow:last-child{border-bottom:none}
+.prow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);
+  background:rgba(111,168,255,.06);pointer-events:none}
+.prow img{width:26px;height:26px;object-fit:contain;image-rendering:pixelated}
+.prow .ph{font-family:var(--mono);font-size:12px;color:var(--faint);text-align:center}
+.prow .pn{font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.prow .pn .var{font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-left:6px}
+.prow .pc{font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap}
+.prow .pv{font-family:var(--mono);font-size:11.5px;color:var(--r-magic);white-space:nowrap;text-align:right}
+.prow .pv.sure{color:var(--r-set)}
+.prow.none .pn,.prow.none .pv{color:var(--flame)}
+.prow.none::before{background:rgba(224,89,46,.07)}
+
+/* ---------- 品质色阶 ---------- */
+.rar-NORMAL{color:var(--r-normal)} .rar-MAGIC{color:var(--r-magic)}
+.rar-UNIQUE{color:var(--r-rare)} .rar-EPIC{color:var(--r-epic)}
+.rar-LEGENDARY{color:var(--ember)} .rar-SET{color:var(--r-set)} .rar-QUEST{color:var(--gold)}
+
+#empty{display:none;text-align:center;color:var(--faint);padding:70px 0;
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em}
+
+a.plain{color:var(--ember-hi);text-decoration:none;border-bottom:1px solid rgba(255,154,60,.35)}
+a.plain:hover{border-bottom-color:var(--ember)}
+
+@media (max-width:720px){
+  .wrap{padding:0 18px 40px}
+  .recipe{grid-template-columns:1fr;gap:10px}
+  .toolbar input[type=search]{width:100%}
+  .toolbar .stat{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+<div class="ember-field" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+<div class="wrap">
+
+<header class="masthead">
+  <a class="brand" href="https://tl2-mod.chr.moe/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <nav class="site">
+    <a href="https://tl2-mod.chr.moe/devlog/">开发日志</a>
+    <a href="https://tl2-mod.chr.moe/changelog/">更新日志</a>
+    <a href="https://tl2-mod.chr.moe/tools/" class="on">工具库</a>
+    <a href="https://tl2-mod.chr.moe/guides/">指南</a>
+    <a href="https://tl2-mod.chr.moe/support/">赞助</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="embers" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b></div>
+  <div class="kicker">Challenger Continent · Transmutation Codex</div>
+  <h1>熔铸配方图鉴<span class="en">The Transmuter's Ledger</span></h1>
+  <p class="lede">挑战者大陆全部 <b>455</b> 条熔铸配方,直接提取自 MOD 数据文件 ——
+    配料、产物、随机概率<span class="pr">(按引擎加权 Roll 算法计算)</span>逐条对账。生成于 2026-07-24 20:06。</p>
+  <div class="legend">
+    <i class="lg-fix">固定产物 · 必得</i>
+    <i class="lg-rand">随机产物 · 标注概率</i>
+    <i class="lg-sock">打孔 / 强化类</i>
+    <i class="lg-none">可能空手</i>
+  </div>
+</section>
+
+<div class="toolbar">
+  <input id="q" type="search" placeholder="搜索配方 / 配料 / 产物…" autocomplete="off">
+  <select id="fGroup"><option value="">全部分组</option></select>
+  <select id="fMod"><option value="">全部组件</option></select>
+  <label class="chk"><input id="fRand" type="checkbox">仅随机产物</label>
+  <span class="stat" id="stat"></span>
+</div>
+
+<main id="list"></main>
+<p id="empty">— 没有匹配的配方 —</p>
+
+<footer class="site">
+  <span>EMBERWORKS · 余烬工坊 © 2026</span>
+  <span><b>MIKURO</b> · <a href="https://github.com/heiybb" rel="me">GITHUB</a> · <a href="https://tl2-mod.chr.moe/index.xml">RSS</a></span>
+</footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+"use strict";
+var D = window.RECIPE_DATA, PFX = "";
+var $ = function(s){ return document.querySelector(s); };
+var esc = function(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+
+function roman(n){
+  var T=[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],
+         [40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]],s="";
+  for(var i=0;i<T.length;i++){ while(n>=T[i][0]){ s+=T[i][1]; n-=T[i][0]; } }
+  return s;
+}
+function fmtProb(p){
+  if(p>=99.9995) return "必得";
+  if(p>=10) return p.toFixed(1).replace(/\.0$/,"")+"%";
+  if(p>=1)  return p.toFixed(1)+"%";
+  if(p>=0.01) return p.toFixed(2)+"%";
+  return "<0.01%";
+}
+function probCls(p){ return p>=99.9995 ? "pv sure" : (p<1 ? "pv low" : "pv"); }
+function cntTxt(c){ if(!c) return ""; return c[0]===c[1] ? (c[0]===1?"":"×"+c[0]) : "×"+c[0]+"–"+c[1]; }
+function iconImg(ic, cls){
+  return ic ? '<img loading="lazy" src="'+PFX+esc(ic)+'" alt="">'
+            : '<span class="'+(cls||"ph")+'">?</span>';
+}
+
+/* ---------- 单条配方卡 ---------- */
+function slotHtml(x, isIng){
+  var cls = "slot" + (x.kind==="unittype" ? " ut" : "") + (x.base ? " base" : "");
+  var sub = x.base ? '<span class="sub">基底 · 保留强化</span>' : "";
+  var ct = isIng ? '<i class="ct">×'+x.count+'</i>' : "";
+  return '<span class="'+cls+'"><span class="ic">'+iconImg(x.icon)+ct+'</span>'+
+    '<span class="nm rar-'+esc(x.rarity||"NORMAL")+'">'+esc(x.name)+sub+'</span></span>';
+}
+function fixedResHtml(r){
+  var out = "";
+  for(var i=0;i<r.results.length;i++){
+    var e = r.results[i];
+    out += '<span class="slot res-fixed"><span class="ic">'+iconImg(e.icon)+'</span>'+
+      '<span class="nm rar-'+esc(e.rarity)+'">'+esc(e.name)+
+      (cntTxt(e.cnt)?' <i class="pr">'+cntTxt(e.cnt)+'</i>':"")+'</span></span>';
+  }
+  return out;
+}
+function randResHtml(r){
+  var es = r.results, n = es.length;
+  var hasNone = es.some(function(e){ return e.kind==="none"; });
+  var prev = "";
+  var shown = 0;
+  for(var i=0;i<n && shown<5;i++){
+    if(es[i].icon){ prev += '<img loading="lazy" src="'+PFX+esc(es[i].icon)+'" alt="">'; shown++; }
+  }
+  if(n>shown) prev += "<i>+"+(n-shown)+"</i>";
+  var rows = "";
+  for(var j=0;j<n;j++){
+    var e = es[j];
+    var vari = (e.nvar>1) ? '<span class="var">×'+e.nvar+' 种</span>' : "";
+    rows += '<div class="prow'+(e.kind==="none"?" none":"")+'" style="--p:'+
+      Math.min(100, e.prob).toFixed(2)+'%">'+
+      '<span>'+(e.icon?'<img loading="lazy" src="'+PFX+esc(e.icon)+'" alt="">':'<span class="ph">'+(e.kind==="none"?"∅":"?")+'</span>')+'</span>'+
+      '<span class="pn rar-'+esc(e.rarity)+'">'+esc(e.name)+vari+'</span>'+
+      '<span class="pc">'+(e.kind==="none"?"":cntTxt(e.cnt))+'</span>'+
+      '<span class="'+probCls(e.prob)+'">'+fmtProb(e.prob)+'</span></div>';
+  }
+  var label = n+' 种可能产物' + (r.resDesc ? ' · '+esc(r.resDesc) : '') +
+    (hasNone ? ' · 含空手' : '');
+  return '<details class="rand"><summary><span class="tri">▶</span>'+label+
+    '<span class="preview">'+prev+'</span></summary>'+
+    '<div class="prtable">'+rows+'</div></details>';
+}
+function recipeHtml(r){
+  var chips = "";
+  if(r.random) chips += '<span class="chip c-rand">随机产物</span>';
+  if(r.socket) chips += '<span class="chip c-sock">打孔</span>';
+  if(r.hidden) chips += '<span class="chip c-hid">游戏内产物显示为 ?</span>';
+  if(r.unlisted) chips += '<span class="chip c-hid">游戏配方列表不显示</span>';
+  if(r.avgLevel) chips += '<span class="chip c-avg">产物等级 = 配料平均</span>';
+  var ings = r.ings.map(function(x){ return slotHtml(x, true); }).join("");
+  var res;
+  if(r.socket){
+    res = '<span class="res-effect">在基底装备上打 1 个镶嵌孔</span>';
+  } else if(r.random){
+    res = randResHtml(r);
+  } else {
+    res = fixedResHtml(r);
+  }
+  return '<article class="recipe" data-id="'+r.id+'">'+
+    '<div class="rhead"><span class="ric">'+iconImg(r.icon, "")+'</span>'+
+    '<div><div class="rname">'+esc(r.display)+'</div>'+
+    '<div class="rtags">'+chips+'</div></div></div>'+
+    '<div class="rbody"><div class="flowline">'+ings+
+    '<span class="arrow">→</span>'+res+'</div></div></article>';
+}
+
+/* ---------- 分组渲染 ---------- */
+var byGroup = {};
+D.recipes.forEach(function(r){ (byGroup[r.group] = byGroup[r.group] || []).push(r); });
+var listEl = $("#list");
+var html = "";
+D.groups.forEach(function(g, gi){
+  var rs = byGroup[g] || [];
+  if(!rs.length) return;
+  html += '<section class="block" data-group="'+esc(g)+'">'+
+    '<header class="sec"><span class="num">'+roman(gi+1)+'</span>'+
+    '<h2>'+esc(g)+'</h2><span class="cnt">'+rs.length+' 条</span></header>'+
+    rs.map(recipeHtml).join("")+'</section>';
+});
+listEl.innerHTML = html;
+
+/* ---------- 搜索索引 ---------- */
+var index = {};
+D.recipes.forEach(function(r){
+  var parts = [r.display, r.name, r.group, r.mod];
+  r.ings.forEach(function(x){ parts.push(x.name, x.intName||""); });
+  r.results.forEach(function(x){ parts.push(x.name); (x.variants||[]).forEach(function(v){ parts.push(v); }); });
+  index[r.id] = parts.join("").toLowerCase();
+});
+
+/* ---------- 过滤 ---------- */
+var selG = $("#fGroup"), selM = $("#fMod");
+D.groups.forEach(function(g){
+  var o = document.createElement("option"); o.value = g; o.textContent = g; selG.appendChild(o);
+});
+Array.from(new Set(D.recipes.map(function(r){ return r.mod; }))).sort().forEach(function(m){
+  var o = document.createElement("option"); o.value = m; o.textContent = m; selM.appendChild(o);
+});
+var rows = {};
+Array.prototype.forEach.call(document.querySelectorAll(".recipe"), function(el){
+  rows[el.getAttribute("data-id")] = el;
+});
+function apply(){
+  var q = $("#q").value.trim().toLowerCase();
+  var g = selG.value, m = selM.value, ro = $("#fRand").checked;
+  var vis = 0;
+  D.recipes.forEach(function(r){
+    var ok = (!g || r.group===g) && (!m || r.mod===m) && (!ro || r.random) &&
+             (!q || index[r.id].indexOf(q)>=0);
+    rows[r.id].style.display = ok ? "" : "none";
+    if(ok) vis++;
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("section.block"), function(sec){
+    var any = Array.prototype.some.call(sec.querySelectorAll(".recipe"),
+      function(el){ return el.style.display!=="none"; });
+    sec.style.display = any ? "" : "none";
+  });
+  $("#stat").textContent = vis + " / " + D.recipes.length;
+  $("#empty").style.display = vis ? "none" : "block";
+}
+["input","change"].forEach(function(ev){
+  $("#q").addEventListener(ev, apply);
+  selG.addEventListener(ev, apply);
+  selM.addEventListener(ev, apply);
+  $("#fRand").addEventListener(ev, apply);
+});
+apply();
+})();
+</script>
+</body>
+</html>
