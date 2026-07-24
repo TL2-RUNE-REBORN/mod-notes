@@ -65,7 +65,33 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 (Beast Taunt Collar) | Pet collar equipment; your pet must wear it to respond to the taunt command |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 (Tome: Beast Taunt Command) | Use to learn an active skill: enemies within 10m switch to attacking your pet for 4 seconds |
 
-> Drop channels for the cap-break gems and the Beast Taunt pair are still being tuned — actual in-game drops are authoritative. Per-tier transmute odds and design rationale: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
+> Drop channels for the Beast Taunt pair are still being tuned — actual in-game drops are authoritative. Per-tier transmute odds and design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+
+## Ⅴ Drops · 材料掉落
+
+The root materials shared by both forging lines all drop from monsters (stackable), and drop rates are **tiered by monster rank** — Jade Marrow floods off normal mobs, Ash rises as monsters get tougher, and Talismans appear only on champions and bosses. The tougher the kill, the more it feeds the cap-break line.
+
+| Material | Line | Normal | Half-champ | Champion | BOSS |
+|---|---|:-:|:-:|:-:|:-:|
+| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | Cooldown · root | **5.5%** | — | — | — |
+| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | Cap-break · universal root | 1.4% | 3% | 6% | **17%** |
+| 五系符 · Talismans (directional) | Cap-break · catalyst | — | 1% | 3% | **8%** |
+
+- **Jade Marrow** drops from normal mobs only — plentiful, and the sole source for the cooldown line (聚灵 / 凝华 / 太虚).
+- **Ash** drops at every rank, more as monsters get tougher; a BOSS always yields exactly 1.
+- **Talismans are a random pool**: when a champion / BOSS drops a talisman it rolls one of the five below at random, so a **specific** talisman's real rate ≈ the table value ÷ 5 (e.g. a given talisman off a BOSS ≈ 1.6%). Champions and bosses are the only source.
+
+Each talisman maps to one cap-break stone:
+
+| <img class="gem-px" src="/img/gems/fu_jingang.png" alt=""> 金刚符 | <img class="gem-px" src="/img/gems/fu_xuanwu.png" alt=""> 玄武符 | <img class="gem-px" src="/img/gems/fu_fengying.png" alt=""> 风影符 | <img class="gem-px" src="/img/gems/fu_liehun.png" alt=""> 裂魂符 | <img class="gem-px" src="/img/gems/fu_shixue.png" alt=""> 嗜血符 |
+|:-:|:-:|:-:|:-:|:-:|
+| → 青莲·金刚 (Vajra) | → 青莲·玄武 (Tortoise) | → 青莲·风影 (Wind Shadow) | → 青莲·裂魂 (Soulrend) | → 青莲·嗜血 (Bloodthirst) |
+
+**Forging**: 9× Ash + 1× the matching talisman at the alchemist yields that stone (the recipe is auto-learned on the first correct insert).
+
+> **Balanced across both lines**: one 凝华 ≈ 81 Jade Marrow (~a thousand-odd normal mobs); one cap-break stone ≈ 9 Ash + 1 talisman (~a hundred-odd champions) — the two lines mirror each other mid-game, and their ceilings (太虚 / maxing one stat at 4–8 stones) are both lifetime goals.
 
 ## Download · 获取
 

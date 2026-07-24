@@ -65,7 +65,33 @@ params:
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 | 宠物项圈装备;佩戴后宠物方可响应嘲讽令 |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 | 使用后学会主动技能:周围 10m 的敌人转而攻击你的宠物,持续 4 秒 |
 
-> 突破系灵石与御兽嘲讽两件套的掉落渠道仍在调整中,以游戏内实际掉落为准。各档熔铸概率与设计取舍详见[完整设计稿](/ideas/qinglian-haste-lingshi/)。
+> 御兽嘲讽两件套的掉落渠道仍在调整中,以游戏内实际掉落为准。青莲灵石各档熔铸概率与设计取舍详见[完整设计稿](/ideas/qinglian-haste-lingshi/)。
+
+<div class="diamond-rule"><span>◆ ◆ ◆</span></div>
+
+## Ⅴ 材料掉落 · Drops
+
+两条铸造线共用的根料全部由怪物掉落、可堆叠,掉率**按怪物等级分层**——玉髓走普通怪海量平推,劫灰随怪物变强而递增,「符」则只在精英与 BOSS 身上现身。越硬的怪,越是突破材料的来源。
+
+| 材料 | 归属 | 普通 | 小精英 | 精英 | BOSS |
+|---|---|:-:|:-:|:-:|:-:|
+| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 | 冷却线 · 根料 | **5.5%** | — | — | — |
+| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 | 突破线 · 通用根料 | 1.4% | 3% | 6% | **17%** |
+| 五系符(定向引子) | 突破线 · 引子 | — | 1% | 3% | **8%** |
+
+- **玉髓**只普通怪掉,量大管饱,是冷却链(聚灵 / 凝华 / 太虚)的唯一来源。
+- **劫灰**全等级掉、越强越多;BOSS 每次固定 1 个。
+- **符为随机池**:精英 / BOSS 掉「符」时从下列五符中**随机开出一种**,故某一**指定**符的实际概率 ≈ 表中值 ÷ 5(例:BOSS 出某指定符 ≈ 1.6%)。精英与 BOSS 是符的唯一来源。
+
+五系符各对应一颗突破石:
+
+| <img class="gem-px" src="/img/gems/fu_jingang.png" alt=""> 金刚符 | <img class="gem-px" src="/img/gems/fu_xuanwu.png" alt=""> 玄武符 | <img class="gem-px" src="/img/gems/fu_fengying.png" alt=""> 风影符 | <img class="gem-px" src="/img/gems/fu_liehun.png" alt=""> 裂魂符 | <img class="gem-px" src="/img/gems/fu_shixue.png" alt=""> 嗜血符 |
+|:-:|:-:|:-:|:-:|:-:|
+| → 青莲·金刚 | → 青莲·玄武 | → 青莲·风影 | → 青莲·裂魂 | → 青莲·嗜血 |
+
+**熔铸**:青莲·劫灰 ×9 + 对应符 ×1,于炼金师处熔铸即成对应突破石(首次投入正确材料自动习得配方)。
+
+> **两线难度对齐**:单颗凝华 ≈ 81 玉髓(约千余只普通怪),单颗突破石 ≈ 9 劫灰 + 1 符(约百余精英)——中段互为对标;顶配(太虚 / 单属性顶满 4–8 颗)同为毕生目标。
 
 ## 获取与更新 · Download
 
