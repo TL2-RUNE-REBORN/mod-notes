@@ -96,3 +96,8 @@ params:
 ## 获取与更新 · Download
 
 随**挑战者大陆整合包**分发,在 [Mikuro 启动器](/tools/mikuro-launcher/) 勾选「MIKURO 游戏增强」即自动挂载。版本变更见 [Mikuro 启动器更新日志](/changelog/mikuro-launcher-changelog/)。
+
+<figure class="shot">
+  <img src="/img/mod-order.png" alt="挑战者大陆最新 MOD 加载排序">
+  <figcaption>fig.1 — 挑战者大陆整合包的最新 MOD 加载排序,启动器内请照此顺序摆放。</figcaption>
+</figure>

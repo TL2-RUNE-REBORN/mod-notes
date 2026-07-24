@@ -96,3 +96,8 @@ Each talisman maps to one cap-break stone:
 ## Download · 获取
 
 Distributed with the **Challenger Continent bundle**; auto-mounted the moment you enable "MIKURO Game Enhancement" in the [Mikuro launcher](/en/tools/mikuro-launcher/). Version history: [Mikuro launcher changelog](/en/changelog/mikuro-launcher-changelog/).
+
+<figure class="shot">
+  <img src="/img/mod-order.png" alt="Challenger Continent recommended MOD load order">
+  <figcaption>fig.1 — The current recommended MOD load order for the Challenger Continent bundle.</figcaption>
+</figure>

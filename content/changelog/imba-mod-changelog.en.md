@@ -14,6 +14,13 @@ Translation polish + a mercenary shield fix, plus a full repack. This release ma
 - 💬: "Diablo Legacy" fills in a large batch of previously missing or untranslated affix and effect strings (~360 entries) — accuracy, melee/ranged weapon damage up/down, Vitality/Focus buffs, health/mana drain debuffs, dodge chance, life steal to owner on hit, fishing luck, swap items with pet, silence / stun resistance, and more
 - ♻️: All components fully rebuilt with the packer; replacing the whole pack is recommended
 
+<figure class="shot">
+  <img src="/img/mod-order.png" alt="Challenger Continent recommended MOD load order">
+  <figcaption>fig.1 — The current recommended MOD load order — arrange the components this way in the launcher.</figcaption>
+</figure>
+
+> The runtime content shipped with the bundle — **Azure Lotus spirit stones · sockets 5→10 · beast taunt** — is documented in full at [MIKURO Game Enhancement · Content](/en/tools/mikuro-runtime-mod/).
+
 ## 2026-07-12
 Crash-fix special, plus the launcher's "MIKURO Game Enhancement" update. This release focuses on three classes of crashes confirmed in real play; all MODs have been fully repacked — replacing the whole pack is recommended, and the launcher has been updated in step.
 
