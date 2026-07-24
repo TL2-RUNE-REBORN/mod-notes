@@ -17,7 +17,7 @@ params:
     - "One click to join the MIKURO Afdian multiplayer servers (Guangzhou / Australia)"
     - "Environment self-check on every launch: OS / first run / mod folder / VC++ runtime"
   flavor: "The cap only ever existed in one line of the old launcher."
-  status: "Released · v1.1.8"
+  status: "Released · v1.1.9"
   metaline: "windows 10 / 11 · bundled with the mod pack"
 ---
 

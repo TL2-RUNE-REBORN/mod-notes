@@ -1,6 +1,6 @@
 ---
 title: "Mikuro Launcher Changelog"
-date: 2026-07-12T14:05:17+10:00
+date: 2026-07-24T21:45:48+10:00
 author: "Mikuro"
 summary: "Version change history of the Mikuro Launcher (including MIKURO Game Enhancement)."
 ---
@@ -8,8 +8,8 @@ summary: "Version change history of the Mikuro Launcher (including MIKURO Game E
 
 > The full in-game content mounted by "MIKURO X" (Azure Lotus gems, sockets 5→10, Beast Taunt) now has its own page in the Armory → **[MIKURO Runtime MOD](/en/tools/mikuro-runtime-mod/)**. This page tracks version changes only.
 
-## 2026-07-24 (v1.1.8)
-A larger feature update: the enhancement switches are consolidated into a "MIKURO X" master + ⚙ popup, with new save Respec tools and WASD movement, a parchment light theme, a no-shake toggle, a first-run notice, plus several fixes.
+## 2026-07-24 (v1.1.9)
+A larger feature update: the enhancement switches are consolidated into a "MIKURO X" master + ⚙ popup, with new save Respec tools and WASD movement, a parchment light theme, a no-shake toggle, a first-run notice, forced-update support, plus several fixes.
 
 - ✨: New save "Respec" tool — every save card gets a "Respec" button: refund skill points per-skill or all at once (removes that skill's entries from the save's effect table and refunds by level), and optionally reset stats (four attributes back to 10/10/10/10, points refunded conservatively); saved in place with an automatic `.bak`. Fully quit the game before saving, or the autosave overwrites your changes
 - ✨: Loot filter gains a "**keep-list**" (whitelist) — when filtering in bulk by rarity, gems (`SOCKETABLE`) and amulets (`AMULET`) are kept by default, so "block blue / green" no longer collaterally destroys runes / gems / amulets; add your own keep entries by type or name (keep-priority above a same-level blacklist); items rescued by the whitelist are flagged "Kept" in the filter panel
@@ -18,6 +18,7 @@ A larger feature update: the enhancement switches are consolidated into a "MIKUR
 - ✨: New "WASD movement" — move with WASD instead of click-to-move; F6 toggles it in-game, `[` `]` adjust step size; if WASD is bound to skills, clear them in the game's key settings first
 - ✨: New "No shake" toggle on the main bar — turns off camera shake (a vanilla option many new players can't find), written into the settings before launch
 - ✨: Environment self-check gains a "First run" item — when the game profile (`settings.txt`) is missing it shows a gentle notice suggesting a mods-off first launch to generate the graphics profile. Optional, not required: by reverse-engineering and a live test, the game autodetects a safe profile when the config is missing, and a first modded launch usually autoconfigures fine
+- ✨: Added **forced-update** support — when a version is marked mandatory, the game can't be launched until you update (the top banner can't be dismissed and the launch button is blocked with a prompt), keeping everyone on a consistent version to avoid multiplayer / save incompatibility
 - 🐛: Fixed mods stuck showing a ⚠ (invalid) marker until restart — a file locked during pack deployment could fail to read and be flagged invalid; the list now re-reads on every refresh and self-heals once the read succeeds
 - 🐛: Fixed an error when double-clicking a vanilla save card — it now clears the selected mods instead (equivalent to "Launch Vanilla")
 - 🎨: Added a parchment light theme; the launcher was renamed to "Mikuro Launcher"
