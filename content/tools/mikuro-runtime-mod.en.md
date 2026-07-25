@@ -63,7 +63,7 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 
 - The **final step** (9× 11% 凝华 → 太虚), like all five cap-break recipes, is a **fixed result** — no gamble.
 - A 聚灵's tier only matters when you socket it: **whichever tier you feed the re-melt, the 凝华 spread is identical** — so melt any 9 same-tier stack as soon as you have it; there is no reason to hoard high rolls.
-- Expected scale: one 聚灵 ≈ 9 Jade Marrow (~400 champions/bosses), one 凝华 ≈ 81 Jade Marrow (~3,600). An 11% 凝华 is only **1.9%** per roll, so nine of them for a 太虚 is a lifetime goal — every lower roll along the way stays perfectly usable.
+- Expected scale: one 聚灵 ≈ 9 Jade Marrow (~210 champions/bosses), one 凝华 ≈ 81 Jade Marrow (~1,900). An 11% 凝华 is only **1.9%** per roll, so nine of them for a 太虚 is a lifetime goal — every lower roll along the way stays perfectly usable.
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
@@ -88,28 +88,43 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 (Beast Taunt Collar) | Pet collar equipment; your pet must wear it to respond to the taunt command |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 (Tome: Beast Taunt Command) | Use to learn an active skill: enemies within 10m switch to attacking your pet for 4 seconds |
 
-> Both Beast Taunt pieces drop **from bosses only, 1% each**, rolled independently (collar and tome are separate checks — you may get both, or neither). Design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
+> Collar and tome roll **independently** — you may get both, or neither. Bosses give **1% each** (doubled on 【史诗·传说级】); both also appear in the general loot pool now, so other sources can turn them up too — full figures in §Ⅴ. Design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 ## Ⅴ Drops · 材料掉落
 
-The root materials shared by both forging lines all drop from monsters (stackable), and drop rates are **tiered by how tough the kill is**. Figures below are the **real per-kill chance** (recalibrated after the latest coverage pass).
+The root materials shared by both forging lines all drop from monsters (stackable). Figures below are the **real per-kill chance**.
 
-| Material | Line | Normal | Half-champ | Champion | BOSS | Imba-mod ★ |
+| Material | Line | Trash | Champion | BOSS | Epic·Legendary ★ | Map BOSS ★★ |
 |---|---|:-:|:-:|:-:|:-:|:-:|
-| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | Cooldown · root | 0.008% | **2.23%** | **2.23%** | **2.23%** | **4.46%** |
-| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | Cap-break · universal root | 0.004% | 0.56% | 1.12% | **3.16%** | **6.32%** |
-| 五系符 · Talismans (one specific) | Cap-break · catalyst | — | 0.037% | 0.074% | **0.21%** | **0.42%** |
-| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | Beast Taunt | — | — | — | **1%** | **2%** |
-| <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | Beast Taunt | — | — | — | **1%** | **2%** |
+| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | Cooldown · root | 0.08% | **4.26%** | **4.26%** | **4.46%** | **7.78%** |
+| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | Cap-break · universal root | 0.04% | 2.13% | **4.18%** | **6.32%** | 3.89% |
+| 五系符 · Talismans (one specific) | Cap-break · catalyst | 0.006% | 0.24% | **0.38%** | **0.42%** | **0.65%** |
+| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | Beast Taunt | — | — | **1%** | **2%** | — |
+| <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | Beast Taunt | 0.009% | 0.25% | **1.25%** | **2%** | **5.2%** |
 
-★ The **Imba-mod column** is that component's 【史诗级】/【传说级】 bosses — they are built "for veterans only", so material rates there are **doubled**. Its other monsters (堕落英雄 / 勇士 / 战神) use the Normal / Champion / BOSS columns.
+★ 【史诗级】/【传说级】 bosses come from the **Imba-mod** component — built "for veterans only", so material rates there are **doubled**.
+★★ Map BOSS = the Dark-Legend component's rift / mapworks bosses. The collar can also come from pet-collar pools (~2.7%).
 
-- **Jade Marrow has two regimes**: trash mobs barely drop it (0.008%); the real supply starts at **half-champion and up, a flat 2.23% across all three ranks**. Farming champions beats farming trash by two orders of magnitude.
-- **Ash** drops at every rank, more as monsters get tougher; a hit always yields exactly 1 (a BOSS hits 3.16% of the time — it is not guaranteed).
+- **Farm the tough ones**: trash to champion is a ~**50×** jump. Champions and bosses are in a different league entirely.
+- **Ash** yields exactly 1 per hit (a BOSS hits 4.18% of the time — it is not guaranteed).
 - **Talismans are a random pool**: a hit rolls one of the five at random — the table already shows the chance for **one specific** talisman.
-- Everything above drops from monsters and nowhere else: **no merchant stocks them, no chest contains them, no barrel or rock coughs one up.** They are deliberately kept out of vanilla's generic loot pools, so they never dilute your normal gear and scroll drops.
+- **No longer monster-only** — these materials now sit in the generic loot pool, so barrels, chests and scenery can drop them too, and merchants stock them (see prices below).
+
+### Merchant prices
+
+Materials can now be bought outright, but at **gold-sink** prices — a fallback, never a shortcut. Prices scale linearly with item level; the table below is at **level 100**:
+
+| Item | Buy price |
+|---|---:|
+| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | **9,000,000** |
+| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | 18,000,000 |
+| Talismans (each) | 27,000,000 |
+| <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | 18,000,000 |
+| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | **9,000,000** |
+
+The same item costs about 1/19 of that at level 1, and about 1.77× at level 180.
 
 Each talisman maps to one cap-break stone:
 
@@ -119,7 +134,7 @@ Each talisman maps to one cap-break stone:
 
 **Forging**: 9× Ash + 1× the matching talisman at the alchemist yields that stone (the recipe is auto-learned on the first correct insert).
 
-> **Balanced across both lines**: one 凝华 ≈ 81 Jade Marrow ≈ **3,600 champions/bosses** (~1,800 if you farm 【史诗·传说级】); one cap-break stone ≈ 9 Ash + 1 specific talisman, and **the talisman is the bottleneck** ≈ **1,300 champions / 470 bosses / 240 【史诗·传说级】** — the two lines mirror each other mid-game, and their ceilings (太虚 / maxing one stat at 4–8 stones) are both lifetime goals.
+> **Balanced across both lines**: one 凝华 ≈ 81 Jade Marrow ≈ **1,900 champions/bosses** (~1,040 on map bosses); one cap-break stone ≈ 9 Ash + 1 specific talisman, and **the talisman is the bottleneck** ≈ **420 champions / 260 bosses / 240 【史诗·传说级】** — the two lines mirror each other mid-game, and their ceilings (太虚 / maxing one stat at 4–8 stones) are both lifetime goals.
 
 ## Download · 获取
 

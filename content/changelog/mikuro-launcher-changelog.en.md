@@ -8,6 +8,21 @@ summary: "Version change history of the Mikuro Launcher (including MIKURO Game E
 
 > The full in-game content mounted by "MIKURO X" (Azure Lotus gems, sockets 5→10, Beast Taunt) now has its own page in the Armory → **[MIKURO Runtime MOD](/en/tools/mikuro-runtime-mod/)**. This page tracks version changes only.
 
+## 2026-07-25 (Game Enhancement content update)
+Azure Lotus material drops overhauled: **coverage 20% → 92%, switched to random drops**. Full figures: **[MIKURO Runtime MOD](/en/tools/mikuro-runtime-mod/)**.
+
+- 🐛: Fixed **re-melt recipes producing nothing** — transmuting 9× 聚灵 into 凝华 yielded no item at all. The output pool's gems were blocked by the engine's rarity gate (a candidate with weight 0 never enters the pool), so all five re-melt recipes were dead
+- ⚡: **Material drop coverage 20% → 92%** — previously only about a fifth of all monsters could drop Azure Lotus materials; huge swathes (mapworks bosses, nearly all Imba-mod monsters) dropped none at all. Eleven loot tables are now taken over and seeded by monster tier
+- ⚡: **Switched to random drops** — materials no longer depend on table-by-table hookups; they now sit in the generic loot pool, the same mechanism the Dark-Legend component's "Maya Shard" uses. This was the root cause of "farming forever and getting nothing": a large class of monsters (especially rift and map bosses) had a loot structure we simply could not reach. Jade Marrow is now ~**7.8%** on map bosses and **4.3%** on champions
+- ⚡: **Doubled material rates on Imba-mod 【史诗级】/【传说级】 bosses** — that tier is built for veterans anyway
+- ✨: **Materials can now be bought from merchants** — at gold-sink prices (at level 100: Jade Marrow ~9,000,000, Ash 18,000,000, talismans 27,000,000). A fallback, never a shortcut
+- ⚠️: Side effect — putting Azure Lotus materials into the shared scroll pool **dilutes same-pool materials such as the Dark-Legend component's "Maya Shard"** (down roughly 60%). That is the arithmetic of a shared pool; it cannot be avoided
+
+## 2026-07-25 (v1.2.0)
+Follow-up fix: flickering mouse cursor.
+
+- 🐛: Fixed the cursor rapidly flickering between the Windows arrow and the in-game pointer — most noticeable when hovering items / monsters, or just moving the mouse. The enhancement layer's in-game panel reset the system cursor to the Windows arrow on every mouse move, fighting the game's own cursor (the game only reapplies its pointer when the shape needs to change, so every move flipped it); it now never touches the system cursor and leaves it entirely to the game. **Unrelated to "WASD movement"** — it happened with that feature off too; on older builds the workaround was pressing `Home` to hide the panel
+
 ## 2026-07-24 (v1.1.9)
 A larger feature update: the enhancement switches are consolidated into a "MIKURO X" master + ⚙ popup, with new save Respec tools and WASD movement, a parchment light theme, a no-shake toggle, a first-run notice, forced-update support, plus several fixes.
 
