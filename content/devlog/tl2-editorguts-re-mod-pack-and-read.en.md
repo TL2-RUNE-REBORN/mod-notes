@@ -2,8 +2,18 @@
 title: "TL2 EditorGuts RE — MOD Packing & Reading Internals"
 date: 2026-06-20T17:00:00+10:00
 author: "Mikuro"
-summary: "Reversing .MOD packing & reading internals from EditorGuts.dll exports."
+summary: "Reversing .MOD packing & reading internals from EditorGuts.dll exports. (Superseded 2026-07-25 by 'TL2 .MOD Packing, Fully Analyzed' — several conclusions here have since been overturned; see the notice at the top.)"
 ---
+
+> **⚠ 2026-07-25: this is an early set of notes. For the current, complete write-up read
+> [\"What's Actually Inside a .MOD — Torchlight II's Packing Format, Fully Explained\"](/en/devlog/tl2-mod-packing-full-analysis/).**
+>
+> The skeleton (three-part container / BINDAT / BINLAYOUT / RAW / rollingHash / uppercase filenames) still holds.
+> What's stale: §5.4's verdict on the MPP residual ("a runtime per-instance nocollide decision, unfixable") was
+> later disproven point by point, and the current figure is **99.850%** walkability; §1.2's reqHash "latent gap"
+> has since been reversed and implemented; this post is missing GUTS's 13 pack-exclude suffixes; and the isal /
+> Python implementation in §1.4 has been replaced by the Rust port, whose same code also compiles to a
+> [web packer](/en/tools/packer/). The text below is kept as-is for the archive.
 
 > Goal: **offline, editor-free** generation — from `.DAT/.LAYOUT` sources — of `.MOD` files that are
 > **functionally equivalent to the native DLL pack and take effect in-game**.

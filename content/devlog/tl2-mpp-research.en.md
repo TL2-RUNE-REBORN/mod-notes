@@ -2,8 +2,22 @@
 title: "TL2 MPP Research"
 date: 2023-08-30T10:48:11+10:00
 author: "Mikuro"
-summary: "Why cleaning up .MPP files breaks dungeon walkability — repro steps and findings."
+summary: "Why cleaning up .MPP files breaks dungeon walkability — repro steps and findings. (2026-07-25: the black-box model below is correct; the mechanism behind it is now reversed — see the notice at the top.)"
 ---
+
+> **⚠ 2026-07-25 — the observations below are correct, and the mechanism behind them is now reversed.**
+> Full write-up in [\"TL2 .MOD Packing, Fully Analyzed\" §8.2](/en/devlog/tl2-mod-packing-full-analysis/#82-why-guts-sometimes-needs-two-builds). In short:
+>
+> - "Function 1 runs before Function 2" is simply the **order inside `CreateMod`** (`sub_103FA610`): the pathing
+>   step (`Pathing_RegenAll_worker` @`0x10018750`) runs **before** the LAYOUT→BINLAYOUT compile (`sub_1029C9A0`).
+> - MPP needs BINLAYOUT because the pathing step drives the **runtime level loader**
+>   (`CLevel_LoadLevelData` @`0x1020AB90`), not a text parser — and the loader only eats `.BINLAYOUT`.
+>   No BINLAYOUT → level load fails → it degrades to a default 50×50 box → an all-`0xFF` stub.
+> - The stub is **2524 bytes** = 24-byte header + 50×50, which matches the "exact 2.5kb" below. The quoted
+>   header bytes `4B 00 00 00 4B 00 00 00`, though, contradict that size (`0x4B` = 75, and 75×75 would be
+>   5649 bytes); a 50×50 header reads `32 00 00 00 32 00 00 00`. Trust the size.
+> - **The offline packer has none of this**: it compiles BINLAYOUT from text on every run and bakes MPP offline,
+>   so there is no stale-intermediate chicken-and-egg and no need to build twice.
 
 I have recently done some tests regarding the `.MPP` files.  
 (Please be aware `MPP` files will only be generated for `LAYOUT` files in the `LAYOUTS` folder)

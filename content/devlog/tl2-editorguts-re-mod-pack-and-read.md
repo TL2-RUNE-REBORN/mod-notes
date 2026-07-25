@@ -3,8 +3,17 @@ title: "TL2 EditorGuts 逆向 — MOD 打包与读取内部结构"
 date: 2026-06-20T17:05:00+10:00
 author: "Mikuro"
 aliases: ["/posts/tl2-editorguts-re-mod-pack-and-read-cn/", "/devlog/tl2-editorguts-re-mod-pack-and-read-cn/", "/posts/tl2-editorguts-re-mod-pack-and-read/"]
-summary: "从 EditorGuts.dll 导出函数逆向 .MOD 打包与读取的完整内部结构。"
+summary: "从 EditorGuts.dll 导出函数逆向 .MOD 打包与读取的完整内部结构。(2026-07-25 已由《TL2 .MOD 打包完全解析》取代 —— 本文若干结论被后续实证推翻,见顶部说明。)"
 ---
+
+> **⚠ 2026-07-25:这是一篇早期笔记,当前完整版请读
+> [《.MOD 里到底装了什么 —— Torchlight II 打包格式完全解析》](/devlog/tl2-mod-packing-full-analysis/)。**
+>
+> 骨架(容器三段 / BINDAT / BINLAYOUT / RAW / rollingHash / 大写文件名)仍然成立,下列几处已经过时:
+> §5.4 对 MPP 残差的判断("运行时的 nocollide per-instance 决定、不可修")后来被逐个证伪,现在的口径是
+> 可走性 **99.850%**;§1.2 的 reqHash "latent gap" 已经逆出并实现;本文缺了 GUTS 的 13 条打包排除后缀;
+> §1.4 提到的 isal 与 Python 实现已被 Rust 版取代,同一套代码还编出了[网页版打包器](/tools/packer/)。
+> 下文保留原样存档。
 
 > 目标:**离线、无编辑器**地从 `.DAT/.LAYOUT` 源生成与原生 DLL 打包**功能等价、可进游戏生效**的 `.MOD`。
 > 本文是 `mikuro_mod_packer/` 包的设计依据,覆盖 **MOD 容器 / BINDAT / BINLAYOUT / RAW / MPP** 五种格式,
