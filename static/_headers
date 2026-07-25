@@ -6,3 +6,9 @@
 /tools/packer/*
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
+
+# 英文版打包页(/en/tools/packer/)复用同一份 worker/wasm/base,只换文案。
+# 不给它同样的头,英文用户就永远拿不到 crossOriginIsolated,静默退回单线程。
+/en/tools/packer/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp

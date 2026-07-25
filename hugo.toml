@@ -108,3 +108,8 @@ defaultContentLanguageInSubdir = false
     [server.headers.values]
       Cross-Origin-Opener-Policy = 'same-origin'
       Cross-Origin-Embedder-Policy = 'require-corp'
+  [[server.headers]]
+    for = '/en/tools/packer/**'
+    [server.headers.values]
+      Cross-Origin-Opener-Policy = 'same-origin'
+      Cross-Origin-Embedder-Policy = 'require-corp'

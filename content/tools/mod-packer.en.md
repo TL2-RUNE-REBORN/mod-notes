@@ -7,7 +7,7 @@ weight: 5
 params:
   rarity: "magic"
   icon: "cube"
-  link: "/tools/packer/"
+  link: "/en/tools/packer/"
   typeline: "Magic · In-Browser Mod Packer · WebAssembly"
   affixes:
     - "The same Rust code as the desktop tl2-mikuro-mod-packer, compiled to wasm — DAT / LAYOUT compilation and .MOD packing are byte-identical"
@@ -19,6 +19,6 @@ params:
   metaline: "web · chrome / edge / firefox"
 ---
 
-<script>location.replace("/tools/packer/")</script>
+<script>location.replace("/en/tools/packer/")</script>
 
-The tool lives on the packer page itself — **[▶ Open the .MOD Packer](/tools/packer/)**, nothing to install, runs straight in your browser.
+The tool lives on the packer page itself — **[▶ Open the .MOD Packer](/en/tools/packer/)**, nothing to install, runs straight in your browser.

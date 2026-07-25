@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>.MOD 打包器 网页版 — 余烬工坊</title>
-<meta name="description" content="浏览器内把火炬之光2 mod 文件夹打包成 .MOD:与桌面版打包器同一套 Rust 代码编译成 WebAssembly,纯本地、零上传、零安装。">
+<title>.MOD Packer · Web Edition — Emberworks</title>
+<meta name="description" content="Pack a Torchlight II mod folder into a .MOD right in the browser: the desktop packer's Rust code compiled to WebAssembly — fully local, nothing uploaded, nothing to install.">
 <meta name="theme-color" content="#100e0b">
 <link rel="alternate" hreflang="zh-CN" href="https://tl2-mod.chr.moe/tools/packer/">
 <link rel="alternate" hreflang="en" href="https://tl2-mod.chr.moe/en/tools/packer/">
@@ -15,7 +15,7 @@
 /* ═══════════════════════════════════════════════════════════════
    EMBERWORKS · 余烬工坊 — 完整设计系统样式表(内联)
    来源:tl2-mod.chr.moe 线上主题(2026-07 定稿)
-   ⚠ 与 /en/tools/packer/index.html 的 <style> 保持一致(改一处必须改两处)
+   ⚠ 与 /tools/packer/index.html 的 <style> 保持一致(改一处必须改两处)
    ═══════════════════════════════════════════════════════════════ */
 :root{
   --bg:        #100e0b;
@@ -339,53 +339,53 @@ footer.site a:hover{color:var(--ember-hi)}
 <div class="wrap">
 
 <header class="masthead">
-  <a class="brand" href="https://tl2-mod.chr.moe/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
+  <a class="brand" href="https://tl2-mod.chr.moe/en/"><b>MIKURO</b>&thinsp;· EMBERWORKS</a>
   <nav class="site">
-    <a href="https://tl2-mod.chr.moe/devlog/">开发日志</a>
-    <a href="https://tl2-mod.chr.moe/changelog/">更新日志</a>
-    <a href="https://tl2-mod.chr.moe/tools/" class="on">工具库</a>
-    <a href="https://tl2-mod.chr.moe/guides/">指南</a>
-    <a class="lang" href="https://tl2-mod.chr.moe/en/tools/packer/" title="English" hreflang="en">EN</a>
+    <a href="https://tl2-mod.chr.moe/en/devlog/">Dev Journal</a>
+    <a href="https://tl2-mod.chr.moe/en/changelog/">Changelog</a>
+    <a href="https://tl2-mod.chr.moe/en/tools/" class="on">Armory</a>
+    <a href="https://tl2-mod.chr.moe/en/guides/">Manual</a>
+    <a class="lang" href="https://tl2-mod.chr.moe/tools/packer/" title="中文" hreflang="zh-CN">中文</a>
   </nav>
 </header>
 
 <div class="hero">
   <div class="embers"><b></b><b></b><b></b><b></b><b></b></div>
   <span class="kicker">MIKURO · IN-BROWSER MOD PACKER</span>
-  <h1>.MOD 打包器<em>网页版</em></h1>
-  <div class="sub">Pack in the Browser <span class="zh">零 上 传 · 零 安 装</span></div>
-  <p class="lede">选一个 mod 文件夹,浏览器就地把 <b>DAT / LAYOUT</b> 编译成引擎二进制格式并封装成 <b>.MOD</b>——与桌面版打包器<b>同一套 Rust 代码</b>编译成 WebAssembly,输出一致。文件全程留在你的电脑里,不经过任何服务器。</p>
+  <h1>.MOD Packer<em> Web Edition</em></h1>
+  <div class="sub">网页版打包器 <span class="zh">No Upload · No Install</span></div>
+  <p class="lede">Pick a mod folder and the browser compiles <b>DAT / LAYOUT</b> into the engine's binary formats and wraps them into a <b>.MOD</b> — the <b>same Rust code</b> as the desktop packer, compiled to WebAssembly, with identical output. Your files never leave your machine; no server is involved.</p>
 </div>
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
-<!-- ═══ Ⅰ 打包 ═══ -->
+<!-- ═══ Ⅰ Pack ═══ -->
 <section class="block">
   <header class="sec">
     <span class="num">Ⅰ</span>
-    <h2>打包 <span class="en">Pack</span></h2>
-    <p class="lede">mod 文件夹需包含 <b>MOD.DAT</b> 与 <b>MEDIA/</b>(与桌面版打包器的输入完全相同)。</p>
+    <h2>Pack <span class="en">打包</span></h2>
+    <p class="lede">The mod folder must contain <b>MOD.DAT</b> and <b>MEDIA/</b> (exactly the input the desktop packer takes).</p>
   </header>
 
   <div class="packer">
-    <p class="thread-status" id="threadStatus">ENGINE · 检测中 …</p>
-    <p class="step-cap">01 · 选择 Mod 文件夹</p>
-    <button class="btn" id="pick">选择 MOD 文件夹</button>
+    <p class="thread-status" id="threadStatus">ENGINE · detecting …</p>
+    <p class="step-cap">01 · Choose the mod folder</p>
+    <button class="btn" id="pick">Choose MOD folder</button>
     <input type="file" id="pickFallback" webkitdirectory multiple hidden>
-    <p class="pick-hint" id="pickHint">Chrome / Edge 直接选文件夹;Firefox 等浏览器走目录上传(同样只在本地读取)。</p>
+    <p class="pick-hint" id="pickHint">Chrome / Edge pick the folder natively; Firefox and others fall back to directory upload (still read locally only).</p>
 
     <div id="infoBlock" hidden>
       <hr class="hr">
-      <p class="step-cap">02 · 确认信息</p>
+      <p class="step-cap">02 · Confirm</p>
       <dl class="modinfo">
-        <dt>MOD 名称</dt><dd id="iTitle">—</dd>
-        <dt>文件</dt><dd id="iFiles">—</dd>
-        <dt>结构检查</dt><dd id="iCheck">—</dd>
-        <dt>输出文件名</dt><dd><input id="outName" spellcheck="false"></dd>
+        <dt>Mod name</dt><dd id="iTitle">—</dd>
+        <dt>Files</dt><dd id="iFiles">—</dd>
+        <dt>Structure</dt><dd id="iCheck">—</dd>
+        <dt>Output name</dt><dd><input id="outName" spellcheck="false"></dd>
       </dl>
       <hr class="hr">
-      <p class="step-cap">03 · 打包</p>
-      <button class="btn" id="pack">打包为 .MOD</button>
+      <p class="step-cap">03 · Pack</p>
+      <button class="btn" id="pack">Pack into .MOD</button>
     </div>
 
     <div id="runBlock" hidden>
@@ -394,62 +394,64 @@ footer.site a:hover{color:var(--ember-hi)}
       <div class="progress" id="progress"><i id="progressBar"></i></div>
       <div class="log" id="log"></div>
       <div class="result" id="result" hidden>
-        <button class="btn dl" id="download">下载 .MOD</button>
+        <button class="btn dl" id="download">Download .MOD</button>
         <div class="meta" id="resultMeta"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ Ⅱ 说明与边界 ═══ -->
+<!-- ═══ Ⅱ Notes & Limits ═══ -->
 <section class="block">
   <header class="sec">
     <span class="num">Ⅱ</span>
-    <h2>说明与边界 <span class="en">Notes &amp; Limits</span></h2>
+    <h2>Notes &amp; Limits <span class="en">说明与边界</span></h2>
   </header>
 
   <div class="rarity-note">
-    词缀色阶 ——
-    <em style="color:var(--ember)">■ 传奇橙 = 关键保证</em> ·
-    <em style="color:var(--r-set)">■ 套装绿 = 正常状态</em> ·
-    <em style="color:var(--flame)">■ 焰红 = 边界警示</em>
+    Affix scale ——
+    <em style="color:var(--ember)">■ legendary orange = key guarantee</em> ·
+    <em style="color:var(--r-set)">■ set green = normal state</em> ·
+    <em style="color:var(--flame)">■ flame red = limit warning</em>
   </div>
 
   <ul class="notes-list">
-    <li><span class="chip opt">本地</span><span>打包全程在浏览器的 <b>WebAssembly 沙箱</b>内完成,任何文件都不会上传;页面资源加载完后断网也能打包。</span></li>
-    <li><span class="chip add">一致</span><span><b>BINDAT / BINLAYOUT / RAW 编译与 .MOD 容器封装</b>与桌面版 <code>tl2-mikuro-mod-packer</code> 同一套代码,内容逐字节一致。manifest 中的文件时间戳按浏览器可见的毫秒精度写入(桌面版为 100ns 精度),该字段的微小差异不影响游戏加载与 MOD 激活。</span></li>
-    <li><span class="chip opt">继承</span><span>附带全量 Runic <b>base 数据</b>(UNITS 模板 + LEVELSETS + 碰撞几何,10269 个文件,gzip ≈ 3 MB),<code>BASEFILE</code> 单位继承链与 <b>MPP 走格</b>都在浏览器内完整烘焙——编译结果与桌面版一致。</span></li>
-    <li><span class="chip opt">MPP</span><span><b>关卡寻路走格在浏览器内生成</b>(<code>--mpp re</code>):走格只需 base 碰撞几何(9 MB,已附带),不碰 160 MB 的渲染网格。新地图 / 改地图类 mod 直接可用。</span></li>
-    <li><span class="chip opt">多线程</span><span>页面开启跨源隔离后走 <b>wasm threads</b>:DAT/LAYOUT 编译与容器压缩由 rayon 真并行(与桌面版同一套并行代码),大 mod 打包时间约为单线程的 <b>1/4 ~ 1/6</b>。输出仍与单线程/桌面版逐字节一致;不支持的环境自动回退单线程。</span></li>
-    <li><span class="chip del">边界</span><span>整棵 mod 目录读入内存打包;<b>数百 MB 的巨型整合组件</b>(关卡资产超多、MPP 极重)可能超出浏览器 4 GB 内存上限,请用桌面版。普通 mod 不受影响。</span></li>
+    <li><span class="chip opt">Local</span><span>Packing happens entirely inside the browser's <b>WebAssembly sandbox</b>; no file is ever uploaded. Once the page assets have loaded you can go offline and still pack.</span></li>
+    <li><span class="chip add">Identical</span><span><b>BINDAT / BINLAYOUT / RAW compilation and .MOD container assembly</b> run the same code as the desktop <code>tl2-mikuro-mod-packer</code> — byte-for-byte identical output. File timestamps in the manifest are written at the millisecond precision the browser exposes (the desktop build has 100 ns precision); that tiny difference in one field affects neither game loading nor mod activation.</span></li>
+    <li><span class="chip opt">Base</span><span>Ships the full Runic <b>base data</b> (UNITS templates + LEVELSETS + collision geometry, 10269 files, ≈ 3 MB gzipped), so <code>BASEFILE</code> unit inheritance and <b>MPP walk-grids</b> bake completely in the browser — same result as the desktop build.</span></li>
+    <li><span class="chip opt">MPP</span><span><b>Level walk-grids are generated in the browser</b> (<code>--mpp re</code>): the walk-grid only needs the base collision geometry (9 MB, bundled), never the 160 MB of render meshes. New-map / edited-map mods work out of the box.</span></li>
+    <li><span class="chip opt">Threads</span><span>With cross-origin isolation the page runs on <b>wasm threads</b>: DAT/LAYOUT compilation and container compression are genuinely parallel through rayon (the same parallel code as the desktop build), cutting large-mod packing to roughly <b>1/4 – 1/6</b> of the single-thread time. Output stays byte-for-byte identical to the single-thread and desktop builds; unsupported environments fall back to a single thread automatically.</span></li>
+    <li><span class="chip del">Limits</span><span>The whole mod tree is read into memory to pack. <b>Multi-hundred-MB mega components</b> (huge level asset sets, very heavy MPP) can exceed the browser's 4 GB memory ceiling — use the desktop packer for those. Ordinary mods are unaffected.</span></li>
   </ul>
 </section>
 
-<!-- ═══ Ⅲ 怎么用 ═══ -->
+<!-- ═══ Ⅲ How to use ═══ -->
 <section class="block">
   <header class="sec">
     <span class="num">Ⅲ</span>
-    <h2>怎么用 <span class="en">How to use</span></h2>
-    <p class="lede">与桌面版打包器同一套 Rust 代码编译成 <b>WebAssembly</b>,把 <code>DAT</code> / <code>LAYOUT</code> 编译成引擎二进制并封装成 <code>.MOD</code>——全程在你的浏览器本地完成,文件不上传、无需安装。</p>
+    <h2>How to use <span class="en">怎么用</span></h2>
+    <p class="lede">The desktop packer's Rust code compiled to <b>WebAssembly</b>: it compiles <code>DAT</code> / <code>LAYOUT</code> into engine binaries and wraps them into a <code>.MOD</code> — all locally in your browser, nothing uploaded, nothing installed.</p>
   </header>
 
   <ul class="notes-list">
-    <li><span class="chip opt">① 选</span><span>点 <b>选择 MOD 文件夹</b>,选中 mod 根目录(需含 <code>MOD.DAT</code> 与 <code>MEDIA/</code>)。Chrome / Edge 用原生文件夹选择器;Firefox 等自动改走目录上传(同样只在本地读取)。</span></li>
-    <li><span class="chip opt">② 确认</span><span>核对 <b>MOD 名称</b> 与 <b>输出文件名</b>(自动从 <code>MOD.DAT</code> 的 <code>MOD_FILE_NAME</code> 读出)。</span></li>
-    <li><span class="chip add">③ 打包</span><span>点 <b>打包为 .MOD</b>,完成后直接下载。含关卡的 mod 会一并烘 MPP 走格;巨型整合组件请用桌面版。</span></li>
+    <li><span class="chip opt">① Pick</span><span>Hit <b>Choose MOD folder</b> and select the mod root (it needs <code>MOD.DAT</code> and <code>MEDIA/</code>). Chrome / Edge use the native folder picker; Firefox and others switch to directory upload automatically (still read locally only).</span></li>
+    <li><span class="chip opt">② Confirm</span><span>Check the <b>mod name</b> and the <b>output name</b> (read automatically from <code>MOD_FILE_NAME</code> in <code>MOD.DAT</code>).</span></li>
+    <li><span class="chip add">③ Pack</span><span>Hit <b>Pack into .MOD</b> and download the result. Mods containing levels bake their MPP walk-grids along the way; use the desktop packer for mega components.</span></li>
   </ul>
-  <p class="flavor">"同一座熔炉,换了一扇窗。"</p>
+  <p class="flavor">"The same furnace, seen through a new window."</p>
 </section>
 
 <footer class="site">
   <span>EMBERWORKS · 余烬工坊 © 2026</span>
-  <span><b>MIKURO</b> · <a href="https://github.com/heiybb" rel="me">GITHUB</a> · <a href="https://tl2-mod.chr.moe/tools/">工具库</a></span>
+  <span><b>MIKURO</b> · <a href="https://github.com/heiybb" rel="me">GITHUB</a> · <a href="https://tl2-mod.chr.moe/en/tools/">ARMORY</a></span>
 </footer>
 
 </div>
 
 <script type="module">
-/* ── 主线程:UI + 目录选择;打包与自检全部在 module worker 里跑 ── */
+/* ── 主线程:UI + 目录选择;打包与自检全部在 module worker 里跑 ──
+   worker / wasm / base bundle 全部复用 /tools/packer/ 那一份(3 MB+ 资产不复制),
+   只用 ?lang=en 让 worker 吐英文文案。 */
 const $ = id => document.getElementById(id);
 const els = {
   pick: $("pick"), fallback: $("pickFallback"), hint: $("pickHint"),
@@ -463,9 +465,9 @@ let picked = null;      // { files:[{rel,file}], folderName, meta:{name,title}, 
 let outBlob = null, outUrl = null, outFileName = null;
 let activeLog = els.log; // worker 日志当前写到哪个 <div>
 
-const worker = new Worker("./pack_worker.js", { type: "module" });
+const worker = new Worker("/tools/packer/pack_worker.js?lang=en", { type: "module" });
 worker.onerror = e => {
-  appendLog(activeLog, "worker 加载失败:" + (e.message || e), "bad");
+  appendLog(activeLog, "Failed to load worker: " + (e.message || e), "bad");
   setBusy(false);
 };
 // 线程池成员(rayon worker)的实时进度绕过被 _start 阻塞的主 worker,
@@ -480,37 +482,37 @@ worker.onmessage = ev => {
     const el = $("threadStatus");
     if (m.threads >= 2) {
       el.classList.add("mt");
-      el.innerHTML = `ENGINE · <b>多线程 ×${m.threads}</b> — wasm threads + rayon,与桌面版同源并行`;
+      el.innerHTML = `ENGINE · <b>multi-threaded ×${m.threads}</b> — wasm threads + rayon, same parallel code as the desktop build`;
     } else {
       el.classList.remove("mt");
       el.innerHTML = m.isolated
-        ? "ENGINE · 单线程(强制)"
-        : "ENGINE · 单线程 — 此环境无跨源隔离(SharedArrayBuffer 不可用),已自动回退";
+        ? "ENGINE · single thread (forced)"
+        : "ENGINE · single thread — no cross-origin isolation here (SharedArrayBuffer unavailable), fell back automatically";
     }
   }
   else if (m.type === "stage") { els.stage.textContent = m.stage; els.progress.classList.add("busy"); }
   else if (m.type === "progress") {
     els.progress.classList.remove("busy");
     els.bar.style.width = m.total ? Math.round(m.done / m.total * 100) + "%" : "0%";
-    els.stage.textContent = `读取文件 ${m.done}/${m.total} · ${(m.bytes / 1048576).toFixed(1)} MB`;
+    els.stage.textContent = `Reading files ${m.done}/${m.total} · ${(m.bytes / 1048576).toFixed(1)} MB`;
   }
   else if (m.type === "done") {
     els.progress.classList.remove("busy");
     els.bar.style.width = "100%";
-    els.stage.textContent = "完成";
+    els.stage.textContent = "Done";
     outBlob = new Blob([m.data], { type: "application/octet-stream" });
     if (outUrl) URL.revokeObjectURL(outUrl);
     outUrl = URL.createObjectURL(outBlob);
     outFileName = m.name;
     els.resultMeta.innerHTML =
-      `<b>${m.name}</b> · ${m.size.toLocaleString()} 字节 · ${m.ms} ms<br>` +
+      `<b>${m.name}</b> · ${m.size.toLocaleString()} bytes · ${m.ms} ms<br>` +
       `<span class="sha">SHA-256 ${m.sha}</span>`;
     els.result.hidden = false;
     setBusy(false);
   }
   else if (m.type === "error") {
     els.progress.classList.remove("busy");
-    els.stage.textContent = "打包失败";
+    els.stage.textContent = "Packing failed";
     if (m.message) appendLog(activeLog, m.message, "bad");
     setBusy(false);
   }
@@ -554,7 +556,7 @@ const sanitize = s => (s || "").replace(/[\\/:*?"<>|\x00-\x1f]/g, "_").trim() ||
 
 /* ── 目录选择:File System Access 优先,webkitdirectory 兜底 ── */
 const hasFSA = "showDirectoryPicker" in window;
-if (!hasFSA) els.hint.innerHTML = "当前浏览器不支持文件夹选择器,将走<b>目录上传</b>(同样只在本地读取,不上传)。";
+if (!hasFSA) els.hint.innerHTML = "This browser has no folder picker, so it falls back to <b>directory upload</b> (still read locally, never uploaded).";
 
 els.pick.addEventListener("click", async () => {
   if (hasFSA) {
@@ -583,7 +585,7 @@ els.fallback.addEventListener("change", () => {
 
 async function scanFSA(dirHandle) {
   els.stage.textContent = "";
-  els.iFiles.textContent = "扫描中 …";
+  els.iFiles.textContent = "Scanning …";
   els.info.hidden = false;
   const files = [];
   // 顶层只认 MOD.DAT + MEDIA/,其余(已打好的 .MOD、图源等)不进内存
@@ -608,7 +610,7 @@ async function collectDir(dirHandle, prefix, out) {
     if (handle.kind === "directory") await collectDir(handle, rel, out);
     else if (!skipReadInput(name)) {
       out.push({ rel, file: await handle.getFile() });
-      if ((out.length & 63) === 0) els.iFiles.textContent = `扫描中 … ${out.length} 个文件`;
+      if ((out.length & 63) === 0) els.iFiles.textContent = `Scanning … ${out.length} files`;
     }
   }
 }
@@ -626,14 +628,14 @@ async function finishScan(files, folderName) {
 
   els.info.hidden = false;
   els.iTitle.textContent = meta.title || meta.name || folderName;
-  els.iFiles.textContent = `${files.length} 个文件 · ${(totalBytes / 1048576).toFixed(1)} MB(仅 MOD.DAT + MEDIA/)`;
+  els.iFiles.textContent = `${files.length} files · ${(totalBytes / 1048576).toFixed(1)} MB (MOD.DAT + MEDIA/ only)`;
   els.iCheck.innerHTML =
-    (picked.hasModDat ? `<span class="ok">✓ MOD.DAT</span>` : `<span class="miss">✗ MOD.DAT(将用文件夹名,header 为空)</span>`) +
+    (picked.hasModDat ? `<span class="ok">✓ MOD.DAT</span>` : `<span class="miss">✗ MOD.DAT (folder name will be used, empty header)</span>`) +
     " · " +
     (hasMedia ? `<span class="ok">✓ MEDIA/</span>` : `<span class="miss">✗ MEDIA/</span>`);
   els.outName.value = sanitize(meta.name || folderName) + ".MOD";
   els.pack.disabled = !hasMedia;
-  if (!hasMedia) els.iFiles.textContent += " —— 所选文件夹里没有 MEDIA/,请确认选的是 mod 根目录";
+  if (!hasMedia) els.iFiles.textContent += " —— no MEDIA/ in the selected folder; make sure you picked the mod root";
   els.run.hidden = true;
   els.result.hidden = true;
 }

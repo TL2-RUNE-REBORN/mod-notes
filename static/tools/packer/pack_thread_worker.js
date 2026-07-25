@@ -27,6 +27,9 @@ patchTextDecoderForSAB();
 const bc = new BroadcastChannel("tl2-pack-log");
 const log = (line, cls) => bc.postMessage({ line, cls });
 
+// 文案语言由 pack_worker.js 经 worker URL 的 ?lang=… 透传(见那边的 T())
+const T = (zh, en) => (/(^|[?&])lang=en(&|$)/.test(self.location.search) ? en : zh);
+
 let instance = null;
 let wasi = null;
 
@@ -62,7 +65,7 @@ self.onmessage = async (ev) => {
       wasi.initialize(wrapInstanceFreshMemory(instance, m.memory)); // 只挂 inst,不跑入口
       self.postMessage({ type: "ready" });
     } catch (e) {
-      log("[pool] init 失败:" + String(e && e.stack || e), "bad");
+      log(T("[pool] init 失败:", "[pool] init failed: ") + String(e && e.stack || e), "bad");
       self.postMessage({ type: "init-error", err: String(e && e.message || e) });
     }
   } else if (m.op === "start") {
@@ -70,7 +73,7 @@ self.onmessage = async (ev) => {
       instance.exports.wasi_thread_start(m.tid, m.startArg);
       // rayon worker 正常情况下不返回(池常驻);返回说明线程函数退出了
     } catch (e) {
-      log(`[pool] 线程 ${m.tid} 异常:` + String(e && e.stack || e), "bad");
+      log(T(`[pool] 线程 ${m.tid} 异常:`, `[pool] thread ${m.tid} crashed: `) + String(e && e.stack || e), "bad");
     }
   }
 };

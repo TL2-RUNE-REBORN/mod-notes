@@ -43,6 +43,12 @@ patchTextDecoderForSAB(); // threads 模式下 wasm 内存是 SAB;单线程零�
 const post = (type, extra) => self.postMessage(Object.assign({ type }, extra));
 const log = (line, cls) => post("log", { line, cls });
 
+// ── 文案 i18n ───────────────────────────────────────────────────────────────
+// 英文页(/en/tools/packer/)复用同一份 worker 与 wasm/base 资产,只用 worker
+// URL 上的 ?lang=en 切文案(资产 3MB+,绝不为翻译复制一份)。缺省中文。
+const LANG = /(^|[?&])lang=en(&|$)/.test(self.location.search) ? "en" : "zh";
+const T = (zh, en) => (LANG === "en" ? en : zh);
+
 const FILETIME_EPOCH_DELTA = 116444736000000000n; // 100ns ticks, 1601→1970
 
 // ── 多线程能力检测 ─────────────────────────────────────────────────────────
@@ -109,8 +115,9 @@ const wasmPromises = {};
 function loadWasm(threaded) {
   const key = threaded ? "mt" : "st";
   if (!wasmPromises[key]) wasmPromises[key] = (async () => {
-    const url = threaded ? "./pack_threads.wasm" : "./pack.wasm";
-    post("stage", { stage: `加载 ${threaded ? "pack_threads" : "pack"}.wasm …` });
+    const name = threaded ? "pack_threads" : "pack";
+    const url = `./${name}.wasm`;
+    post("stage", { stage: T(`加载 ${name}.wasm …`, `Loading ${name}.wasm …`) });
     const r = await fetch(url);
     if (!r.ok) throw new Error(url + " fetch " + r.status);
     const bytes = await r.arrayBuffer();
@@ -123,7 +130,7 @@ function loadWasm(threaded) {
 let basePromise = null;
 function loadBase() {
   if (!basePromise) basePromise = (async () => {
-    post("stage", { stage: "加载 base 数据(UNITS 模板 + 关卡几何)…" });
+    post("stage", { stage: T("加载 base 数据(UNITS 模板 + 关卡几何)…", "Loading base data (UNITS templates + level geometry) …") });
     const gz = await fetch("./full_base_bundle.bin.gz").then(r => {
       if (!r.ok) throw new Error("base bundle fetch " + r.status);
       return r.arrayBuffer();
@@ -145,7 +152,10 @@ function loadBase() {
     }
     // 隔离环境:字节进 SAB(线程池零拷贝共享);否则普通 buffer(同样省碎片)。
     const { buf, meta } = sabifyEntries(entries, CAN_THREAD);
-    log(`base bundle:${n} 个文件(UNITS 模板 + LEVELSETS + 碰撞几何,gz ${gz.byteLength >> 10} KB)`);
+    log(T(
+      `base bundle:${n} 个文件(UNITS 模板 + LEVELSETS + 碰撞几何,gz ${gz.byteLength >> 10} KB)`,
+      `base bundle: ${n} files (UNITS templates + LEVELSETS + collision geometry, gz ${gz.byteLength >> 10} KB)`,
+    ));
     return { tree: buildTree(entries), buf, meta }; // 只读,可跨 pack 复用
   })();
   return basePromise;
@@ -157,14 +167,15 @@ async function spawnThreadPool(n, initMsg) {
   const workers = [];
   const ready = [];
   for (let i = 0; i < n; i++) {
-    const w = new Worker("./pack_thread_worker.js", { type: "module" });
+    // 带上 ?lang=…:池成员的错误日志也要跟页面同语言
+    const w = new Worker("./pack_thread_worker.js" + self.location.search, { type: "module" });
     workers.push(w);
     ready.push(new Promise((res, rej) => {
       w.onmessage = e => {
         if (e.data && e.data.type === "ready") res();
         else if (e.data && e.data.type === "init-error") rej(new Error(e.data.err));
       };
-      w.onerror = e => rej(new Error("pack_thread_worker: " + (e.message || "加载失败")));
+      w.onerror = e => rej(new Error("pack_thread_worker: " + (e.message || T("加载失败", "failed to load"))));
     }));
     w.postMessage(initMsg);
   }
@@ -189,7 +200,7 @@ async function runPack(modEntries, outName, forceSingle = false, convertThreads 
   const threaded = !forceSingle && CAN_THREAD && poolSize >= 2;
   const [{ module, limits }, base] = await Promise.all([loadWasm(threaded), loadBase()]);
 
-  post("stage", { stage: "构建内存文件系统 …" });
+  post("stage", { stage: T("构建内存文件系统 …", "Building the in-memory filesystem …") });
   // 多线程:mod 字节也进 SAB,池成员共享同一份(主树的 File 直接持同一 view)
   let modMeta = null, modBuf = null;
   if (threaded) ({ buf: modBuf, meta: modMeta } = sabifyEntries(modEntries, true));
@@ -216,7 +227,7 @@ async function runPack(modEntries, outName, forceSingle = false, convertThreads 
   const imports = {};
   if (threaded) {
     try {
-      post("stage", { stage: `预建线程池(${poolSize} workers)…` });
+      post("stage", { stage: T(`预建线程池(${poolSize} workers)…`, `Pre-spawning the thread pool (${poolSize} workers) …`) });
       memory = new WebAssembly.Memory({ initial: limits.mn, maximum: limits.mx, shared: true });
       pool = await spawnThreadPool(poolSize, {
         op: "init", module, memory,
@@ -228,7 +239,7 @@ async function runPack(modEntries, outName, forceSingle = false, convertThreads 
       imports.wasi = { "thread-spawn": (a) => pool.spawn(a) };
       post("mode", { threads: PACK_THREADS, isolated: true });
     } catch (e) {
-      log("线程池初始化失败,回退单线程:" + (e && e.message || e), "bad");
+      log(T("线程池初始化失败,回退单线程:", "Thread pool init failed, falling back to single thread: ") + (e && e.message || e), "bad");
       if (pool) pool.terminate();
       return runPack(modEntries, outName, true);
     }
@@ -243,7 +254,12 @@ async function runPack(modEntries, outName, forceSingle = false, convertThreads 
   );
   imports.wasi_snapshot_preview1 = wasi.wasiImport;
 
-  post("stage", { stage: threaded ? `打包中(压缩 ×${PACK_THREADS}${convertThreads >= 2 ? " · 编译 ×" + convertThreads : ""} 并行)…` : "打包中(DAT/LAYOUT 编译 + 容器组装)…" });
+  const par = `×${PACK_THREADS}${convertThreads >= 2 ? " · " + T("编译", "compile") + " ×" + convertThreads : ""}`;
+  post("stage", {
+    stage: threaded
+      ? T(`打包中(压缩 ${par} 并行)…`, `Packing (parallel: compress ${par}) …`)
+      : T("打包中(DAT/LAYOUT 编译 + 容器组装)…", "Packing (DAT/LAYOUT compile + container assembly) …"),
+  });
   const t0 = performance.now();
   const instance = await WebAssembly.instantiate(module, imports);
   let rc = 0;
@@ -257,11 +273,11 @@ async function runPack(modEntries, outName, forceSingle = false, convertThreads 
     if (pool) pool.terminate(); // rayon 常驻线程随池一起回收
   }
   const ms = Math.round(performance.now() - t0);
-  if (rc !== 0) throw new Error("pack.wasm 退出码 " + rc);
+  if (rc !== 0) throw new Error(T("pack.wasm 退出码 ", "pack.wasm exit code ") + rc);
 
   const oc = (outDir.dir && outDir.dir.contents) || outCI;
   const f = oc.get(outName);
-  if (!f) throw new Error("wasm 正常退出但没有产出 " + outName);
+  if (!f) throw new Error(T("wasm 正常退出但没有产出 ", "wasm exited cleanly but produced no ") + outName);
   const data = f.data instanceof Uint8Array ? f.data : new Uint8Array(f.data);
   return { data, ms };
 }
@@ -331,7 +347,10 @@ const bytesEq = (a, b) => a.length === b.length && a.every((x, i) => x === b[i])
 //   manifest 中每个源文件条目的 FILETIME 必须等于 f64 路径复算的期望值,
 //   合成条目保持 0,数据段解压内容逐文件与参照一致。
 async function selftest() {
-  log(`── 内置自检 · 天煞星宠物 MOD 样例(${CAN_THREAD ? PACK_THREADS + " 线程" : "单线程"})──`);
+  log(T(
+    `── 内置自检 · 天煞星宠物 MOD 样例(${CAN_THREAD ? PACK_THREADS + " 线程" : "单线程"})──`,
+    `── Built-in self-test · Tianshaxing pet-mod sample (${CAN_THREAD ? PACK_THREADS + " threads" : "single thread"}) ──`,
+  ));
   const [modJson, refBuf] = await Promise.all([
     fetch("./selftest/pet_mod.json").then(r => { if (!r.ok) throw new Error("pet_mod.json " + r.status); return r.json(); }),
     fetch("./selftest/ref_pet.MOD").then(r => { if (!r.ok) throw new Error("ref_pet.MOD " + r.status); return r.arrayBuffer(); }),
@@ -353,14 +372,20 @@ async function selftest() {
     if (fr && fr.ft > 0n) { e.mtimeNs = (fr.ft - FILETIME_EPOCH_DELTA) * 100n; injected++; }
     entriesA.set(k, e);
   }
-  log(`样例载入:${entriesA.size} 个文件(${injected} 个注入参照 mtime);参照 ref_pet.MOD ${ref.length} 字节`);
+  log(T(
+    `样例载入:${entriesA.size} 个文件(${injected} 个注入参照 mtime);参照 ref_pet.MOD ${ref.length} 字节`,
+    `Sample loaded: ${entriesA.size} files (${injected} with the reference mtime injected); reference ref_pet.MOD ${ref.length} bytes`,
+  ));
   const a = await runPack(entriesA, "selftest.MOD");
   const [shaA, shaRef] = await Promise.all([sha256hex(a.data), sha256hex(ref)]);
   const passA = a.data.length === ref.length && shaA === shaRef;
-  log(`Test A(逐字节一致):输出 ${a.data.length} B / ${a.ms} ms`);
-  log(`  SHA256 输出 ${shaA}`);
-  log(`  SHA256 参照 ${shaRef}`);
-  log(passA ? "  → PASS · 与桌面版输出逐字节一致(含 manifest FILETIME)" : "  → FAIL · 输出与参照不一致", passA ? "ok" : "bad");
+  log(T(`Test A(逐字节一致):输出 ${a.data.length} B / ${a.ms} ms`, `Test A (byte-for-byte): output ${a.data.length} B / ${a.ms} ms`));
+  log(T(`  SHA256 输出 ${shaA}`, `  SHA-256 output    ${shaA}`));
+  log(T(`  SHA256 参照 ${shaRef}`, `  SHA-256 reference ${shaRef}`));
+  log(passA
+    ? T("  → PASS · 与桌面版输出逐字节一致(含 manifest FILETIME)", "  → PASS · byte-for-byte identical to the desktop output (manifest FILETIME included)")
+    : T("  → FAIL · 输出与参照不一致", "  → FAIL · output differs from the reference"),
+    passA ? "ok" : "bad");
 
   // Test B — 毫秒精度真实用户路径(File.lastModified)
   const MS = Date.UTC(2026, 0, 1); // 固定 2026-01-01T00:00:00Z
@@ -386,14 +411,25 @@ async function selftest() {
     bytesEq(db, dn) ? same++ : diff++;
   }
   const passB = ftBad === 0 && diff === 0 && mb.files.size === mr.files.size;
-  log(`Test B(毫秒 mtime):源文件 FILETIME 命中 ${srcOk}/${srcTotal},合成文件保持 0:${synthOk}/${synthTotal},解压内容一致 ${same}/${mr.files.size}`);
-  log(passB ? "  → PASS · File.lastModified 全链路进入 manifest FILETIME" : "  → FAIL", passB ? "ok" : "bad");
+  log(T(
+    `Test B(毫秒 mtime):源文件 FILETIME 命中 ${srcOk}/${srcTotal},合成文件保持 0:${synthOk}/${synthTotal},解压内容一致 ${same}/${mr.files.size}`,
+    `Test B (millisecond mtime): source FILETIME matched ${srcOk}/${srcTotal}, synthesized entries stayed 0: ${synthOk}/${synthTotal}, decompressed payload identical ${same}/${mr.files.size}`,
+  ));
+  log(passB
+    ? T("  → PASS · File.lastModified 全链路进入 manifest FILETIME", "  → PASS · File.lastModified travels the whole chain into the manifest FILETIME")
+    : "  → FAIL", passB ? "ok" : "bad");
 
   post("selftest", {
     pass: passA && passB,
     summary: passA && passB
-      ? `PASS · Test A 与桌面版参照逐字节一致(${a.data.length} B,SHA-256 相同);Test B mtime 链路 ${srcOk}/${srcTotal} 命中${CAN_THREAD ? ` · ${PACK_THREADS} 线程` : ""}`
-      : `FAIL · Test A ${passA ? "PASS" : "FAIL"} / Test B ${passB ? "PASS" : "FAIL"}(详见日志)`,
+      ? T(
+        `PASS · Test A 与桌面版参照逐字节一致(${a.data.length} B,SHA-256 相同);Test B mtime 链路 ${srcOk}/${srcTotal} 命中${CAN_THREAD ? ` · ${PACK_THREADS} 线程` : ""}`,
+        `PASS · Test A byte-for-byte with the desktop reference (${a.data.length} B, same SHA-256); Test B mtime chain matched ${srcOk}/${srcTotal}${CAN_THREAD ? ` · ${PACK_THREADS} threads` : ""}`,
+      )
+      : T(
+        `FAIL · Test A ${passA ? "PASS" : "FAIL"} / Test B ${passB ? "PASS" : "FAIL"}(详见日志)`,
+        `FAIL · Test A ${passA ? "PASS" : "FAIL"} / Test B ${passB ? "PASS" : "FAIL"} (see log)`,
+      ),
     shaA, size: a.data.length,
   });
 }
@@ -405,7 +441,7 @@ self.onmessage = async (ev) => {
     if (msg.op === "selftest") {
       await selftest();
     } else if (msg.op === "pack") {
-      post("stage", { stage: "开始打包 " + msg.outName });
+      post("stage", { stage: T("开始打包 ", "Starting pack: ") + msg.outName });
       const entries = new Map();
       let done = 0, bytes = 0;
       for (const { rel, file } of msg.files) {
@@ -415,14 +451,17 @@ self.onmessage = async (ev) => {
         if ((done & 31) === 0 || done === msg.files.length)
           post("progress", { done, total: msg.files.length, bytes });
       }
-      log(`已读入 ${done} 个文件,共 ${(bytes / 1048576).toFixed(1)} MB`);
+      log(T(
+        `已读入 ${done} 个文件,共 ${(bytes / 1048576).toFixed(1)} MB`,
+        `Read ${done} files, ${(bytes / 1048576).toFixed(1)} MB total`,
+      ));
       // argv 里只放 ASCII 占位名:shim 0.3.0 的 args_sizes_get 按 UTF-16 code units
       // 计长、args_get 按 UTF-8 写入,中文输出名会被截断成无效 UTF-8 → Rust
       // env::args() panic。容器内容与外部文件名无关,真实名字只用于下载。
       const { data, ms } = await runPack(entries, "OUTPUT.MOD", !!msg.forceSingle, msg.convertThreads ?? CONVERT_THREADS);
       const sha = await sha256hex(data);
-      log(`打包完成:${data.length} 字节 / ${ms} ms`);
-      log(`SHA256:${sha}`);
+      log(T(`打包完成:${data.length} 字节 / ${ms} ms`, `Packed: ${data.length} bytes / ${ms} ms`));
+      log(T(`SHA256:${sha}`, `SHA-256: ${sha}`));
       const out = data.byteOffset === 0 && data.buffer.byteLength === data.length ? data : data.slice();
       self.postMessage({ type: "done", name: msg.outName, size: out.length, sha, ms, data: out.buffer }, [out.buffer]);
     }
@@ -430,10 +469,13 @@ self.onmessage = async (ev) => {
     const raw = String(e && e.message || e);
     // 浏览器 4GB 线性内存上限:巨型整合组件(关卡/MPP 资产极多)会撞穿
     const oom = /memory|out of memory|unreachable|RuntimeError|allocation|os error 48/i.test(raw);
-    log("错误:" + (e && e.stack || e), "bad");
+    log(T("错误:", "Error: ") + (e && e.stack || e), "bad");
     post("error", {
       message: oom
-        ? "超出浏览器 4GB 内存上限 —— 这个 mod 太大(关卡 / MPP 资产过多)。请改用桌面版打包器。原始错误:" + raw
+        ? T(
+          "超出浏览器 4GB 内存上限 —— 这个 mod 太大(关卡 / MPP 资产过多)。请改用桌面版打包器。原始错误:",
+          "Hit the browser's 4 GB memory ceiling — this mod is too big (too many level / MPP assets). Use the desktop packer instead. Raw error: ",
+        ) + raw
         : raw,
     });
   }
