@@ -63,7 +63,7 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 
 - The **final step** (9× 11% 凝华 → 太虚), like all five cap-break recipes, is a **fixed result** — no gamble.
 - A 聚灵's tier only matters when you socket it: **whichever tier you feed the re-melt, the 凝华 spread is identical** — so melt any 9 same-tier stack as soon as you have it; there is no reason to hoard high rolls.
-- Expected scale: one 聚灵 ≈ 9 Jade Marrow, one 凝华 ≈ 81 Jade Marrow (~a thousand-odd normal mobs). An 11% 凝华 is only **1.9%** per roll, so nine of them for a 太虚 is a lifetime goal — every lower roll along the way stays perfectly usable.
+- Expected scale: one 聚灵 ≈ 9 Jade Marrow (~400 champions/bosses), one 凝华 ≈ 81 Jade Marrow (~3,600). An 11% 凝华 is only **1.9%** per roll, so nine of them for a 太虚 is a lifetime goal — every lower roll along the way stays perfectly usable.
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
@@ -94,19 +94,21 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 
 ## Ⅴ Drops · 材料掉落
 
-The root materials shared by both forging lines all drop from monsters (stackable), and drop rates are **tiered by monster rank** — Jade Marrow floods off normal mobs, Ash rises as monsters get tougher, and Talismans appear only on champions and bosses. The tougher the kill, the more it feeds the cap-break line.
+The root materials shared by both forging lines all drop from monsters (stackable), and drop rates are **tiered by how tough the kill is**. Figures below are the **real per-kill chance** (recalibrated after the latest coverage pass).
 
-| Material | Line | Normal | Half-champ | Champion | BOSS |
-|---|---|:-:|:-:|:-:|:-:|
-| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | Cooldown · root | **5.5%** | — | — | — |
-| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | Cap-break · universal root | 1.4% | 3% | 6% | **17%** |
-| 五系符 · Talismans (directional) | Cap-break · catalyst | — | 1% | 3% | **8%** |
-| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | Beast Taunt | — | — | — | **1%** |
-| <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | Beast Taunt | — | — | — | **1%** |
+| Material | Line | Normal | Half-champ | Champion | BOSS | Imba-mod ★ |
+|---|---|:-:|:-:|:-:|:-:|:-:|
+| <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | Cooldown · root | 0.008% | **2.23%** | **2.23%** | **2.23%** | **4.46%** |
+| <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | Cap-break · universal root | 0.004% | 0.56% | 1.12% | **3.16%** | **6.32%** |
+| 五系符 · Talismans (one specific) | Cap-break · catalyst | — | 0.037% | 0.074% | **0.21%** | **0.42%** |
+| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | Beast Taunt | — | — | — | **1%** | **2%** |
+| <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | Beast Taunt | — | — | — | **1%** | **2%** |
 
-- **Jade Marrow** drops from normal mobs only — plentiful, and the sole source for the cooldown line (聚灵 / 凝华 / 太虚).
-- **Ash** drops at every rank, more as monsters get tougher; a hit always yields exactly 1 (a BOSS hits 17% of the time — it is not guaranteed).
-- **Talismans are a random pool**: when a champion / BOSS drops a talisman it rolls one of the five below at random, so a **specific** talisman's real rate ≈ the table value ÷ 5 (e.g. a given talisman off a BOSS ≈ 1.6%). Champions and bosses are the only source.
+★ The **Imba-mod column** is that component's 【史诗级】/【传说级】 bosses — they are built "for veterans only", so material rates there are **doubled**. Its other monsters (堕落英雄 / 勇士 / 战神) use the Normal / Champion / BOSS columns.
+
+- **Jade Marrow has two regimes**: trash mobs barely drop it (0.008%); the real supply starts at **half-champion and up, a flat 2.23% across all three ranks**. Farming champions beats farming trash by two orders of magnitude.
+- **Ash** drops at every rank, more as monsters get tougher; a hit always yields exactly 1 (a BOSS hits 3.16% of the time — it is not guaranteed).
+- **Talismans are a random pool**: a hit rolls one of the five at random — the table already shows the chance for **one specific** talisman.
 - Everything above drops from monsters and nowhere else: **no merchant stocks them, no chest contains them, no barrel or rock coughs one up.** They are deliberately kept out of vanilla's generic loot pools, so they never dilute your normal gear and scroll drops.
 
 Each talisman maps to one cap-break stone:
@@ -117,7 +119,7 @@ Each talisman maps to one cap-break stone:
 
 **Forging**: 9× Ash + 1× the matching talisman at the alchemist yields that stone (the recipe is auto-learned on the first correct insert).
 
-> **Balanced across both lines**: one 凝华 ≈ 81 Jade Marrow (~a thousand-odd normal mobs); one cap-break stone ≈ 9 Ash + 1 talisman (~a hundred-odd champions) — the two lines mirror each other mid-game, and their ceilings (太虚 / maxing one stat at 4–8 stones) are both lifetime goals.
+> **Balanced across both lines**: one 凝华 ≈ 81 Jade Marrow ≈ **3,600 champions/bosses** (~1,800 if you farm 【史诗·传说级】); one cap-break stone ≈ 9 Ash + 1 specific talisman, and **the talisman is the bottleneck** ≈ **1,300 champions / 470 bosses / 240 【史诗·传说级】** — the two lines mirror each other mid-game, and their ceilings (太虚 / maxing one stat at 4–8 stones) are both lifetime goals.
 
 ## Download · 获取
 

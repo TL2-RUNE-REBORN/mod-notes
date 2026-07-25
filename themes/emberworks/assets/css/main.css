@@ -334,7 +334,11 @@ section.block{margin-top:88px}
   color:#c8bda9;overflow-x:auto;margin:26px 0;
 }
 .article-body pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+/* 宽表(如掉落表 7 列)在自己的容器内横向滚动,页面本身永不横向溢出(设计规范 QA #2)。
+   容器由 _markup/render-table.html 渲染钩子包出;margin 移到容器上,表格自身归零。 */
+.table-wrap{overflow-x:auto;margin:26px 0;-webkit-overflow-scrolling:touch}
 .article-body table{width:100%;border-collapse:collapse;margin:26px 0;font-size:15px}
+.table-wrap>table{margin:0;min-width:max-content}
 .article-body th{
   font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--gold);text-align:left;padding:10px 14px;border-bottom:1px solid var(--line-hi);
