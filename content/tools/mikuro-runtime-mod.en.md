@@ -42,6 +42,29 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 - Jade Marrow drops randomly from monsters (stackable); transmute at the alchemist — the recipe is learned automatically the first time you insert the right materials
 - Multiple gems stack multiplicatively: actual cooldown = base × ∏(1 − gem% ÷ 100). Example: three 5% gems → base × 0.95 × 0.95 × 0.95 ≈ 0.857, about **−14.3%** total (not an additive −15%)
 
+**Transmute odds** — every transmute rolls independently; no pity, no accumulation:
+
+| First melt · 9× <img class="gem-px" src="/img/gems/jade.png" alt=""> Jade Marrow yields | Chance |
+|---|:-:|
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 1% | **40%** |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 2% | 28% |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 3% | 18% |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 4% | 10% |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 5% | 4% |
+
+| Re-melt · 9× <img class="gem-px" src="/img/gems/juling.png" alt=""> same-tier 聚灵 yields | Chance |
+|---|:-:|
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 6% | **38.9%** |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 7% | 27.2% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 8% | 17.5% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 9% | 9.7% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 10% | 4.7% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 **11%** | **1.9%** |
+
+- The **final step** (9× 11% 凝华 → 太虚), like all five cap-break recipes, is a **fixed result** — no gamble.
+- A 聚灵's tier only matters when you socket it: **whichever tier you feed the re-melt, the 凝华 spread is identical** — so melt any 9 same-tier stack as soon as you have it; there is no reason to hoard high rolls.
+- Expected scale: one 聚灵 ≈ 9 Jade Marrow, one 凝华 ≈ 81 Jade Marrow (~a thousand-odd normal mobs). An 11% 凝华 is only **1.9%** per roll, so nine of them for a 太虚 is a lifetime goal — every lower roll along the way stays perfectly usable.
+
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 ## Ⅲ Azure Lotus gems · Cap-break & specials · 上限突破
@@ -65,7 +88,7 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 (Beast Taunt Collar) | Pet collar equipment; your pet must wear it to respond to the taunt command |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 (Tome: Beast Taunt Command) | Use to learn an active skill: enemies within 10m switch to attacking your pet for 4 seconds |
 
-> Drop channels for the Beast Taunt pair are still being tuned — actual in-game drops are authoritative. Per-tier transmute odds and design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
+> Both Beast Taunt pieces drop **from bosses only, 1% each**, rolled independently (collar and tome are separate checks — you may get both, or neither). Design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
@@ -78,10 +101,13 @@ The root materials shared by both forging lines all drop from monsters (stackabl
 | <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 (Jade Marrow) | Cooldown · root | **5.5%** | — | — | — |
 | <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 (Ash) | Cap-break · universal root | 1.4% | 3% | 6% | **17%** |
 | 五系符 · Talismans (directional) | Cap-break · catalyst | — | 1% | 3% | **8%** |
+| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | Beast Taunt | — | — | — | **1%** |
+| <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | Beast Taunt | — | — | — | **1%** |
 
 - **Jade Marrow** drops from normal mobs only — plentiful, and the sole source for the cooldown line (聚灵 / 凝华 / 太虚).
-- **Ash** drops at every rank, more as monsters get tougher; a BOSS always yields exactly 1.
+- **Ash** drops at every rank, more as monsters get tougher; a hit always yields exactly 1 (a BOSS hits 17% of the time — it is not guaranteed).
 - **Talismans are a random pool**: when a champion / BOSS drops a talisman it rolls one of the five below at random, so a **specific** talisman's real rate ≈ the table value ÷ 5 (e.g. a given talisman off a BOSS ≈ 1.6%). Champions and bosses are the only source.
+- Everything above drops from monsters and nowhere else: **no merchant stocks them, no chest contains them, no barrel or rock coughs one up.** They are deliberately kept out of vanilla's generic loot pools, so they never dilute your normal gear and scroll drops.
 
 Each talisman maps to one cap-break stone:
 

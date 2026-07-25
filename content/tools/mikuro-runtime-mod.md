@@ -42,6 +42,29 @@ params:
 - 青莲玉髓由怪物随机掉落(可堆叠);集齐后在炼金师处熔铸,首次投入正确材料即自动习得配方
 - 多颗为乘法叠加:实际冷却 ＝ 原冷却 × ∏(1 − 每颗% ÷ 100)。例:镶 3 颗 5% → 原冷却 × 0.95 × 0.95 × 0.95 ≈ 0.857,合计约 **−14.3%**(而非直加的 −15%)
 
+**熔铸概率** —— 每次熔铸独立随机,不保底、不累积:
+
+| 初铸 · <img class="gem-px" src="/img/gems/jade.png" alt=""> 玉髓 ×9 开出 | 概率 |
+|---|:-:|
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 1% | **40%** |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 2% | 28% |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 3% | 18% |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 4% | 10% |
+| <img class="gem-px" src="/img/gems/juling.png" alt=""> 聚灵 5% | 4% |
+
+| 重铸 · <img class="gem-px" src="/img/gems/juling.png" alt=""> 同档聚灵 ×9 开出 | 概率 |
+|---|:-:|
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 6% | **38.9%** |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 7% | 27.2% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 8% | 17.5% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 9% | 9.7% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 10% | 4.7% |
+| <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 **11%** | **1.9%** |
+
+- **顶铸**(11% 凝华 ×9 → 太虚)和突破线的五条熔铸一样是**固定产出**,不赌。
+- 聚灵的档位只决定它自己镶嵌时的数值;**重铸时投入哪一档,开出的凝华分布都相同**——攒够 9 枚同档就可以直接下炉,不必留着高档聚灵。
+- 期望量级:1 颗聚灵 ≈ 9 玉髓,1 颗凝华 ≈ 81 玉髓(约千余只普通怪)。11% 凝华单次仅 **1.9%**,凑满 9 枚做太虚属毕生目标级投入,途中开出的低档凝华照常可用。
+
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 ## Ⅲ 青莲灵石 · 上限突破与特效 · Cap-break
@@ -65,7 +88,7 @@ params:
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 | 宠物项圈装备;佩戴后宠物方可响应嘲讽令 |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 | 使用后学会主动技能:周围 10m 的敌人转而攻击你的宠物,持续 4 秒 |
 
-> 御兽嘲讽两件套的掉落渠道仍在调整中,以游戏内实际掉落为准。青莲灵石各档熔铸概率与设计取舍详见[完整设计稿](/ideas/qinglian-haste-lingshi/)。
+> 御兽嘲讽两件套**只由 BOSS 掉落,各 1%**,两者相互独立(项圈和嘲讽令分别判定,可能同时掉、也可能都不掉)。青莲灵石的设计取舍详见[完整设计稿](/ideas/qinglian-haste-lingshi/)。
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
@@ -78,10 +101,13 @@ params:
 | <img class="gem-px" src="/img/gems/jade.png" alt=""> 青莲玉髓 | 冷却线 · 根料 | **5.5%** | — | — | — |
 | <img class="gem-px" src="/img/gems/jiehui.png" alt=""> 青莲·劫灰 | 突破线 · 通用根料 | 1.4% | 3% | 6% | **17%** |
 | 五系符(定向引子) | 突破线 · 引子 | — | 1% | 3% | **8%** |
+| <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 御兽嘲讽项圈 | 御兽嘲讽 | — | — | — | **1%** |
+| <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 | 御兽嘲讽 | — | — | — | **1%** |
 
 - **玉髓**只普通怪掉,量大管饱,是冷却链(聚灵 / 凝华 / 太虚)的唯一来源。
-- **劫灰**全等级掉、越强越多;BOSS 每次固定 1 个。
+- **劫灰**全等级掉、越强越多;每次命中固定 1 枚(BOSS 是 17% 命中,不是必掉)。
 - **符为随机池**:精英 / BOSS 掉「符」时从下列五符中**随机开出一种**,故某一**指定**符的实际概率 ≈ 表中值 ÷ 5(例:BOSS 出某指定符 ≈ 1.6%)。精英与 BOSS 是符的唯一来源。
+- 以上全部只从怪物身上掉:**商人不卖、宝箱不出、桶和石头里也砸不出来**。这批物品被刻意排除在原版的通用掉落池之外,不会稀释你正常的装备和卷轴收益。
 
 五系符各对应一颗突破石:
 
