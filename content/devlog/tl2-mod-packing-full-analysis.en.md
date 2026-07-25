@@ -3,7 +3,6 @@ title: "What's Actually Inside a .MOD — Torchlight II's Packing Format, Fully 
 date: 2026-07-25T10:30:00+10:00
 author: "Mikuro"
 summary: "Everything that happens between a mod folder and a .MOD the game will actually load: how the container is assembled, what each of the five binary formats is, which single hash the game really validates, and how the pathing grid gets baked. Including the real mechanism behind those baffling failures — ticked in the launcher but does nothing / the portrait turned into some other image / players can't move after entering the dungeon."
-aliases: ["/devlog/tl2-mod-packing-full-analysis/"]
 ---
 
 > You tick a mod in the launcher, hit play, and the game has a new class, a new weapon, a new map.
