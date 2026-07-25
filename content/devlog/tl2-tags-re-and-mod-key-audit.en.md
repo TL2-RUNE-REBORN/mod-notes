@@ -2,8 +2,15 @@
 title: "TL2 Tag System RE: A Zero-Validation Engine, and a Property-Key Audit"
 date: 2026-07-24T16:38:00+10:00
 author: "Mikuro"
-summary: "The engine matches tags by rghash with zero runtime validation — any tag works. Plus the truth about GUTS's spammy no-match warning, and a property-key audit of two real mod packs."
+summary: "The engine matches tags by rghash with zero runtime validation — any tag works. Plus the truth about GUTS's spammy no-match warning, and a property-key audit of two real mod packs. (2026-07-25: section 9 added — names live in two namespaces, and the \"zero hardcoded tags\" search was blind.)"
 ---
+
+> **⚠ Correction, 2026-07-25**: reconciling against one name the engine demonstrably consumes —
+> `TIER3_DESCRIPTION` — showed that the *method* behind conclusion #2 below ("hardcoded tags: zero") is
+> blind: the engine never uses precomputed hash immediates, it rghashes wide-string literals **at runtime**.
+> The corrected framing, the measurements, and the packer fix that fell out of it are in
+> [section 9](#9-correction-2026-07-25-tier3_description-narrows-the-conclusion).
+> Conclusions #1 and #3 (any tag **value** works / the warning is GUTS-only) survived re-verification.
 
 > It started ordinary: an old mod pack's load log was flooded with `Found property name with a hashcode (…) that has no match in tags.dat`.
 > The real question — is this the mod using an "illegal tag," or something else entirely? Following that one warning, I took TL2's tag system apart down to `Torchlight2.exe`.
@@ -20,7 +27,7 @@ summary: "The engine matches tags by rghash with zero runtime validation — any
 ## 0. Conclusions first
 
 1. **The engine accepts any tag (rghash match, zero validation).** `TAGS.DAT` = GUTS dropdown + a hash→name display table, not a membership set. A tag you can't pick in GUTS is simply one that isn't in that table; bypass GUTS — write the DAT directly / pack directly — and any tag works.
-2. **Hardcoded tags in the engine: zero.** The hash immediates for 68 candidate tags, searched across the entire exe code segment: 0 hits. The 56 callers of rghash are all DAT field-key parsers. Tags are 100% data-driven — boss/hero-style special behavior runs through `UNITTYPES` / `MONSTERCLASS` / explicit DAT flags (like `ISBOSS`), **not tags**.
+2. ~~**Hardcoded tags in the engine: zero.**~~ **(→ narrowed 2026-07-25, see [section 9](#9-correction-2026-07-25-tier3_description-narrows-the-conclusion))** The hash immediates for 68 candidate tags, searched across the entire exe code segment: 0 hits. The 56 callers of rghash are all DAT field-key parsers. Tags are 100% data-driven — boss/hero-style special behavior runs through `UNITTYPES` / `MONSTERCLASS` / explicit DAT flags (like `ISBOSS`), **not tags**.
 3. **The `no match in tags.dat` warning is GUTS-only, and loses nothing.** That string doesn't exist in `Torchlight2.exe` at all. The real risk isn't the warning — it's that **opening and re-saving in GUTS** rewrites unrecognized key names as hash numbers, and may quietly drop other fields you'd edited.
 
 The exe evidence for each follows.
@@ -173,6 +180,138 @@ The contrast is the whole point: **same engine, same `TAGS.DAT`, two mods.** The
 
 ---
 
+## 9. Correction (2026-07-25): TIER3_DESCRIPTION narrows the conclusion
+
+Conclusion #2 above ("hardcoded tags in the engine: zero") rested on a hash-immediate search that came back
+empty. A day later I reconciled it against one name the engine **demonstrably** consumes —
+`TIER3_DESCRIPTION`, the third tier-bonus line in a skill tooltip — and the reasoning fell apart.
+
+### 9.1 How it is actually consumed: three stages
+
+**① DAT key → skill-definition field.** In the skill DAT it is an ordinary top-level `[SKILL]` property:
+
+```
+<TRANSLATE>TIER1_DESCRIPTION:5 pillars of flame are created
+<TRANSLATE>TIER2_DESCRIPTION:6 pillars of flame are created
+<TRANSLATE>TIER3_DESCRIPTION:7 pillars of flame are created
+```
+
+The engine **hardcodes all three names as wide-string literals** and reads them in the skill-definition
+loader `sub_6DC320`:
+
+| key | literal | read at | stored at |
+|---|---|---|---|
+| `TIER1_DESCRIPTION` | `@0x218B4AC` | `0x6DD905` | `+0x270` |
+| `TIER2_DESCRIPTION` | `@0x218B488` | `0x6DD95C` | `+0x28C` |
+| `TIER3_DESCRIPTION` | `@0x218B464` | `0x6DD9B3` | `+0x2A8` |
+
+The lookup goes through the generic property-bag getter `sub_677F00` → `sub_677E80`, whose first line is
+`v3 = sub_4C9FE0(key)` — it **rghashes the literal at runtime**, then binary-searches a hash-ordered tree.
+
+**② Tooltip build, `sub_6D4020`.** The same function fetches UI widgets by name:
+`TIER1_SEC`/`TIER2_SEC`/`TIER3_SEC` (section containers), `TIER1DESCRIPTION`/`TIER2DESCRIPTION`/
+`TIER3DESCRIPTION` (text), `TIERDIVIDER` (separator). Per section: empty field → hide; non-empty → set the
+text and `setAlpha(investedPoints < threshold ? 0.5 : 1.0)` (`sub_70ECF0` → `CEGUI::Window::setAlpha`).
+**Thresholds 5 / 10 / 15 are exe immediates**; all three empty falls back to `"No Tier upgrades available."`.
+
+**③ The skill-tree cell, `sub_79F4F0`**, binds a second set: `TIERTEXT1/2/3` (alongside `MINUS`/`PLUS`/
+`PROGRESSBAR`/`INVESTED`/`CONTAINER`).
+
+The exe contains exactly **13 wide literals starting with `TIER`, all enumerated — and no `TIER4`.**
+
+### 9.2 So what was wrong with #2
+
+**The search method, not the data.** Special-casing a name does **not** require a precomputed hash immediate:
+the engine keeps the name as a wide literal in code and hashes it on every call. So "search the whole exe for
+hash immediates → 0 hits" was going to return 0 **no matter how many names the engine hardcodes**. It proves nothing.
+
+A measurement that can actually see them — extract **every** UTF-16LE literal in the exe and intersect with the
+`TAGS.DAT` name pool:
+
+| | count |
+|---|---|
+| identifier-shaped names in the `TAGS.DAT` pool | 2929 |
+| └ **hardcoded in the exe** as wide literals | **1167 (39%)** |
+| └ absent from the exe (pure data space) | 1762 (61%) |
+| identifier-shaped wide literals in the exe | 4050 |
+| └ **not** in the `TAGS.DAT` pool | 2883 |
+
+Two more corrections fall out:
+
+- **`sub_4CA070` is not a "tag matcher."** It is `node.keyHash == rghash(literal)` — a **key** comparator, with
+  exactly one call site in the whole exe (`sub_506550`, comparing `TIMELINEOBJECTEVENT`). Section 1 used it as
+  the core evidence for tag matching; that was a mislabel.
+- **"the 56 rghash callers" is too narrow a lens.** Hardcoded names live at the **property-getter call sites**
+  (`sub_677F00` alone has ≥100 xrefs), not at rghash's direct callers.
+
+One methodology lesson too: **IDA's string list is unreliable** — `TIER3_DESCRIPTION` isn't in it at all, so
+`find_regex` reports 0 hits. Section 4's claim that the GUTS warning string is absent from the exe was therefore
+re-verified the hard way, by extracting UTF-16LE/ASCII strings from the **raw bytes**: `no match in tags.dat` and
+`Found property name with a hashcode` are still 0, while `TAGS.DAT` / `Loading tag file` / `Tags parsed` do hit.
+**The conclusion stands.**
+
+### 9.3 Corrected framing: names live in two namespaces
+
+The root confusion was calling every name in `TAGS.DAT` a "tag." There are two distinct things:
+
+1. **Keys the engine reads** (`TIER3_DESCRIPTION`, `SKILL_ICON`, `CHEST_OVERRIDE`, …): the name is
+   **hardcoded in the exe**, **case-sensitive, character for character**. A misspelled key still gets stored in
+   the property bag (rghash validates nothing), but **no code ever queries it** → inert, silently dead. That is
+   exactly the mechanism behind the lowercase `chest_OVERRIDE` hazard in section 5.2.
+2. **Values matched between data files** (unit/level tags, spawnclass names, …): name them anything, as long as
+   the carrier and the checker agree. Membership in `TAGS.DAT` only affects whether GUTS can offer it in a
+   dropdown and whether a hash reverses to a readable name.
+
+**"Any tag works" holds only for the second kind** — re-verified this round: the 131 `A1-*` level/quest tags have
+0 hits in the exe, and the engine's own property schema (`sub_4A29A0`, for `CWidgetUnitImageDescriptor`) documents
+its `TAG` property as *"The tag to check in the unit data of the target."* — data compared against data. Same on
+the loot side (`sub_5FE2C0` loops over `TAG` blocks reading `NAME`/`CHANCE`/`MINCOUNT`/`MAXCOUNT`).
+
+The practical takeaway — you cannot invent a tag name and inherit engine behavior for free — is **unchanged**, but
+the reason has to be restated: not "the engine hardcodes no names," but **the engine hardcodes its own key set,
+whose behavior you cannot alter and which offers no spare hooks**.
+
+That also upgrades the `TIER4_DESCRIPTION` note in section 5.2 from inference to proof: the engine **does not read
+it** (no such literal) and the UI has **no** `TIER4_SEC`/`TIER4DESCRIPTION`/`TIERTEXT4` widget → **100% inert,
+harmless, never displayed**. A fourth tier can only be folded into `TIER3_DESCRIPTION`'s text. And those 5/10/15
+thresholds only drive that line's dim/highlight state — **data cannot move them**; the actual numbers follow the
+skill's `[LEVEL]` blocks, so putting tier bonuses on other invest levels desyncs the tooltip's dim/bright from the
+real bonus.
+
+### 9.4 Fallout: a real bug in our own packer
+
+The reconciliation exposed a genuine bug in the toolchain. A BINDAT stores names only as rghash, so decompiling
+leans on an embedded reverse dictionary (1678 entries, harvested from shipped data); a hash it can't name comes out
+as the placeholder `UNK_<8 hex digits>`. The problem was on the way **back in**: the compiler dutifully rghashed the
+placeholder **text** `UNK_1A2B3C4D` — producing a **completely different hash**. No error, no warning, the data just
+went dark.
+
+Not a theoretical risk. Scanning key and section names across 80,505 real DATs (the whole challenger-continent repo):
+
+- only 20 new keys (all mod-invented: manifest fields, `*_OVERRIDE` experiments, `TIER4_DESCRIPTION`);
+- but **104 new section names, overwhelmingly `LEVEL17` … `LEVEL100`**.
+
+Because the dictionary was harvested from **shipped** data, its numbered families stop where the vanilla game
+stopped: `LEVEL1..16`, `CHILD1..5`, `ENCHANTCOST1..4`, `VALUE1..5`, `TIER1..3_DESCRIPTION`. Mods left that range
+long ago. So a `[LEVEL20]` unpacks as `UNK_…` and repacks into a key the engine never looks up — **the whole
+section's data disappears silently**.
+
+The fix (shipped; both the Rust and the WASM packer share one `bindat.rs`):
+
+1. **`UNK_<HEX8>` is now a real escape**: the compiler recognizes it and writes the **original hash back verbatim**,
+   so decompile → compile is **byte-identical**. Deliberately strict (exact length + uppercase hex); anything
+   else is an ordinary name and gets hashed.
+2. **Packing warns**: any file that used the escape is listed with its placeholder names — the data survives, but
+   the readable name is gone, so put the real name back when you know it, and **never hand-edit the digits inside
+   an `UNK_` token** (that changes the hash).
+3. The WASM side additionally exports `dat_raw_hash_names(data)` so the browser tool can raise the same warning.
+
+As for "just pour all 4050 exe identifiers into the dictionary" — considered, rejected: the merge is collision-free,
+but the gap that actually bites is names mods invent, which no dictionary can ever cover. Fixing the escape is the
+cure.
+
+---
+
 ## Appendix: key addresses
 
 **`Torchlight2.exe`** (imagebase `0x400000`)
@@ -180,7 +319,12 @@ The contrast is the whole point: **same engine, same `TAGS.DAT`, two mods.** The
 | function | address |
 |---|---|
 | rghash (name/key hash) | `sub_4C9FE0` |
-| tag/key match (plain hash compare) | `sub_4CA070` |
+| ~~tag~~ key match (plain hash compare, 1 call site exe-wide) | `sub_4CA070` |
+| property-bag get (rghash + hash-tree lookup) | `sub_677F00` → `sub_677E80` |
+| skill-definition loader (reads `TIER1/2/3_DESCRIPTION`) | `sub_6DC320` |
+| skill tooltip (`TIER<n>_SEC`/`TIER<n>DESCRIPTION`/`TIERDIVIDER`, thresholds 5/10/15) | `sub_6D4020` |
+| skill-tree cell (`TIERTEXT1/2/3`) | `sub_79F4F0` |
+| widget alpha (dim/highlight) | `sub_70ECF0` → `CEGUI::Window::setAlpha` |
 | structural-key parse (`BASEOBJECT`/`PROPERTIES`/`NAME`/`ID`) | `sub_4CA7D0` |
 | `TAGS.DAT` loader (hash→name table) / map get-or-create | `sub_65BBF0` / `sub_4FF760` |
 | vanilla requirement-key wide strings | `STRENGTH_REQUIRED@0x2174364` / `DEXTERITY_REQUIRED@0x2174304` |
