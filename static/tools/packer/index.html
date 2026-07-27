@@ -401,10 +401,50 @@ footer.site a:hover{color:var(--ember-hi)}
   </div>
 </section>
 
-<!-- ═══ Ⅱ 说明与边界 ═══ -->
+<!-- ═══ Ⅱ 解包 ═══ -->
 <section class="block">
   <header class="sec">
     <span class="num">Ⅱ</span>
+    <h2>解包 <span class="en">Unpack</span></h2>
+    <p class="lede">反过来:把一个 <b>.MOD</b> 还原成可编辑的源目录。容器里存的是<b>编译产物、却挂在源文件名下</b>,所以 <code>DAT</code> / <code>LAYOUT</code> 会被反编译回文本源——直接就能改、能重新打包。</p>
+  </header>
+
+  <div class="packer">
+    <p class="step-cap">01 · 选择 .MOD 文件</p>
+    <button class="btn" id="upick">选择 .MOD 文件</button>
+    <input type="file" id="upickFile" accept=".MOD,.mod" hidden>
+    <p class="pick-hint" id="upickHint">Chrome / Edge 解包后可直接写进你指定的文件夹;其它浏览器打包成 ZIP 下载。</p>
+
+    <div id="uinfoBlock" hidden>
+      <hr class="hr">
+      <p class="step-cap">02 · 确认信息</p>
+      <dl class="modinfo">
+        <dt>文件</dt><dd id="uiName">—</dd>
+        <dt>大小</dt><dd id="uiSize">—</dd>
+        <dt>输出方式</dt><dd id="uiMode">—</dd>
+      </dl>
+      <hr class="hr">
+      <p class="step-cap">03 · 解包</p>
+      <button class="btn" id="unpack">解包为源目录</button>
+    </div>
+
+    <div id="urunBlock" hidden>
+      <hr class="hr">
+      <p class="stage" id="ustage"></p>
+      <div class="progress" id="uprogress"><i id="uprogressBar"></i></div>
+      <div class="log" id="ulog"></div>
+      <div class="result" id="uresult" hidden>
+        <button class="btn dl" id="udownload" hidden>下载 ZIP</button>
+        <div class="meta" id="uresultMeta"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Ⅲ 说明与边界 ═══ -->
+<section class="block">
+  <header class="sec">
+    <span class="num">Ⅲ</span>
     <h2>说明与边界 <span class="en">Notes &amp; Limits</span></h2>
   </header>
 
@@ -422,13 +462,16 @@ footer.site a:hover{color:var(--ember-hi)}
     <li><span class="chip opt">MPP</span><span><b>关卡寻路走格在浏览器内生成</b>(<code>--mpp re</code>):走格只需 base 碰撞几何(9 MB,已附带),不碰 160 MB 的渲染网格。新地图 / 改地图类 mod 直接可用。</span></li>
     <li><span class="chip opt">多线程</span><span>页面开启跨源隔离后走 <b>wasm threads</b>:DAT/LAYOUT 编译与容器压缩由 rayon 真并行(与桌面版同一套并行代码),大 mod 打包时间约为单线程的 <b>1/4 ~ 1/6</b>。输出仍与单线程/桌面版逐字节一致;不支持的环境自动回退单线程。</span></li>
     <li><span class="chip del">边界</span><span>整棵 mod 目录读入内存打包;<b>数百 MB 的巨型整合组件</b>(关卡资产超多、MPP 极重)可能超出浏览器 4 GB 内存上限,请用桌面版。普通 mod 不受影响。</span></li>
+    <li><span class="chip add">解包</span><span>解包同样是<b>反向编译</b>而不是解压:<code>BINDAT</code> / <code>BINLAYOUT</code> 会还原成 UTF-16LE 文本源,产物与桌面版 <code>unpack</code> 逐字节一致(对官方 GUTS 解包器实测 13 个 mod / 9 万余文件 <b>99.4% 逐字节相同</b>,余下的差异是 GUTS 那侧丢精度或认不出名字)。</span></li>
+    <li><span class="chip del">名字</span><span>DAT 的键名在容器里只剩<b>单向哈希</b>。内嵌词表覆盖原版全部键名;mod 自造的新键还原不出时会写成 <code>UNK_&lt;8位十六进制&gt;</code> —— 它<b>重新打包后仍是同一个哈希</b>,游戏照读,但<b>千万别手改里面的数字</b>(改的是哈希本身)。</span></li>
+    <li><span class="chip del">时间戳</span><span>解包<b>不还原文件修改时间</b>(浏览器写文件时设不了),桌面版可以。这只影响重新打包后 manifest 里的时间戳字段,不影响游戏加载。</span></li>
   </ul>
 </section>
 
-<!-- ═══ Ⅲ 怎么用 ═══ -->
+<!-- ═══ Ⅳ 怎么用 ═══ -->
 <section class="block">
   <header class="sec">
-    <span class="num">Ⅲ</span>
+    <span class="num">Ⅳ</span>
     <h2>怎么用 <span class="en">How to use</span></h2>
     <p class="lede">与桌面版打包器同一套 Rust 代码编译成 <b>WebAssembly</b>,把 <code>DAT</code> / <code>LAYOUT</code> 编译成引擎二进制并封装成 <code>.MOD</code>——全程在你的浏览器本地完成,文件不上传、无需安装。</p>
   </header>
@@ -437,6 +480,7 @@ footer.site a:hover{color:var(--ember-hi)}
     <li><span class="chip opt">① 选</span><span>点 <b>选择 MOD 文件夹</b>,选中 mod 根目录(需含 <code>MOD.DAT</code> 与 <code>MEDIA/</code>)。Chrome / Edge 用原生文件夹选择器;Firefox 等自动改走目录上传(同样只在本地读取)。</span></li>
     <li><span class="chip opt">② 确认</span><span>核对 <b>MOD 名称</b> 与 <b>输出文件名</b>(自动从 <code>MOD.DAT</code> 的 <code>MOD_FILE_NAME</code> 读出)。</span></li>
     <li><span class="chip add">③ 打包</span><span>点 <b>打包为 .MOD</b>,完成后直接下载。含关卡的 mod 会一并烘 MPP 走格;巨型整合组件请用桌面版。</span></li>
+    <li><span class="chip opt">④ 解包</span><span>想反过来看别人的 mod 或改自己的旧包:在 <b>解包</b> 一节选一个 <code>.MOD</code>,Chrome / Edge 会让你指定一个输出文件夹并直接写进去;其它浏览器打成 ZIP 下载。解出来的就是可以直接改、再用上面「打包」重新封装的源目录。</span></li>
   </ul>
   <p class="flavor">"同一座熔炉,换了一扇窗。"</p>
 </section>
@@ -660,8 +704,103 @@ els.download.addEventListener("click", () => {
   a.click();
 });
 
+/* ══════════════ 解包 ══════════════
+   与打包完全独立的一条链路:自己的 worker、自己的日志/进度区。
+   落盘两条路 —— Chrome/Edge 授权一个输出目录直接写;其余打 ZIP 下载。 */
+const u = {
+  pick: $("upick"), file: $("upickFile"), hint: $("upickHint"),
+  info: $("uinfoBlock"), name: $("uiName"), size: $("uiSize"), mode: $("uiMode"),
+  go: $("unpack"), run: $("urunBlock"), stage: $("ustage"),
+  progress: $("uprogress"), bar: $("uprogressBar"), log: $("ulog"),
+  result: $("uresult"), meta: $("uresultMeta"), download: $("udownload"),
+};
+let uFile = null, uZipUrl = null, uZipName = null;
+
+u.mode.textContent = hasFSA ? "写入你指定的文件夹" : "打包成 ZIP 下载(此浏览器不支持文件夹写入)";
+if (!hasFSA) u.hint.innerHTML = "当前浏览器不支持文件夹写入,解包结果将打成 <b>ZIP</b> 下载(同样只在本地处理,不上传)。";
+
+const uWorker = new Worker("./unpack_worker.js", { type: "module" });
+uWorker.onerror = e => {
+  appendLog(u.log, "worker 加载失败:" + (e.message || e), "bad");
+  uSetBusy(false);
+};
+uWorker.onmessage = ev => {
+  const m = ev.data;
+  if (m.type === "log") appendLog(u.log, m.line, m.cls);
+  else if (m.type === "stage") { u.stage.textContent = m.stage; u.progress.classList.add("busy"); }
+  else if (m.type === "progress") {
+    u.progress.classList.remove("busy");
+    u.bar.style.width = m.total ? Math.round(m.done / m.total * 100) + "%" : "0%";
+    const what = m.phase === "write" ? "写出" : m.phase === "zip" ? "打包 ZIP" : "解包";
+    u.stage.textContent = `${what} ${m.done}/${m.total}` +
+      (m.bytes ? ` · ${(m.bytes / 1048576).toFixed(1)} MB` : "");
+  }
+  else if (m.type === "done") {
+    u.progress.classList.remove("busy");
+    u.bar.style.width = "100%";
+    u.stage.textContent = "完成";
+    const mb = (m.bytes / 1048576).toFixed(1);
+    if (m.mode === "zip") {
+      if (uZipUrl) URL.revokeObjectURL(uZipUrl);
+      uZipUrl = URL.createObjectURL(m.blob);
+      uZipName = (uFile.name || "MOD").replace(/\.mod$/i, "") + "_unpacked.zip";
+      u.download.hidden = false;
+      u.meta.innerHTML = `<b>${m.files.toLocaleString()}</b> 个文件 · ${mb} MB · ${m.ms} ms —— 点上方按钮下载 ZIP`;
+    } else {
+      u.download.hidden = true;
+      u.meta.innerHTML = `<b>${m.files.toLocaleString()}</b> 个文件 · ${mb} MB · ${m.ms} ms —— 已写入你选择的文件夹`;
+    }
+    u.result.hidden = false;
+    uSetBusy(false);
+  }
+  else if (m.type === "error") {
+    u.progress.classList.remove("busy");
+    u.stage.textContent = "解包失败";
+    if (m.message) appendLog(u.log, m.message, "bad");
+    uSetBusy(false);
+  }
+};
+function uSetBusy(b) { for (const x of [u.pick, u.go]) x.disabled = b; }
+
+u.pick.addEventListener("click", () => u.file.click());
+u.file.addEventListener("change", () => {
+  const f = u.file.files[0];
+  if (!f) return;
+  uFile = f;
+  u.info.hidden = false;
+  u.name.textContent = f.name;
+  u.size.textContent = `${(f.size / 1048576).toFixed(1)} MB · ${f.size.toLocaleString()} 字节`;
+  u.run.hidden = true;
+  u.result.hidden = true;
+});
+
+u.go.addEventListener("click", async () => {
+  if (!uFile) return;
+  // showDirectoryPicker 必须在用户手势里调用,所以放在点击处理器最前面。
+  let dirHandle = null;
+  if (hasFSA) {
+    try { dirHandle = await window.showDirectoryPicker({ mode: "readwrite" }); }
+    catch (e) { if (e && e.name === "AbortError") return; throw e; }
+  }
+  u.run.hidden = false;
+  u.result.hidden = true;
+  u.log.textContent = "";
+  u.download.hidden = true;
+  uSetBusy(true);
+  u.bar.style.width = "0%";
+  uWorker.postMessage({ op: "unpack", file: uFile, dirHandle });
+});
+
+u.download.addEventListener("click", () => {
+  if (!uZipUrl) return;
+  const a = document.createElement("a");
+  a.href = uZipUrl;
+  a.download = uZipName;
+  a.click();
+});
+
 /* 调试钩子:允许控制台直接喂一组 {rel, file} 走完整 UI 流程(排查用户问题用) */
-window.__emberPacker = { finishScan, els, worker };
+window.__emberPacker = { finishScan, els, worker, unpack: { u, uWorker } };
 </script>
 </body>
 </html>
