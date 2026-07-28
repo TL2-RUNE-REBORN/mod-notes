@@ -562,7 +562,13 @@ worker.onmessage = ev => {
   }
 };
 
+/* 反查不出的键名一律红色告警。判定放在这一个入口而不是每个 worker 里:
+   UNK_<hex> 的十六进制数字是有承载的 —— 它们重新编译回原始 hash,被"顺手
+   整理"就会让这个段落和引擎要找的键悄悄脱钩,而且哪里都不报错。任何产出方
+   忘了带 class,这里都会兜住。*/
+const UNK_RE = /\bUNK_[0-9A-Fa-f]{8}\b/;
 function appendLog(el, line, cls) {
+  if (!cls && UNK_RE.test(String(line))) cls = "bad";
   const span = document.createElement(cls ? "span" : "div");
   if (cls) {
     span.className = cls;
