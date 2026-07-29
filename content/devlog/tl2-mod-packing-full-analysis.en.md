@@ -1,5 +1,5 @@
 ---
-title: "What's Actually Inside a .MOD — Torchlight II's Packing Format, Fully Explained"
+title: "What's Actually Inside a .MOD: Torchlight II's Packing Format, Fully Explained"
 date: 2026-07-25T10:30:00+10:00
 author: "Mikuro"
 summary: "Everything that happens between a mod folder and a .MOD the game will actually load: how the container is assembled, what each of the five binary formats is, which single hash the game really validates, and how the pathing grid gets baked. Including the real mechanism behind those baffling failures — ticked in the launcher but does nothing / the portrait turned into some other image / players can't move after entering the dungeon."
@@ -10,7 +10,7 @@ summary: "Everything that happens between a mod folder and a .MOD the game will 
 >
 > This post takes the whole chain apart: **a mod folder → five binary formats → one container → the game loads it.**
 > It's both a complete format specification (byte layouts, hash algorithms, function addresses) and an answer
-> to questions like "why is my mod ticked but nothing happens" — those almost always trace back to one specific
+> to questions like "why is my mod ticked but nothing happens"; those almost always trace back to one specific
 > field in one of the sections below.
 >
 > **Sources**: IDA disassembly of `EditorGuts.dll` (the core of the official GUTS editor, 32-bit,
@@ -45,7 +45,7 @@ summary: "Everything that happens between a mod folder and a .MOD the game will 
    the readable text in loose community MEDIA trees is **decompiled** by unpacking tools.
 9. **GUTS silently strips 13 suffix classes at pack time** (`.XML`/`.MAX`/`.LOG`/thumbnails/project files…),
    so a dirty working tree produces different packages under the official editor and a third-party tool.
-10. **The whole chain is now reproducible entirely offline**: no editor install, no D3D9 device —
+10. **The whole chain is now reproducible entirely offline**: no editor install, no D3D9 device;
     it even runs **in a browser** (the same Rust code compiled to WebAssembly).
 
 ---
@@ -110,7 +110,7 @@ offline implementation. A few details worth knowing up front:
 - A `devbuild.txt` in the working directory flips manifest+88 and **stops stamping per-file mtime**.
   ftime is never validated, so it's harmless, but it's a hidden build mode that changes output bytes.
 - GUTS compiles **incrementally** (`sub_1028FC00` skips when a fresh `.BIN*` already exists). That brings cache
-  coherency risk; offline tooling instead compiles everything from text every run — the compilers are
+  coherency risk; offline tooling instead compiles everything from text every run; the compilers are
   byte-verified, so the output is identical and it costs nothing.
 
 ---
@@ -126,7 +126,7 @@ out = header (variable length)   # off_data = len(header)
 ```
 
 By analogy with zip: the data section is the compressed data area, the manifest is the central directory, and the
-header is the thing zip doesn't have — an ID card saying who this mod is, what version, and what it depends on.
+header is the thing zip doesn't have: an ID card saying who this mod is, what version, and what it depends on.
 
 `off_data` / `off_man` are written as 0 placeholders and back-patched with an fseek once the three parts are spliced.
 
@@ -188,7 +188,7 @@ End-to-end: a mod with two REQUIRED_MODS entries produces the header value `0x42
 installed, so it can only use the version **declared** in MOD.DAT, without recursion. Flat dependencies
 (declared == installed, and the dependency itself declares no REQUIRED_MODS) agree; deeper graphs don't.
 
-Incidentally, `REQUIRED_MODS` sees less use than you'd expect — most mod series use **manual load order**
+Incidentally, `REQUIRED_MODS` sees less use than you'd expect; most mod series use **manual load order**
 instead (their description says "put this above XX"), relying on the override rules in §2.7.
 
 ### 2.4 Manifest: the file tree, and that uppercase trap
@@ -225,7 +225,7 @@ it references was lowercase (didn't).
 
 **Another trap, this one only for tool authors**: the manifest records each file's mtime. So byte-comparing two
 outputs requires packing **the same tree**; `cp -r` into two copies and packing each will always produce a byte
-difference from mtime alone — that isn't a regression, it's a broken measurement.
+difference from mtime alone; that isn't a regression, it's a broken measurement.
 
 ### 2.5 The data section and rollingHash: the single most important number here
 
@@ -268,7 +268,7 @@ afterwards), so the "random" divisor is a **deterministic function of the data-s
 Verified byte-for-byte against 30 shipped / editor-produced `.MOD` files.
 
 One more property worth remembering: it **samples only about 50 bytes** (stride is roughly N/25 to N/75).
-That property later saved the browser build — see §10.2.
+That property later saved the browser build; see §10.2.
 
 ### 2.6 Three hash/count fields, and which one is real
 
@@ -309,7 +309,7 @@ header modid matches.
 
 ⇒ Mods override vanilla; among mods, earlier in `.sch` overrides later.
 **From the user's side: higher in the launcher list = higher priority.** Override granularity is
-**whole-file replacement** — no field-level merging.
+**whole-file replacement**, with no field-level merging.
 
 ---
 
@@ -325,7 +325,7 @@ While collecting files, GUTS strips 13 suffix classes (`sub_103F4340`, static ta
 | Compiled-output alias | `.LAYOUT.BINDAT` |
 
 The first class is intuitive: the artist's `.MAX` project, the designer's `.XLS` sheet, logs, shortcuts,
-thumbnails — clutter that shouldn't ship. **If your tool doesn't strip them, your package comes out bigger than
+thumbnails: clutter that shouldn't ship. **If your tool doesn't strip them, your package comes out bigger than
 the official one and carries a pile of source assets with it.**
 
 The second class isn't thrown away — it's **renamed**. GUTS compiles, strips the text source, carries
@@ -395,7 +395,7 @@ One last special case: `.IMAGESET` looks like it should compile, but doesn't nee
 
 ## 5. BINDAT: where all the game's numbers live
 
-Items, monsters, skills, affixes, recipes, loot tables — nearly everything the game calls "data" lives in `.DAT`,
+Items, monsters, skills, affixes, recipes, loot tables: nearly everything the game calls "data" lives in `.DAT`,
 and compiles to BINDAT. It's a recursive node tree, each node carrying a set of properties.
 
 ### 5.1 Format
@@ -423,7 +423,7 @@ The upside: any key serializes, with no "dictionary completeness" risk. A mod in
 name compiles just fine. Corpus proof: 901025 / 901028 keys equal `rg_hash(name)` (the 3 exceptions all live in
 one file that was corrupt to begin with).
 
-The cost: it's **irreversible** — see §5.5.
+The cost: it's **irreversible**; see §5.5.
 
 One encoding detail in passing: strings use **surrogatepass**, i.e. the editor reads and writes the wchar stream
 verbatim without validating UTF-16 surrogate pairs. The official `TAGS.DAT` contains a float colour blob spliced
@@ -463,10 +463,10 @@ disagreeing with its own text**: a correct encoder is literally `struct.pack('<f
 **are** the canonical float32 of the text by construction. The cleanest proof is an entry called `QUAKE1` —
 the text literally says `"1"`, the correct encoding is `1.0` / `0x3F800000`, and shipped has
 `1.0000001` / `0x3F800001`. No correct parser emits that value from `"1"`; it's a lossy artifact of the
-editor's GUI export. The rest are GRAPHS/STATS and POTIONS curve Y values — the same story.
+editor's GUI export. The rest are GRAPHS/STATS and POTIONS curve Y values, the same story.
 
 The 31st is `TAGS.DAT`: GUTS names the empty-`[]` root after the **filename**
-(shipped root `name_hash = rg_hash("TAGS")`), and its source is corrupt anyway — it's the lone-surrogate file
+(shipped root `name_hash = rg_hash("TAGS")`), and its source is corrupt anyway; it's the lone-surrogate file
 from §5.2.
 
 ### 5.5 Going backwards: a BINDAT decompiler
@@ -499,7 +499,7 @@ placeholder names at pack time.
 ## 6. BINLAYOUT: scenes, UI and effects
 
 `.LAYOUT` describes where things sit: every rock in a level tile, every widget in the UI, every emitter in a
-particle effect. It compiles to BINLAYOUT — a schema-driven, per-descriptor encoding:
+particle effect. It compiles to BINLAYOUT, a schema-driven, per-descriptor encoding:
 
 ```
 Header: <B>0x0B <B>flag(=4) <I>dg_off <H>obj_count(top level)
@@ -541,7 +541,7 @@ The difference is an order of magnitude: the mod corpus went from **18/13224** t
   **inline strings**, not resolved ids.
 
 Accuracy: base MEDIA **8965 / 8985 byte-exact**. The 20 mismatches are irreproducible uninitialized garbage in
-the shipped files — a property mis-authored as `<STRING>` makes the writer read a stale `prop_value[+8]`,
+the shipped files: a property mis-authored as `<STRING>` makes the writer read a stale `prop_value[+8]`,
 nondeterministically. Semantically it's 8985/8985. The mod corpus is **13214 / 13224**.
 
 A function-by-function audit against the DLL also fixed a few fine points, listed here for anyone writing an
@@ -575,7 +575,7 @@ output byte-for-byte.
 
 `EncodeUnits` (`sub_1026CC50`) walks the `BASEFILE` inheritance chain and **reads base-game file content** to
 pull UNITTYPE / LEVEL / RARITY / CREATEAS. On the reading side, `sub_660560` (via `sub_661480`
-CUnitResourceList) stores all of it and **indexes by UNITTYPE** — the game genuinely uses it, and missing values
+CUnitResourceList) stores all of it and **indexes by UNITTYPE**; the game genuinely uses it, and missing values
 affect spawning and loot.
 
 That's why a pure browser packer must carry the base game's UNITS templates: an item inheriting from
@@ -661,7 +661,7 @@ writing every file.
 
 ### 8.3 Reproducing the grid offline: hunting down the 0.29%
 
-Moving the bake offline, the hard part isn't the classifier — those three steps transcribe directly. The hard
+Moving the bake offline, the hard part isn't the classifier; those three steps transcribe directly. The hard
 part is **whether the triangle soup fed to the classifier matches**: which room pieces' collision geometry gets
 baked in, and which don't.
 
@@ -775,7 +775,7 @@ reachable, and it's what players actually care about.
 
 So there's a `reconnect_walkable` safety pass: a 0-1 BFS that finds thin wall barriers cutting off a large
 walkable region and opens them (on by default). That zeroed out every player-trapping gap of ≥100 cells.
-The 31 tiles with genuine traps left were each rendered in Ogre and inspected by hand — all of them are narrow
+The 31 tiles with genuine traps left were each rendered in Ogre and inspected by hand; all of them are narrow
 strips and dead corners hugging collision geometry, none strictly blocking a path.
 
 Practical guidance:
@@ -811,7 +811,7 @@ loose ./MEDIA        >   extracted from ./PAKS/DATA.PAK   >   a bundle embedded 
 ```
 
 The extraction set is the LEVELSETS DATs (the MPP piece table + ROOMPIECES.RAW), the UNITS DATs (the UNITDATA
-BASEFILE inheritance from §7), and the collision meshes those pieces reference — decompiled to text and cached
+BASEFILE inheritance from §7), and the collision meshes those pieces reference, decompiled to text and cached
 next to the tool.
 
 **All three layers pack the same level mod byte-identically** (414110 bytes): compilation, RAW (with BASEFILE
@@ -833,7 +833,7 @@ always compile correctly.
 #### Comparison one: vs the native GUTS DLL
 
 Start with the official implementation itself. The native numbers here are not a stopwatch against the editor
-GUI — that would be unfair. They were measured by driving the real `EditorGuts.dll` from a forked headless host,
+GUI; that would be unfair. They were measured by driving the real `EditorGuts.dll` from a forked headless host,
 calling its own `CreateMod` + `EditorRegenPathingData`, with the one-off 3.85 s `InitEditor` cost **amortized
 out** so only the **hot pack** time counts. In other words, this is the native path's **best case**.
 The Rust side ran on the **same source copies**, 5 repeated rounds averaged.
@@ -865,7 +865,7 @@ Two caveats that **have to be stated**:
   numbers are **native 749.2 s vs Rust 45.66 s including MPP**.
 - File counts here are larger than in the monorepo because these source copies carry compiled siblings
   (`.BINDAT`/`.BINLAYOUT`) that both sides must walk. Two more components (Map Expansion 242.98 s, POE 52.72 s)
-  had their source copies deleted and couldn't be re-measured, so they're excluded — including them would only
+  had their source copies deleted and couldn't be re-measured, so they're excluded; including them would only
   make the native total longer.
 
 #### Comparison two: vs the Python reference implementation
@@ -937,7 +937,7 @@ subfolders plus `./mods/*`, lists folders containing `MOD.DAT` as mod sources, f
 `MEDIA/LAYOUTS/*.LAYOUT` as level mods, and packs the selection into the Documents mods folder.
 
 The design is deliberately conservative: **the TUI only handles selection.** Once you've chosen, it restores the
-terminal and runs conversion and packing with ordinary console output — the verified core is never touched.
+terminal and runs conversion and packing with ordinary console output; the verified core is never touched.
 Running it bare in a non-TTY (pipe / CI) falls back to a usage message rather than hanging.
 
 ---
@@ -973,10 +973,10 @@ Game side (`Torchlight2.exe`, imagebase `0x400000`): scheme parsing `sub_7DEA10`
 - **Desktop packer**: `tl2-mikuro-mod-packer` —
   `[--in-place|--temp-copy] [--mpp {re,dll,none}] [--raw {auto,none}] [--deploy] <mod dir>`;
   subcommands `compile-dat` / `compile-layout` / `compile-mpp` / `extract-base` / `unpack-base`; no args → TUI.
-- **Web build**: [/en/tools/packer/](/en/tools/packer/) — the same code compiled to WebAssembly, fully client-side.
+- **Web build**: [/en/tools/packer/](/en/tools/packer/), the same code compiled to WebAssembly, fully client-side.
 - **Diagnostic environment variables**: `MIKURO_TIMING=1` (stage timing), `MPP_TIMING`,
   `MPP_RECONNECT=0` (disable the walk-grid safety pass; required when verifying byte-exactness),
   `MIKURO_BINDAT_DICT` (switch to corpus global-id mode),
   `TL2_MEDIA_DIR` / `TL2_INSTALL_DIR` / `TL2_MOD_GAMEVER`.
-- **Further reading**: [TL2 Tag System RE](/en/devlog/tl2-tags-re-and-mod-key-audit/) —
+- **Further reading**: [TL2 Tag System RE](/en/devlog/tl2-tags-re-and-mod-key-audit/),
   the other thread on the rghash from §5.2, covering tags and property keys.
