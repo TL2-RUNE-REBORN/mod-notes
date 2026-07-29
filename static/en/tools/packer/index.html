@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>.MOD Packer · Web Edition — Emberworks</title>
+<title>.MOD UN/PACKER · Web Edition — Emberworks</title>
 <meta name="description" content="Pack a Torchlight II mod folder into a .MOD right in the browser: the desktop packer's Rust code compiled to WebAssembly — fully local, nothing uploaded, nothing to install.">
 <meta name="theme-color" content="#100e0b">
 <link rel="alternate" hreflang="zh-CN" href="https://tl2-mod.chr.moe/tools/packer/">
@@ -351,10 +351,11 @@ footer.site a:hover{color:var(--ember-hi)}
 
 <div class="hero">
   <div class="embers"><b></b><b></b><b></b><b></b><b></b></div>
-  <span class="kicker">MIKURO · IN-BROWSER MOD PACKER</span>
-  <h1>.MOD Packer<em> Web Edition</em></h1>
-  <div class="sub">Pack in the Browser <span class="zh">No Upload · No Install</span></div>
-  <p class="lede">Pick a mod folder and the browser compiles <b>DAT / LAYOUT</b> into the engine's binary formats and wraps them into a <b>.MOD</b> — the <b>same Rust code</b> as the desktop packer, compiled to WebAssembly, with identical output. Your files never leave your machine; no server is involved.</p>
+  <span class="kicker">MIKURO · IN-BROWSER MOD UN/PACKER</span>
+  <h1>.MOD UN/PACKER<em> Web Edition</em></h1>
+  <div class="sub">Pack &amp; Unpack in the Browser <span class="zh">No Upload · No Install</span></div>
+  <p class="lede">Pick a mod folder and the browser compiles <b>DAT / LAYOUT</b> into the engine's binary formats and wraps them into a <b>.MOD</b> — or goes the other way and unpacks a <b>.MOD</b> back into editable sources. The <b>same Rust code</b> as the desktop build, compiled to WebAssembly, with identical output. Your files never leave your machine; no server is involved.</p>
+  <p class="lede" style="color:var(--muted)">Want it faster, or working on a multi-hundred-MB compilation? Reach for the <b>native Rust build</b> instead — real multi-core parallelism with no browser memory ceiling, typically several times quicker: <a href="https://github.com/heiybb/tl2-mikuro-mod-packer-rs" target="_blank" rel="noopener"><b>tl2-mikuro-mod-packer-rs ↗</b></a> (single exe, nothing to install). The web edition wins on being instantly available, anywhere.</p>
 </div>
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
@@ -463,7 +464,7 @@ footer.site a:hover{color:var(--ember-hi)}
     <li><span class="chip opt">Threads</span><span>With cross-origin isolation the page runs on <b>wasm threads</b>: DAT/LAYOUT compilation and container compression are genuinely parallel through rayon (the same parallel code as the desktop build), cutting large-mod packing to roughly <b>1/4 – 1/6</b> of the single-thread time. Output stays byte-for-byte identical to the single-thread and desktop builds; unsupported environments fall back to a single thread automatically.</span></li>
     <li><span class="chip del">Limits</span><span>The whole mod tree is read into memory to pack. <b>Multi-hundred-MB mega components</b> (huge level asset sets, very heavy MPP) can exceed the browser's 4 GB memory ceiling — use the desktop packer for those. Ordinary mods are unaffected.</span></li>
     <li><span class="chip add">Unpack</span><span>Unpacking is <b>decompilation, not extraction</b>: <code>BINDAT</code> / <code>BINLAYOUT</code> payloads are turned back into UTF-16LE text sources, byte-for-byte identical to what the desktop <code>unpack</code> produces (measured against the official GUTS unpacker across 13 mods / 90k+ files: <b>99.4% byte-identical</b>, and the remainder is GUTS losing precision or failing to name a key).</span></li>
-    <li><span class="chip del">Names</span><span>DAT key names survive in the container only as a <b>one-way hash</b>. The bundled dictionary covers every name the base game uses; a mod's brand-new key that cannot be reversed is written as <code>UNK_&lt;8 hex digits&gt;</code> — it <b>recompiles to the very same hash</b> so the game still reads it, but <b>never hand-edit those digits</b> (they ARE the hash).</span></li>
+    <li><span class="chip add">Name recovery</span><span>DAT key names survive in the container only as a <b>one-way <code>rghash</code></b>; whatever cannot be reversed becomes <code>UNK_&lt;8 hex digits&gt;</code> — the data survives (the placeholder recompiles to the very same hash) but the readable name is gone, so <b>never hand-edit those digits</b>. Bundled now is a <b>465,361-entry tiered reverse table</b> (real key positions / exe wide literals / curated dictionaries / numbered families / filenames / DAT values, merged most-trustworthy first, 1.31 MB compressed), plus the file's own basename and entire string table used as hints. <b>Recovered names print green</b> and spell out the placeholder they would have been (<code>recovered: UNK_091C391F → SECOND_STAT</code>); <b>anything still unreversed prints red</b>. Measured across 20 third-party mods (98,008 files): <code>UNK_</code> down from 972 to 871, <b>zero regressions, zero wrong names</b> — and newly recovered keys like <code>DISALLOWPVP</code> / <code>FORCEPVP</code> / <code>UNITREWARD</code> exist only inside the exe, never in any shipped data file.</span></li>
     <li><span class="chip del">Timestamps</span><span>Unpacking <b>does not restore file modification times</b> (browsers cannot set them); the desktop build does. That only shows up in the manifest timestamp field after a repack, and does not affect game loading.</span></li>
   </ul>
 </section>

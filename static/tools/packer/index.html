@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>.MOD 打包器 网页版 — 余烬工坊</title>
-<meta name="description" content="浏览器内把火炬之光2 mod 文件夹打包成 .MOD:与桌面版打包器同一套 Rust 代码编译成 WebAssembly,纯本地、零上传、零安装。">
+<title>.MOD UN/PACKER 网页版 — 余烬工坊</title>
+<meta name="description" content="浏览器内把火炬之光2 mod 文件夹打包成 .MOD,也能把 .MOD 解回可编辑源目录:与桌面版同一套 Rust 代码编译成 WebAssembly,纯本地、零上传、零安装。">
 <meta name="theme-color" content="#100e0b">
 <link rel="alternate" hreflang="zh-CN" href="https://tl2-mod.chr.moe/tools/packer/">
 <link rel="alternate" hreflang="en" href="https://tl2-mod.chr.moe/en/tools/packer/">
@@ -351,10 +351,11 @@ footer.site a:hover{color:var(--ember-hi)}
 
 <div class="hero">
   <div class="embers"><b></b><b></b><b></b><b></b><b></b></div>
-  <span class="kicker">MIKURO · IN-BROWSER MOD PACKER</span>
-  <h1>.MOD 打包器<em>网页版</em></h1>
-  <div class="sub">Pack in the Browser <span class="zh">零 上 传 · 零 安 装</span></div>
-  <p class="lede">选一个 mod 文件夹,浏览器就地把 <b>DAT / LAYOUT</b> 编译成引擎二进制格式并封装成 <b>.MOD</b>——与桌面版打包器<b>同一套 Rust 代码</b>编译成 WebAssembly,输出一致。文件全程留在你的电脑里,不经过任何服务器。</p>
+  <span class="kicker">MIKURO · IN-BROWSER MOD UN/PACKER</span>
+  <h1>.MOD UN/PACKER<em>网页版</em></h1>
+  <div class="sub">Pack &amp; Unpack in the Browser <span class="zh">零 上 传 · 零 安 装</span></div>
+  <p class="lede">选一个 mod 文件夹,浏览器就地把 <b>DAT / LAYOUT</b> 编译成引擎二进制格式并封装成 <b>.MOD</b>;反过来也能把 <b>.MOD</b> 解回可编辑的源目录。与桌面版<b>同一套 Rust 代码</b>编译成 WebAssembly,输出一致。文件全程留在你的电脑里,不经过任何服务器。</p>
+  <p class="lede" style="color:var(--muted)">追求速度、或要处理几百 MB 的整合包 —— 用<b>原生 Rust 版</b>更合适:多核并行不受浏览器内存上限约束,通常快数倍。<a href="https://github.com/heiybb/tl2-mikuro-mod-packer-rs" target="_blank" rel="noopener"><b>tl2-mikuro-mod-packer-rs ↗</b></a>(单文件 exe,免安装)。网页版胜在随开随用、跨平台。</p>
 </div>
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
@@ -464,6 +465,7 @@ footer.site a:hover{color:var(--ember-hi)}
     <li><span class="chip del">边界</span><span>整棵 mod 目录读入内存打包;<b>数百 MB 的巨型整合组件</b>(关卡资产超多、MPP 极重)可能超出浏览器 4 GB 内存上限,请用桌面版。普通 mod 不受影响。</span></li>
     <li><span class="chip add">解包</span><span>解包同样是<b>反向编译</b>而不是解压:<code>BINDAT</code> / <code>BINLAYOUT</code> 会还原成 UTF-16LE 文本源,产物与桌面版 <code>unpack</code> 逐字节一致(对官方 GUTS 解包器实测 13 个 mod / 9 万余文件 <b>99.4% 逐字节相同</b>,余下的差异是 GUTS 那侧丢精度或认不出名字)。</span></li>
     <li><span class="chip del">名字</span><span>DAT 的键名在容器里只剩<b>单向哈希</b>。内嵌词表覆盖原版全部键名;mod 自造的新键还原不出时会写成 <code>UNK_&lt;8位十六进制&gt;</code> —— 它<b>重新打包后仍是同一个哈希</b>,游戏照读,但<b>千万别手改里面的数字</b>(改的是哈希本身)。</span></li>
+    <li><span class="chip add">键名恢复</span><span>BINDAT 只存键名的 <b>rghash</b>,反查不出就退化成 <code>UNK_&lt;hex&gt;</code>——数据还在(占位符重编译回同一个 hash),可读的名字没了。现在内置一张 <b>46.5 万条分层反查表</b>(真实键位 / exe 宽字面量 / 社区词典 / 编号族 / 文件名 / DAT 取值,按可信度分层,1.31 MB 压缩内嵌),再加上文件自身的 basename 与整张字符串表当线索。<b>被救回的名字标绿</b>并写出它本来会是的占位符(<code>recovered: UNK_091C391F → SECOND_STAT</code>),<b>仍反查不出的标红</b>。20 个第三方 MOD 实测(9.8 万文件):UNK_ 从 972 降到 871,<b>零回归零错名</b>;新认出的键里 <code>DISALLOWPVP</code> / <code>FORCEPVP</code> / <code>UNITREWARD</code> 等只存在于 exe,原版数据一次没用过。</span></li>
     <li><span class="chip del">时间戳</span><span>解包<b>不还原文件修改时间</b>(浏览器写文件时设不了),桌面版可以。这只影响重新打包后 manifest 里的时间戳字段,不影响游戏加载。</span></li>
   </ul>
 </section>
