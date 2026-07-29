@@ -110,7 +110,7 @@ offline implementation. A few details worth knowing up front:
 - A `devbuild.txt` in the working directory flips manifest+88 and **stops stamping per-file mtime**.
   ftime is never validated, so it's harmless, but it's a hidden build mode that changes output bytes.
 - GUTS compiles **incrementally** (`sub_1028FC00` skips when a fresh `.BIN*` already exists). That brings cache
-  coherency risk; offline tooling instead compiles everything from text every run; the compilers are
+  coherency risk. Offline tooling instead compiles everything from text every run, and the compilers are
   byte-verified, so the output is identical and it costs nothing.
 
 ---
