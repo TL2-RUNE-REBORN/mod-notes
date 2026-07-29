@@ -569,8 +569,11 @@ function appendLog(el, line, cls) {
   const _t = String(line);
   // 红:反查不出的键名。绿:本来会反查不出、但被扩展词典或文件自身上下文救回来的
   // —— 只报失败会让人以为这张表从不起作用,两个信号都给才看得出发生了什么。
-  if (!cls && UNK_RE.test(_t)) cls = "bad";
-  else if (!cls && _t.includes("recovered:")) cls = "ok";
+  // "recovered:" 先判:恢复行现在会明写出它本来会是的占位符
+  // (recovered: UNK_091C391F -> SECOND_STAT),自身就含 UNK_,
+  // 先判失败规则会把每一次成功都涂成红色。
+  if (!cls && _t.includes("recovered:")) cls = "ok";
+  else if (!cls && UNK_RE.test(_t)) cls = "bad";
   const span = document.createElement(cls ? "span" : "div");
   if (cls) {
     span.className = cls;
