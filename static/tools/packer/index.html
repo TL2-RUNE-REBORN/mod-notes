@@ -566,7 +566,11 @@ worker.onmessage = ev => {
    忘了带 class,这里都会兜住。*/
 const UNK_RE = /\bUNK_[0-9A-Fa-f]{8}\b/;
 function appendLog(el, line, cls) {
-  if (!cls && UNK_RE.test(String(line))) cls = "bad";
+  const _t = String(line);
+  // 红:反查不出的键名。绿:本来会反查不出、但被扩展词典或文件自身上下文救回来的
+  // —— 只报失败会让人以为这张表从不起作用,两个信号都给才看得出发生了什么。
+  if (!cls && UNK_RE.test(_t)) cls = "bad";
+  else if (!cls && _t.includes("recovered:")) cls = "ok";
   const span = document.createElement(cls ? "span" : "div");
   if (cls) {
     span.className = cls;
