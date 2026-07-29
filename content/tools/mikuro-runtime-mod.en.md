@@ -12,7 +12,7 @@ params:
     - "Azure Lotus gems: three-tier cooldown line (Gathered Spirit / Condensed Essence / Great Void) + four dual-effect (stat + cap) cap-break stones + Bloodthirst"
     - "Socket tooltip rows 5 → 10 (engine has no 5-socket cap; items with ≤5 sockets unaffected)"
     - "Beast Taunt: collar + command tome, pet pulls 10m aggro for 4 seconds"
-    - "In-game item text is deliberately short — this page is the authoritative reference"
+    - "In-game item text is deliberately short; this page is the authoritative reference"
   flavor: "Farm the jade, forge the spirit."
   status: "Always on with Game Enhancement"
   metaline: "runtime-mounted · single-player / host"
@@ -24,13 +24,13 @@ params:
 
 ## Ⅰ Sockets 5 → 10 · 镶嵌孔
 
-Item tooltips can display up to **10 sockets**. The vanilla UI only drew 5 rows — the engine itself has no 5-socket cap; items with 5 or fewer sockets are completely unaffected.
+Item tooltips can display up to **10 sockets**. The vanilla UI only drew 5 rows, but the engine itself has no 5-socket cap; items with 5 or fewer sockets are completely unaffected.
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 ## Ⅱ Azure Lotus gems · Cooldown line (haste) · 冷却系
 
-Only four slot types accept them — <mark>weapon / helmet / gloves / shield</mark> — and each item counts at most **2 gems** (two-handed weapons **4**). Stacking sockets is useless; quality beats quantity.
+Only four slot types accept them (<mark>weapon / helmet / gloves / shield</mark>) and each item counts at most **2 gems** (two-handed weapons **4**). Stacking sockets is useless; quality beats quantity.
 
 | Gem | CD reduction | How to get |
 |---|---|---|
@@ -39,10 +39,10 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 | <img class="gem-px" src="/img/gems/taixu.png" alt=""> 青莲·太虚 (Great Void) | 15%, plus all damage +50% | Transmute 9× 11% 凝华 (fixed result) |
 
 - Upgrade chain: **<img class="gem-px" src="/img/gems/jade.png" alt=""> 9× Jade Marrow → 聚灵 (random 1–5%) → 9× same tier → 凝华 (random 6–11%) → 9× 11% 凝华 → 太虚**; low rolls never become junk — any 9 same-tier 聚灵 can be re-melted for another gamble
-- Jade Marrow drops randomly from monsters (stackable); transmute at the alchemist — the recipe is learned automatically the first time you insert the right materials
+- Jade Marrow drops randomly from monsters (stackable); transmute at the alchemist, where the recipe is learned automatically the first time you insert the right materials
 - Multiple gems stack multiplicatively: actual cooldown = base × ∏(1 − gem% ÷ 100). Example: three 5% gems → base × 0.95 × 0.95 × 0.95 ≈ 0.857, about **−14.3%** total (not an additive −15%)
 
-**Transmute odds** — every transmute rolls independently; no pity, no accumulation:
+**Transmute odds**: every transmute rolls independently; no pity, no accumulation:
 
 | First melt · 9× <img class="gem-px" src="/img/gems/jade.png" alt=""> Jade Marrow yields | Chance |
 |---|:-:|
@@ -61,15 +61,15 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 | <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 10% | 4.7% |
 | <img class="gem-px" src="/img/gems/ninghua.png" alt=""> 凝华 **11%** | **1.9%** |
 
-- The **final step** (9× 11% 凝华 → 太虚), like all five cap-break recipes, is a **fixed result** — no gamble.
-- A 聚灵's tier only matters when you socket it: **whichever tier you feed the re-melt, the 凝华 spread is identical** — so melt any 9 same-tier stack as soon as you have it; there is no reason to hoard high rolls.
+- The **final step** (9× 11% 凝华 → 太虚), like all five cap-break recipes, is a **fixed result**, no gamble.
+- A 聚灵's tier only matters when you socket it: **whichever tier you feed the re-melt, the 凝华 spread is identical**, so melt any 9 same-tier stack as soon as you have it; there is no reason to hoard high rolls.
 - Expected scale: one 聚灵 ≈ 9 Jade Marrow (~210 champions/bosses), one 凝华 ≈ 81 Jade Marrow (~1,900). An 11% 凝华 is only **1.9%** per roll, so nine of them for a 太虚 is a lifetime goal — every lower roll along the way stays perfectly usable.
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
 ## Ⅲ Azure Lotus gems · Cap-break & specials · 上限突破
 
-> **The four cap-break gems now do double duty — stat + cap:** each grants +X% of the stat *and* raises its cap by the same +X% (the "Per gem" column below is that shared value; stat and cap rise together), so the raised cap exactly holds the stat — effective the moment you socket it, no need to first stack up to the vanilla cap.
+> **The four cap-break gems now do double duty, stat + cap:** each grants +X% of the stat *and* raises its cap by the same +X% (the "Per gem" column below is that shared value; stat and cap rise together), so the raised cap exactly holds the stat — effective the moment you socket it, no need to first stack up to the vanilla cap.
 
 | Gem | Effect | Per gem | Cap | Slots |
 |---|---|---|---|---|
@@ -88,7 +88,7 @@ Only four slot types accept them — <mark>weapon / helmet / gloves / shield</ma
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> 青莲·御兽嘲讽项圈 (Beast Taunt Collar) | Pet collar equipment; your pet must wear it to respond to the taunt command |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> 魔典:御兽·嘲讽令 (Tome: Beast Taunt Command) | Use to learn an active skill: enemies within 10m switch to attacking your pet for 4 seconds |
 
-> Collar and tome roll **independently** — you may get both, or neither. Bosses give **1% each** (doubled on 【史诗·传说级】); both also appear in the general loot pool now, so other sources can turn them up too — full figures in §Ⅴ. Design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
+> Collar and tome roll **independently**; you may get both, or neither. Bosses give **1% each** (doubled on 【史诗·传说级】); both also appear in the general loot pool now, so other sources can turn them up too — full figures in §Ⅴ. Design rationale for the Azure Lotus gems: see the [full design draft](/en/ideas/qinglian-haste-lingshi/).
 
 <div class="diamond-rule"><span>◆ ◆ ◆</span></div>
 
@@ -104,17 +104,17 @@ The root materials shared by both forging lines all drop from monsters (stackabl
 | <img class="gem-px" src="/img/gems/xiangquan.png" alt=""> Beast Taunt Collar | Beast Taunt | — | — | **1%** | **2%** | — |
 | <img class="gem-px" src="/img/gems/modian.png" alt=""> Tome: Beast Taunt Command | Beast Taunt | 0.009% | 0.25% | **1.25%** | **2%** | **5.2%** |
 
-★ 【史诗级】/【传说级】 bosses come from the **Imba-mod** component — built "for veterans only", so material rates there are **doubled**.
+★ 【史诗级】/【传说级】 bosses come from the **Imba-mod** component, built "for veterans only", so material rates there are **doubled**.
 ★★ Map BOSS = the Dark-Legend component's rift / mapworks bosses. The collar can also come from pet-collar pools (~2.7%).
 
 - **Farm the tough ones**: trash to champion is a ~**50×** jump. Champions and bosses are in a different league entirely.
-- **Ash** yields exactly 1 per hit (a BOSS hits 4.18% of the time — it is not guaranteed).
-- **Talismans are a random pool**: a hit rolls one of the five at random — the table already shows the chance for **one specific** talisman.
-- **No longer monster-only** — these materials now sit in the generic loot pool, so barrels, chests and scenery can drop them too, and merchants stock them (see prices below).
+- **Ash** yields exactly 1 per hit (a BOSS hits 4.18% of the time, so it is not guaranteed).
+- **Talismans are a random pool**: a hit rolls one of the five at random; the table already shows the chance for **one specific** talisman.
+- **No longer monster-only**: these materials now sit in the generic loot pool, so barrels, chests and scenery can drop them too, and merchants stock them (see prices below).
 
 ### Merchant prices
 
-Materials can now be bought outright, but at **gold-sink** prices — a fallback, never a shortcut. Prices scale linearly with item level; the table below is at **level 100**:
+Materials can now be bought outright, but at **gold-sink** prices: a fallback, never a shortcut. Prices scale linearly with item level; the table below is at **level 100**:
 
 | Item | Buy price |
 |---|---:|
@@ -142,5 +142,5 @@ Distributed with the **Challenger Continent bundle**; auto-mounted the moment yo
 
 <figure class="shot">
   <img src="/img/mod-order.png" alt="Challenger Continent recommended MOD load order">
-  <figcaption>fig.1 — The current recommended MOD load order for the Challenger Continent bundle.</figcaption>
+  <figcaption>fig.1 The current recommended MOD load order for the Challenger Continent bundle.</figcaption>
 </figure>

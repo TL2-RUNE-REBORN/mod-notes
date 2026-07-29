@@ -103,4 +103,4 @@ A full set of 8 top-grade Sublimation stones reaches the **≈60%** "practical e
 
 ---
 
-**Progress**: the design draft is settled; the two hard engine-side problems — the percentage cooldown multiplier and the socket-slot gate — have both been cracked with runtime patches and verified in-game. What remains is the content side: the stone DAT files, the forging recipes, and wiring up the drops. Numbers / drop rates / recipes are all tunable — feedback wanted.
+**Progress**: the design draft is settled; the two hard engine-side problems (the percentage cooldown multiplier and the socket-slot gate) have both been cracked with runtime patches and verified in-game. What remains is the content side: the stone DAT files, the forging recipes, and wiring up the drops. Numbers / drop rates / recipes are all tunable — feedback wanted.

@@ -11,7 +11,7 @@ summary: "Why cleaning up .MPP files breaks dungeon walkability — repro steps 
 > - "Function 1 runs before Function 2" is simply the **order inside `CreateMod`** (`sub_103FA610`): the pathing
 >   step (`Pathing_RegenAll_worker` @`0x10018750`) runs **before** the LAYOUT→BINLAYOUT compile (`sub_1029C9A0`).
 > - MPP needs BINLAYOUT because the pathing step drives the **runtime level loader**
->   (`CLevel_LoadLevelData` @`0x1020AB90`), not a text parser — and the loader only eats `.BINLAYOUT`.
+>   (`CLevel_LoadLevelData` @`0x1020AB90`), not a text parser, and the loader only eats `.BINLAYOUT`.
 >   No BINLAYOUT → level load fails → it degrades to a default 50×50 box → an all-`0xFF` stub.
 > - The stub is **2524 bytes** = 24-byte header + 50×50, which matches the "exact 2.5kb" below. The quoted
 >   header bytes `4B 00 00 00 4B 00 00 00`, though, contradict that size (`0x4B` = 75, and 75×75 would be

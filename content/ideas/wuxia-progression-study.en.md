@@ -3,7 +3,7 @@ title: "Moonlight Blade Progression Systems: A Research Report"
 date: 2026-07-14T12:04:00+08:00
 params:
   status: hatch
-  summary: "Taking apart Moonlight Blade's entire progression stack — Longzhu, Tianxinzhu, Langwen, Bianshi, Jingmai — to scout the road for the remaster's equipment and progression systems."
+  summary: "Taking apart Moonlight Blade's entire progression stack (Longzhu, Tianxinzhu, Langwen, Bianshi, Jingmai) to scout the road for the remaster's equipment and progression systems."
 ---
 
 **Purpose**: reference material for designing the equipment and progression systems of the Torchlight II remaster
@@ -45,7 +45,7 @@ Three foundational principles run through the whole design, and they are **stron
 
 ### 2.1 Grade Tiers
 
-Equipment comes in four grades — **white, blue, purple, gold** (PC client) — with **orange (sect-treasure weapons)** as the top rarity. At equal level and slot, a higher grade grants more Gongli.
+Equipment comes in four grades (**white, blue, purple, gold** (PC client)) with **orange (sect-treasure weapons)** as the top rarity. At equal level and slot, a higher grade grants more Gongli.
 
 - Every sect-treasure weapon has its own backstory; crafting one requires collecting a rare drop item (Meteor Flame Stone), and repairs consume a dedicated material (Meteor Iron Stone, each restoring 40 durability).
 - The mobile client's quality sequence is green → blue → purple → orange, and each piece carries sect, wear-level, and slot restrictions.
@@ -136,7 +136,7 @@ Moonlight Blade drives all of this through the "Polish" interface (hotkey B), sp
 
 ---
 
-## 4. Longzhu — Skill-Forging Affixes
+## 4. Longzhu: Skill-Forging Affixes
 
 > Originally named Zhulong; Moonlight Blade's most distinctive system. Its core is **binding equipment progression directly to sect skills**.
 
@@ -165,7 +165,7 @@ Longzhu = "socket a rune into gear that doesn't just add numbers — it changes 
 
 ---
 
-## 5. Tianxinzhu — Controllable Random Enchanting
+## 5. Tianxinzhu: Controllable Random Enchanting
 
 > Best understood as **souped-up equipment enchanting**. The enhanced attributes are displayed in yellow text on the item panel.
 
@@ -201,7 +201,7 @@ This "keep-and-reroll" mechanic gives players **directional control within rando
 
 ---
 
-## 6. Langwen — Inlay and Resonance Combos
+## 6. Langwen: Inlay and Resonance Combos
 
 > Of the three systems, the one most focused on **build composition** — it relies on **combinations of Langwen quality/type triggering resonance** to amplify the payoff.
 
@@ -225,7 +225,7 @@ This "keep-and-reroll" mechanic gives players **directional control within rando
 
 - **Six attack-resonance pieces**: main weapon, off-hand weapon, wristguards, leggings, necklace, ring.
 - **Six defense-resonance pieces**: bracelet, jade pendant, helmet, top, lining, shoes.
-- Attack pieces take attack Langwen and defense pieces take defense Langwen — that is how you maximize the payoff and activate resonance.
+- Attack pieces take attack Langwen and defense pieces take defense Langwen: that is how you maximize the payoff and activate resonance.
 
 ### 6.3 The resonance mechanic ★ (the core highlight)
 
@@ -251,7 +251,7 @@ This "keep-and-reroll" mechanic gives players **directional control within rando
 
 ---
 
-## 7. Bianshi — Shaped Gem System
+## 7. Bianshi: Shaped Gem System
 
 > Moonlight Blade's gem-socketing system; its biggest highlight is **using shape to express attribute direction at a glance**.
 
@@ -284,7 +284,7 @@ Bianshi are not socketed into equipment: they activate at level 30 upon completi
 
 ---
 
-## 8. Jingmai — Node-Based Growth Network
+## 8. Jingmai: Node-Based Growth Network
 
 > Moonlight Blade's "talent tree / growth network" system: spend resources to activate acupoints one by one and gain attributes.
 
@@ -374,7 +374,7 @@ The same point of a base attribute is thus worth different amounts to different 
 
 ### 10.3 Pacing-control advice (port with caution)
 
-Moonlight Blade's soft time gates — "meridian fatigue timers," "Zhengxu locks" — are MMO daily-retention design; **a single-player/buy-to-play Torchlight II should de-emphasize time gates**, while keeping:
+Moonlight Blade's soft time gates ("meridian fatigue timers," "Zhengxu locks") are MMO daily-retention design; **a single-player/buy-to-play Torchlight II should de-emphasize time gates**, while keeping:
 
 - **Exploration-unlocked progression nodes** (the healthy core of the Zhengxu lock): bind some powerful talents/rune slots to exploration or challenge achievements rather than pure resource stacking.
 - **The opening > leveling attribute gap**: encourage "spread wide first, then dig deep," creating a clear sense of progression stages.

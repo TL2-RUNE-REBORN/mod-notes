@@ -5,8 +5,7 @@ author: "Mikuro"
 summary: "The engine matches tags by rghash with zero runtime validation — any tag works. Plus the truth about GUTS's spammy no-match warning, and a property-key audit of two real mod packs. (2026-07-25: section 9 added — names live in two namespaces, and the \"zero hardcoded tags\" search was blind.)"
 ---
 
-> **⚠ Correction, 2026-07-25**: reconciling against one name the engine demonstrably consumes —
-> `TIER3_DESCRIPTION` — showed that the *method* behind conclusion #2 below ("hardcoded tags: zero") is
+> **⚠ Correction, 2026-07-25**: reconciling against one name the engine demonstrably consumes (> `TIER3_DESCRIPTION`) showed that the *method* behind conclusion #2 below ("hardcoded tags: zero") is
 > blind: the engine never uses precomputed hash immediates, it rghashes wide-string literals **at runtime**.
 > The corrected framing, the measurements, and the packer fix that fell out of it are in
 > [section 9](#9-correction-2026-07-25-tier3_description-narrows-the-conclusion).
@@ -26,7 +25,7 @@ summary: "The engine matches tags by rghash with zero runtime validation — any
 
 ## 0. Conclusions first
 
-1. **The engine accepts any tag (rghash match, zero validation).** `TAGS.DAT` = GUTS dropdown + a hash→name display table, not a membership set. A tag you can't pick in GUTS is simply one that isn't in that table; bypass GUTS — write the DAT directly / pack directly — and any tag works.
+1. **The engine accepts any tag (rghash match, zero validation).** `TAGS.DAT` = GUTS dropdown + a hash→name display table, not a membership set. A tag you can't pick in GUTS is simply one that isn't in that table; bypass GUTS (write the DAT directly / pack directly) and any tag works.
 2. ~~**Hardcoded tags in the engine: zero.**~~ **(→ narrowed 2026-07-25, see [section 9](#9-correction-2026-07-25-tier3_description-narrows-the-conclusion))** The hash immediates for 68 candidate tags, searched across the entire exe code segment: 0 hits. The 56 callers of rghash are all DAT field-key parsers. Tags are 100% data-driven — boss/hero-style special behavior runs through `UNITTYPES` / `MONSTERCLASS` / explicit DAT flags (like `ISBOSS`), **not tags**.
 3. **The `no match in tags.dat` warning is GUTS-only, and loses nothing.** That string doesn't exist in `Torchlight2.exe` at all. The real risk isn't the warning — it's that **opening and re-saving in GUTS** rewrites unrecognized key names as hash numbers, and may quietly drop other fields you'd edited.
 
@@ -44,7 +43,7 @@ for wchar c in s:
     h = (h >> 27) ^ (h << 5) ^ c        # confirmed instruction-by-instruction: shr ecx,0x1B  shl esi,5  xor ecx,esi  xor ecx,edx
 ```
 
-It's the same algorithm as `sub_100CA9A0` in `EditorGuts.dll` — which matters, because GUTS hashes key/name strings when it compiles a DAT, and the game hashes them again at runtime; the two must agree or nothing lines up.
+It's the same algorithm as `sub_100CA9A0` in `EditorGuts.dll`, which matters, because GUTS hashes key/name strings when it compiles a DAT, and the game hashes them again at runtime; the two must agree or nothing lines up.
 
 **A tag match is a single hash compare.** `sub_4CA070` decompiles to one line:
 
@@ -78,7 +77,7 @@ While here, this nails Q4 (is a tag hash really rghash?): compute rghash for all
 
 ---
 
-## 3. How many tags does the engine hardcode? — Zero
+## 3. How many tags does the engine hardcode?: Zero
 
 "Zero validation" left one loose thread: what if the engine **special-cases** some tag (sees `HERO` and triggers special AI)? Two independent angles converge on the same answer.
 
@@ -88,9 +87,9 @@ While here, this nails Q4 (is a tag hash really rghash?): compute rghash for all
 - **Per-content-type field keys**: SKILL (`SKILL_TYPE` / `ACTIVATION_TYPE` / `TARGET_ALIGNMENT` …), AFFIX/EFFECT (`TARGET` / `IGNORE_UNITTYPE` / `DURATION` …), QUEST (`TASK` / `REWARD` …), plus EMOTE/FEATURE/THEME/KEYBIND.
 - **Tag registry loading**: `sub_65BBF0` (`COUNT` / `TAG<i>`).
 
-So rghash is a **generic "match a DAT field key by hash" function** — not a place where any specific tag gets special treatment.
+So rghash is a **generic "match a DAT field key by hash" function**, not a place where any specific tag gets special treatment.
 
-**Angle two: search for the hash immediates directly.** If the engine special-cased a tag, it would have to compare against a **precomputed hash immediate** (it won't rehash a string constant at runtime). So: compute rghash for 68 candidate tags — 28 common gameplay guesses (`HERO` / `BOSS` / `CHAMPION` / `PET` / `SUMMONED` / `MALE` / `FEMALE` / `ELITE` / `MINION` …) plus 40 real baseline single-word tags — and `find_bytes` their little-endian u32 across the **whole exe**: **0 hits in the code segment**. The lone "hit," `PET@0x253b69d`, has no xref and isn't even 4-byte aligned = coincidental data bytes, not a tag-hash reference.
+**Angle two: search for the hash immediates directly.** If the engine special-cased a tag, it would have to compare against a **precomputed hash immediate** (it won't rehash a string constant at runtime). So: compute rghash for 68 candidate tags — 28 common gameplay guesses (`HERO` / `BOSS` / `CHAMPION` / `PET` / `SUMMONED` / `MALE` / `FEMALE` / `ELITE` / `MINION` …) plus 40 real baseline single-word tags, and `find_bytes` their little-endian u32 across the **whole exe**: **0 hits in the code segment**. The lone "hit," `PET@0x253b69d`, has no xref and isn't even 4-byte aligned = coincidental data bytes, not a tag-hash reference.
 
 **→ Tags are 100% data-driven.** Whether a custom tag means anything depends entirely on whether you **also write the data rule that references it** (an affix/loot/spawn DAT). A carrier with nobody checking it = inert dead data (harmless, and useless). Want to "borrow" some built-in engine behavior? There's no shortcut — that behavior goes through `UNITTYPES` / classes / explicit flags, and recognizes no tag string.
 
@@ -113,7 +112,7 @@ Three conclusions:
 
 1. **This is a GUTS editor diagnostic.** The game engine never emits it and doesn't care — fully consistent with §1's "hash match, zero validation."
 2. **The value isn't lost.** The store step (`sub_10287DD0`) runs unconditionally, **before** the lookup. GUTS simply has no friendly name to show and falls back to the hashcode as the name.
-3. **The real risk is a GUTS round-trip.** Re-save in GUTS and those "hash-name-only" properties get written back as hash **numbers** (dev's own words: GUTS replaces unrecognized keys with hash numbers, and re-hashes on top of that) — and GUTS may **incidentally discard other fields you edited**. Bypass GUTS — text edit + pack directly (the mikuro packer) — and this entire class of problem never happens.
+3. **The real risk is a GUTS round-trip.** Re-save in GUTS and those "hash-name-only" properties get written back as hash **numbers** (dev's own words: GUTS replaces unrecognized keys with hash numbers, and re-hashes on top of that), and GUTS may **incidentally discard other fields you edited**. Bypass GUTS — edit the text and pack directly with the mikuro packer — and this entire class of problem never happens.
 
 ---
 
@@ -183,8 +182,7 @@ The contrast is the whole point: **same engine, same `TAGS.DAT`, two mods.** The
 ## 9. Correction (2026-07-25): TIER3_DESCRIPTION narrows the conclusion
 
 Conclusion #2 above ("hardcoded tags in the engine: zero") rested on a hash-immediate search that came back
-empty. A day later I reconciled it against one name the engine **demonstrably** consumes —
-`TIER3_DESCRIPTION`, the third tier-bonus line in a skill tooltip — and the reasoning fell apart.
+empty. A day later I reconciled it against one name the engine **demonstrably** consumes (`TIER3_DESCRIPTION`, the third tier-bonus line in a skill tooltip) and the reasoning fell apart.
 
 ### 9.1 How it is actually consumed: three stages
 
@@ -217,7 +215,7 @@ text and `setAlpha(investedPoints < threshold ? 0.5 : 1.0)` (`sub_70ECF0` → `C
 **③ The skill-tree cell, `sub_79F4F0`**, binds a second set: `TIERTEXT1/2/3` (alongside `MINUS`/`PLUS`/
 `PROGRESSBAR`/`INVESTED`/`CONTAINER`).
 
-The exe contains exactly **13 wide literals starting with `TIER`, all enumerated — and no `TIER4`.**
+The exe contains exactly **13 wide literals starting with `TIER`, all enumerated, and no `TIER4`.**
 
 ### 9.2 So what was wrong with #2
 
@@ -244,7 +242,7 @@ Two more corrections fall out:
 - **"the 56 rghash callers" is too narrow a lens.** Hardcoded names live at the **property-getter call sites**
   (`sub_677F00` alone has ≥100 xrefs), not at rghash's direct callers.
 
-One methodology lesson too: **IDA's string list is unreliable** — `TIER3_DESCRIPTION` isn't in it at all, so
+One lesson about method, too: **IDA's string list is unreliable** — `TIER3_DESCRIPTION` isn't in it at all, so
 `find_regex` reports 0 hits. Section 4's claim that the GUTS warning string is absent from the exe was therefore
 re-verified the hard way, by extracting UTF-16LE/ASCII strings from the **raw bytes**: `no match in tags.dat` and
 `Found property name with a hashcode` are still 0, while `TAGS.DAT` / `Loading tag file` / `Tags parsed` do hit.
@@ -267,7 +265,7 @@ The root confusion was calling every name in `TAGS.DAT` a "tag." There are two d
 its `TAG` property as *"The tag to check in the unit data of the target."* — data compared against data. Same on
 the loot side (`sub_5FE2C0` loops over `TAG` blocks reading `NAME`/`CHANCE`/`MINCOUNT`/`MAXCOUNT`).
 
-The practical takeaway — you cannot invent a tag name and inherit engine behavior for free — is **unchanged**, but
+The practical takeaway (you cannot invent a tag name and inherit engine behavior for free) is **unchanged**, but
 the reason has to be restated: not "the engine hardcodes no names," but **the engine hardcodes its own key set,
 whose behavior you cannot alter and which offers no spare hooks**.
 

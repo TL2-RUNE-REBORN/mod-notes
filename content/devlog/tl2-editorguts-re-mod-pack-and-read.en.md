@@ -15,7 +15,7 @@ summary: "Reversing .MOD packing & reading internals from EditorGuts.dll exports
 > Python implementation in §1.4 has been replaced by the Rust port, whose same code also compiles to a
 > [web packer](/en/tools/packer/). The text below is kept as-is for the archive.
 
-> Goal: **offline, editor-free** generation — from `.DAT/.LAYOUT` sources — of `.MOD` files that are
+> Goal: **offline, editor-free** generation (from `.DAT/.LAYOUT` sources) of `.MOD` files that are
 > **functionally equivalent to the native DLL pack and take effect in-game**.
 > This is the design basis of the `mikuro_mod_packer/` package, covering the five formats
 > **MOD container / BINDAT / BINLAYOUT / RAW / MPP**, and **how the native DLL writes and reads/validates** each.
@@ -98,7 +98,7 @@ per file (manifest order): <II> uncompressed_size, compressed_size(0=stored) + b
 ```
 - **maxCompressedBlockSize** = the largest compressed block, feeds the game's decompress read-buffer sizing.
 - **Store vs compress** = `byte_11E94CD8[type]` (pak writer `sub_102A7100`: `if (byte_11E94CD8[type] && size < 0x1900000)` → compress). The table is 1 for types 0..23, **0 only for type 24 (.JPG)**. I.e. **everything is zlib-L6 except .JPG (stored)**; any block ≥ `0x1900000` (26 MB) is also stored.
-  > Note: our offline packer uses **isal** (`isal_zlib`, SIMD DEFLATE, still zlib-format so the game inflates it; its crc32 equals the standard value; falls back to zlib if absent) — not byte-exact but functionally equivalent and ~3–5x faster.
+  > Note: our offline packer uses **isal** (`isal_zlib`, SIMD DEFLATE, still zlib-format so the game inflates it; its crc32 equals the standard value; falls back to zlib if absent), not byte-exact but functionally equivalent and ~3–5x faster.
 
 ### 1.5 The three hash/count fields (★ most critical, all three were misjudged at first)
 
@@ -190,7 +190,7 @@ Body = one recursive node:
   validation; `TAGS.DAT` splices a float-colour blob into a `<STRING>:` value (reinterpreted as lone surrogates), which
   requires surrogatepass for a byte round-trip.
 
-### 2.2 String-id resolution model — ★ PER-FILE (model A, PROVEN)
+### 2.2 String-id resolution model: ★ PER-FILE (model A, PROVEN)
 - In the **shipped** format, ids come from a **global session counter** (`sub_1023E9F0`, `counter++`).
 - **But the game resolves per-file** (model A): each BINDAT carries its own table; body ids resolve through **that
   file's table**.
@@ -285,7 +285,7 @@ We finally *measured* every long-assumed claim about the residual, end to end:
 - **The `.BINLAYOUT` is fully deterministic and byte-exact.** Regenerating the same `.LAYOUT` N times through the real DLL
   gives an SHA-identical `.BINLAYOUT` every run (incl. the tiles whose `.mpp` oscillates), and our offline compiler matches
   it byte-for-byte. So the residual is **not** in BINLAYOUT — it is entirely downstream, in the `.mpp` pathing bake.
-- **The native `.mpp` bake is itself nondeterministic — but only on geometrically complex tiles.** Regen ×5: cliff/overhang
+- **The native `.mpp` bake is itself nondeterministic, but only on geometrically complex tiles.** Regen ×5: cliff/overhang
   and multi-chunk tiles produce a *different* `.mpp` every run (tens of wall-boundary cells oscillate, 0.01–0.04%); plain
   concave/cave tiles are byte-stable (0 variance). Those oscillating cells are unmatchable *in principle* — the corpus is one
   noisy sample and the engine doesn't even match itself there.

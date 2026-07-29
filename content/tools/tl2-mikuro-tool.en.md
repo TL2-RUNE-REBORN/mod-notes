@@ -23,7 +23,7 @@ https://github.com/heiybb/TL2-Mikuro
 ## Why it exists
 Packing or unpacking a mod normally means starting the editor and sitting through a ~20-second load while it initializes features you don't need.
 TL2-Mikuro initializes in 3 seconds.
-It does this by calling functions in `EditorGuts.dll` directly — which, regrettably, means `EditorGuts` still has to be installed.
+It does this by calling functions in `EditorGuts.dll` directly, which, regrettably, means `EditorGuts` still has to be installed.
 
 ## Install
 Just drop `TL2-Mikuro.exe` into the same folder as `Editor.exe` / `Torchlight2.exe`.

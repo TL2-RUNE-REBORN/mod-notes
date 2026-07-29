@@ -34,11 +34,11 @@ summary: "Everything that happens between a mod folder and a .MOD the game will 
 4. **The game validates exactly one hash — `rollingHash`.** Get it wrong and the entire mod is silently discarded.
    "Ticked in the launcher, does nothing in game" is usually this.
 5. **Filenames in the manifest must be UPPERCASE.** The game uppercases the request path and then compares it
-   against the stored name **as-is**. A lowercase `.dds` stored verbatim can never be found — and the symptom is
+   against the stored name **as-is**. A lowercase `.dds` stored verbatim can never be found, and the symptom is
    a texture or icon silently turning into a different image.
 6. **Activation is keyed on `MOD_ID`, not the filename.** `modlauncher.sch` in the save folder lists MODGUIDs;
    order is priority, and TL2 is **first-mount-wins** (not the more common last-wins).
-7. **`.mpp` is the only thing that gets *baked*** — and the only thing not reproducible byte-for-byte offline.
+7. **`.mpp` is the only thing that gets *baked***, and the only thing not reproducible byte-for-byte offline.
    But measured the way players experience it (can I walk there?), the offline path is at **99.850%**
    with no player-trapping gaps left.
 8. **The official `DATA.PAK` does not store text.** The entry `FOO.LAYOUT` holds **compiled** BINLAYOUT binary;
@@ -108,7 +108,7 @@ offline implementation. A few details worth knowing up front:
   4 open failed / 5 temp reopen failed / 6 required-mod load failed / 7 version or recursive dependency /
   8 can't read the `Torchlight2.exe` version). `CreateMod` then flips 0 into 1 for its caller.
 - A `devbuild.txt` in the working directory flips manifest+88 and **stops stamping per-file mtime**.
-  ftime is never validated, so it's harmless — but it's a hidden build mode that changes output bytes.
+  ftime is never validated, so it's harmless, but it's a hidden build mode that changes output bytes.
 - GUTS compiles **incrementally** (`sub_1028FC00` skips when a fresh `.BIN*` already exists). That brings cache
   coherency risk; offline tooling instead compiles everything from text every run — the compilers are
   byte-verified, so the output is identical and it costs nothing.
@@ -147,7 +147,7 @@ SS title; SS author; SS descr; SS website; SS download    # SS = u16 code-unit c
 
 Three counter-intuitive points:
 
-- **`MOD_FILE_NAME` is not a header field** — it's the **output filename**.
+- **`MOD_FILE_NAME` is not a header field**: it's the **output filename**.
 - **modver = VERSION + 1.** The publish path runs `++*(this+256)`, so writing 3 in MOD.DAT stores 4 in the package.
 - **gamever does not come from MOD.DAT.** It is read at pack time from **`Torchlight2.exe`'s VS_FIXEDFILEINFO**
   (`sub_103F8CD0`, word order (minorMS, majorMS, privLS, buildLS)). 1.25.9.5 = `0x0005000900190001`,
@@ -246,7 +246,7 @@ Store or compress is decided by a table, `byte_11E94CD8[type]`: types 0..23 are 
 "ticked but no effect."**
 
 If it's wrong, the loader **silently** abandons the whole mod: no dialog, no player-visible error, the mod's
-entire file table is dropped — so nothing appears in game, while the launcher still shows it happily ticked.
+entire file table is dropped, so nothing appears in game, while the launcher still shows it happily ticked.
 
 The writer (end of `sub_102A7100`) and the validator (`sub_102A2690`) are symmetric and deterministic:
 
@@ -262,7 +262,7 @@ rollingHash = h
 ```
 
 There's a nice detail here. At first glance in the disassembly, `divisor` comes out of a random number
-generator — so how can the hash be reproducible at all? It can. That LCG (`sub_10285B30`) is reseeded
+generator, so how can the hash be reproducible at all? It can. That LCG (`sub_10285B30`) is reseeded
 **with N** by `sub_10285A50` immediately before the call (`sub_10285450` saves the old state and restores it
 afterwards), so the "random" divisor is a **deterministic function of the data-section length**.
 Verified byte-for-byte against 30 shipped / editor-produced `.MOD` files.
@@ -330,7 +330,7 @@ the official one and carries a pile of source assets with it.**
 
 The second class isn't thrown away — it's **renamed**. GUTS compiles, strips the text source, carries
 `<sourcename>.BINDAT` around, and renames back to the source name when writing the manifest. So the final
-manifest lists `FOO.DAT` — the **source name** — holding **compiled BINDAT bytes**.
+manifest lists `FOO.DAT` (the **source name**) holding **compiled BINDAT bytes**.
 
 **How do you confirm that?** Rather than reading decompilation alone, use **a real GUTS artifact as ground truth**.
 `EDITORMOD.MOD` is the editor's default output name, so any mod folder ever opened in GUTS has one.
@@ -345,7 +345,7 @@ Count the UTF-16LE names in its manifest region:
 .XLS / .XML / .MAX / .LOG / .THUMBNAIL / .CMP / .MPD / .LNK   all 0    ← the blacklist really does strip them
 ```
 
-Settled — and more robust than reading decompiled code.
+Settled, and more reliable than reading decompiled code.
 
 ---
 
@@ -382,7 +382,7 @@ with exactly matching counts.
 
 **Incident two: the entire UI vanished.** LAYOUT→BINLAYOUT compilation was once gated on "is there already a
 sibling `.BINLAYOUT`." On a source-only repository (`.gitignore` excludes `*.BINLAYOUT`), it compiled **zero**
-layouts, so the package shipped no UI layouts at all — and since the base game's UI directory is 61 `.LAYOUT`
+layouts, so the package shipped no UI layouts at all, and since the base game's UI directory is 61 `.LAYOUT`
 paired with 61 `.LAYOUT.BINLAYOUT`, and the game reads the latter, **the in-game UI was simply gone**.
 
 Both bugs share one lesson: **type classification and compile coverage must come from the same table.**
@@ -413,11 +413,11 @@ Body = one recursive node:
 
 Type numbers: `INTEGER`→1, `FLOAT`→2, `UNSIGNED INT`→4, `STRING`→5, `BOOL`→6, `INTEGER64`→7, `TRANSLATE`→8.
 
-### 5.2 Key names aren't stored — hashes are
+### 5.2 Key names aren't stored: hashes are
 
 This is BINDAT's most important design decision. Node names and property names (`[UNIT]`, `NAME`, `LEVEL`…)
 **never enter the string table**. Instead they're run through **rg_hash** — GUTS's 32-bit string hash
-(`sub_100CA9A0`; the game side is the same algorithm at `sub_4C9FE0`) — and written as a u32.
+(`sub_100CA9A0`; the game side is the same algorithm at `sub_4C9FE0`), and written as a u32.
 
 The upside: any key serializes, with no "dictionary completeness" risk. A mod inventing a brand-new property
 name compiles just fine. Corpus proof: 901025 / 901028 keys equal `rg_hash(name)` (the 3 exceptions all live in
@@ -484,14 +484,14 @@ and **write the original hash back verbatim**, so decompile→recompile is byte-
 (exact length + uppercase hex); anything else is treated as an ordinary name.
 
 > ⚠️ **Never hand-edit the digits inside `UNK_`.** You'd be editing the hash itself, which then points at a
-> different property — and nothing will warn you.
+> different property, and nothing will warn you.
 
 The real shape of the wordlist gap is worth stating, because it isn't what you'd guess: **what's missing isn't
 identifiers, it's numeric families capped at vanilla usage.** `LEVEL1..16` / `CHILD1..5` / `ENCHANTCOST1..4` /
-`VALUE1..5` / `TIER1..3_DESCRIPTION` — while large mods have long since used `LEVEL100`, `CHILD7`,
+`VALUE1..5` / `TIER1..3_DESCRIPTION`, while large mods have long since used `LEVEL100`, `CHILD7`,
 `ENCHANTCOST5`, `TIER4`. Scanning 80505 mod DATs: only 20 genuinely new keys, and of 104 new sections nearly all
 are `LEVEL17..100`. Pouring another 3006 exe string literals into the wordlist (0 collisions) is just insurance;
-it can't cure names a mod invents on the spot — which is why the tooling lists the files and warns about
+it can't cure names a mod invents on the spot, which is why the tooling lists the files and warns about
 placeholder names at pack time.
 
 ---
@@ -510,7 +510,7 @@ Object (recursive):
    <I> adprop_region   <H> child_count   + children…
 ```
 
-### 6.1 Where the schema comes from — a lesson in not learning from data
+### 6.1 Where the schema comes from: a lesson in not learning from data
 
 BINLAYOUT encoding depends entirely on a schema: **which descriptor has which properties, and each property's
 mem number and type**.
@@ -518,8 +518,7 @@ mem number and type**.
 The natural idea is to learn it from data: scan every official `.LAYOUT` and `.BINLAYOUT` and infer the mapping.
 **That approach is wrong, and it fails quietly.**
 
-- It can only cover properties the official data **happens to exercise**. Anything unseen gets **silently dropped** —
-  and a dropped property means a wrong `block_size`, which means a CEGUI crash in game.
+- It can only cover properties the official data **happens to exercise**. Anything unseen gets **silently dropped**, and a dropped property means a wrong `block_size`, which means a CEGUI crash in game.
 - It also learns pollution: the Music descriptor came out with 48 properties; the real count is 4.
 
 The correct approach is to dump the DLL's **runtime descriptor registry** wholesale: headless `InitEditor` →
@@ -602,7 +601,7 @@ then gridW*gridH bytes, row-major (X varies fastest)
 **One cell = 0.4 world units; there are only three values: `0x00` walkable / `0x01` wall /
 `0xFF` out-of-bounds or no ground.** File size = 24 + gridW·gridH. That's the whole format.
 
-The region box comes from each region's **collision** AABB — not the render mesh's bound, which is deliberately
+The region box comes from each region's **collision** AABB, not the render mesh's bound, which is deliberately
 inflated and will compute the wrong box. Each region snaps to 10 with a 0.2 pad, and grid dimensions derive from
 the stored float32 origin.
 
@@ -628,8 +627,7 @@ Two counter-intuitive points:
 This is the longest-lived piece of workflow folklore among mod authors, and its symptom is alarming:
 **players can't move after entering the dungeon.**
 
-To reproduce: open a mod project in GUTS, delete all the intermediates (`.BIN*`, `.MPP`) before hitting build —
-plenty of people keep their workspace tidy that way — then build. Every newly generated `.mpp` comes out at
+To reproduce: open a mod project in GUTS, delete all the intermediates (`.BIN*`, `.MPP`) before hitting build (plenty of people keep their workspace tidy that way) then build. Every newly generated `.mpp` comes out at
 **exactly 2.5 KB**. Play it, and that map is unwalkable. The fix: build again.
 
 The black-box model people inferred looks like this:
@@ -680,7 +678,7 @@ into six independent gaps, every one of them derivable from text:
 |---|---|---|---|
 | 1 | **DEACTIVE THEMES** | The offline "is this geometry backdrop decoration?" test only looked at `CHOICE` and `ACTIVE THEMES`, while the DLL's `sub_1022FF80` also gates on **DEACTIVE THEMES** (it has 5 theme string fields). The batch blamed on "runtime nocollide" turned out to sit entirely under `DEACTIVE THEMES=…` groups. | over-wall −6307 |
 | 2 | **Don't guess links by name** | The old code decided whether to bake a link by checking its name for SPAWNER / RANDOM / CHEST — experience design, not reverse engineering. The DLL **never name-matches**: it follows every link and runs each sub-piece through the same gate. "Follow all + the real gate" let the whole name list be deleted. | −5869, 49 tiles better / 0 regressions |
-| 3 | **Room Piece parents don't pass transforms** | When a Room Piece is parented under another Room Piece (a trace left by the GUTS clone operation), the transform is **not inherited**. There's code-level proof on the exe side: the function that recursively composes world transforms via `PARENTID` has exactly one consumer in the whole binary — QuestController — and baking never goes through it. Without the fix, a 5-level clone chain multiplies scale to 162× and blows the region AABB out to 130k units, failing compilation outright. | 3 tiles went from "failed → STUB" to correct; 18/18 grid headers match the original author's output |
+| 3 | **Room Piece parents don't pass transforms** | When a Room Piece is parented under another Room Piece (a trace left by the GUTS clone operation), the transform is **not inherited**. There's code-level proof on the exe side: the function that recursively composes world transforms via `PARENTID` has exactly one consumer in the whole binary (QuestController) and baking never goes through it. Without the fix, a 5-level clone chain multiplies scale to 162× and blows the region AABB out to 130k units, failing compilation outright. | 3 tiles went from "failed → STUB" to correct; 18/18 grid headers match the original author's output |
 | 4 | **NEVERBAKE actually means force-bake** | A thoroughly misleading name. `sub_10263280` proves NEVERBAKE lives at `descriptor+0x40`, and `SetMesh` does `if descriptor[+0x40] → piece[401]=1`, with the final gate being `ALWAYSBAKE ‖ piece[0x191]` ⇒ **native force-bakes a NEVERBAKE piece even when the instance explicitly says `BAKE:false`**. | diff −5077, danger cells 6284→1688 |
 | 5 | **Controller DATA fields** | A `Layout Link Controller`'s `DATA` field (`1,8,` plus 8 per-object transforms) **overrides** the transform sub-layout objects author for themselves — native places by DATA, not by POSITION. A desert map's "missing floor" hole came from exactly this: a mana_pit was placed outside the tile at Z=−146, while the DATA entry (118,0,170) pulls it right back into the danger zone. | diff −2618, danger cells 1688→**553** |
 | 6 | **Path Bounds Extender** | A type-19 Property Node merges into the grid's **origin** (but not into the writer box). It needs a gate: adopt it only when it actually changes the grid dimensions, otherwise keep the collision origin. | dims match +4, 0 regressions |
@@ -690,8 +688,8 @@ missed by reusing a different function. Adding it was worth over −2021.
 
 **Not one of these is "runtime state."** All of them are derivable from text plus the descriptor table.
 
-**A methodological note**, written down because it recurs: when a heuristic is **name-based**, first check
-whether the DLL's actual per-object gate already expresses the same thing. It usually does — and
+**A methodical note**, written down because it recurs: when a heuristic is **name-based**, first check
+whether the DLL's actual per-object gate already expresses the same thing. It usually does, and
 "follow everything + the real gate" wins on both robustness and accuracy, with no name whitelist to maintain.
 
 ### 8.4 Is the rest just random? A triple-bake experiment
@@ -707,7 +705,7 @@ which makes it a perfect control. Then compare what varies on each side.**
 Result over 1116 tiles:
 
 - the DLL disagrees **with itself** in only **3826 cells**;
-- among disagreements, the cells we call wall and the DLL calls walkable total 33841 — and
+- among disagreements, the cells we call wall and the DLL calls walkable total 33841, and
   **the DLL walks all three times in 33329 = 98.5%**, i.e. this is a **stable, reproducible real difference**;
   genuinely nondeterministic cells number just 512 (1.5%);
 - the other direction (we walk / DLL walls) totals 64953, of which 98.6% is deterministic.
@@ -730,7 +728,7 @@ Digging to the bottom, it's the product of three things:
    accept ⟺ `v16≥0 && v8≥v16 && v15≥0 && v8≥v15+v16`.
 3. On a **sloped** collision triangle, `dz/dy = 8.6e-5` times a 196-unit descent gives a **0.0167** drift in
    `hp.z` — enough to flip a razor-thin margin. Measured: native rejects at −0.00159, our vertical ray accepts
-   at +0.0275. Flat triangles (vertical normal) drift not at all and both sides agree — which explains why the
+   at +0.0275. Flat triangles (vertical normal) drift not at all and both sides agree, which explains why the
    disagreement only ever appears on slopes.
 
 So why not just port the tilted ray and that formula? **We did.** Reject/accept classification reproduces
@@ -773,7 +771,7 @@ Latest scores against an independently baked DLL corpus (production configuratio
 | Tiles with zero danger cells (offline suffices) | 156 / 1116 |
 
 The key move here was **changing the yardstick**. Byte-exactness is unreachable; "don't trap the player" is
-reachable — and it's what players actually care about.
+reachable, and it's what players actually care about.
 
 So there's a `reconnect_walkable` safety pass: a 0-1 BFS that finds thin wall barriers cutting off a large
 walkable region and opens them (on by default). That zeroed out every player-trapping gap of ≥100 cells.
@@ -861,7 +859,7 @@ the run-to-run spread comes mostly from Defender's real-time scanning and write-
 Two caveats that **have to be stated**:
 
 - **MPP is not a like-for-like column.** Native's is `EditorRegenPathingData` (byte-exact); Rust's is the
-  offline `re` backend (the 99.850% from §8.6). For byte-exactness you use `--mpp dll` — which drives that same
+  offline `re` backend (the 99.850% from §8.6). For byte-exactness you use `--mpp dll`, which drives that same
   native DLL, so its speed is exactly the "Native MPP" column. So within that 21.5×, the MPP portion is
   "faster but measured differently"; compile + RAW + boxing is the strictly like-for-like part, and there the
   numbers are **native 749.2 s vs Rust 45.66 s including MPP**.
@@ -920,7 +918,7 @@ The fix is a three-pass temp-file stream:
 
 - **Pass 1**: read each file → compress or store immediately → append to `<out>.data.tmp` (only one file held in
   memory), recording the manifest and the largest compressed block;
-- **Pass 2**: compute rollingHash — and here the "only ~50 bytes are sampled" property from §2.5 becomes a
+- **Pass 2**: compute rollingHash, and here the "only ~50 bytes are sampled" property from §2.5 becomes a
   lifesaver: about 50 seeks against the temp file, with no need to read it back into memory;
 - **Pass 3**: assemble `header ++ [maxCsz][rollingHash] ++ chunked copy of tmp ++ manifest`.
 
