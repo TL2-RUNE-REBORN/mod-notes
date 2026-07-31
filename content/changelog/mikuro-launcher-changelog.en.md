@@ -8,6 +8,13 @@ summary: "Version change history of the Mikuro Launcher (including MIKURO Game E
 
 > The full in-game content mounted by "MIKURO X" (Azure Lotus gems, sockets 5→10, Beast Taunt) now has its own page in the Armory → **[MIKURO Runtime MOD](/en/tools/mikuro-runtime-mod/)**. This page tracks version changes only.
 
+## 2026-07-31 (Game Enhancement: crash safeguard)
+An engine-level safeguard that seals off a long-standing crash which only shows up on certain characters.
+
+- 🐛: Fixed **crashes when spending points or socketing gems** — most common on classes with a lot of passives, e.g. 「**狂热杀神**」and 「**独角兽**」, where some builds crashed almost every single time a point was spent; it also covers the same crash seen with certain skills while socketing gems. The root cause is in the engine itself: while recomputing character stats, a per-frame buff expiry can destroy **the very effect currently being evaluated**, and the evaluation then reads memory that has already been freed. The enhancement layer now checks before that read and, if the data is gone, counts that entry as 0 and carries on — **the crash point is sealed off**
+- ⚙️: This is an **engine-level safeguard, independent of any MOD** — every class, every MOD combination and every save is covered; no MOD data changes and no save-format changes. On healthy data the check never fires and no value is affected; when it does fire, at worst a single value carries a tiny deviation for one frame, overwritten by the next recompute
+- ℹ️: Why these classes in particular — it is a race in time: the more passive / proc skills you have, the more effects are created and destroyed every second, and the greater the chance of landing inside a stat-recompute window. The same skill design on a passive-light class may never hit it at all
+
 ## 2026-07-25 (Game Enhancement content update)
 Azure Lotus material drops overhauled: **coverage 20% → 92%, switched to random drops**. Full figures: **[MIKURO Runtime MOD](/en/tools/mikuro-runtime-mod/)**.
 
