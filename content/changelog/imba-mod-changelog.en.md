@@ -1,10 +1,87 @@
 ---
 title: "Challenger Continent MOD Changelog"
-date: 2026-07-24T21:46:59+10:00
+date: 2026-08-09T23:54:27+10:00
 author: "Mikuro"
 summary: "Complete version change history of the Challenger Continent mod pack."
 ---
 
+
+## 2026-08-09
+The great skill-system audit. Every one of the 36 classes — roughly 1,400 skills in total — was reconciled line by line against what the game actually does: a large batch of effects that existed only in the tooltip and never once fired have been repaired, and several hundred numbers that disagreed with reality have been corrected back into agreement. All MODs need a full repack; replacing the whole pack is recommended.
+
+> ⚠️ **Read before updating** — the old Azure Lotus Sword Immortal (青莲剑仙) has been removed from the class skill pack, and characters using it **can no longer be played** after this update. Settle their affairs first (move gear out, empty the bags, say goodbye).
+
+### Launcher
+- ✨: MOD load order is now corrected automatically (Challenger Continent only)
+- 💬: Corrected the DXVK explanation
+
+### MOD lineup changes
+- ✨: Sword Immortal generation change — the old Azure Lotus Sword Immortal is removed from the class skill pack and succeeded by a standalone MOD, "Azure Lotus Sword Immortal [Refined]" (青莲剑仙[精修])
+- ⚠️: That MOD has been renamed to 「MIKURO_青莲剑仙_精修」 — delete the old `MIKURO_CLASS_QLJX_CN` package file when updating, so the old and new copies are not both mounted
+- 🗑️: The pet system MOD is no longer maintained and will not ship in the full MOD pack again; a stronger multi-pet mode will take its place later
+- 🐛: No more invisible walls blocking your path
+
+### Azure Lotus Sword Immortal [Refined] — the class itself
+- ✨: Charge system wired in — Swordplay: Thrust (剑术-刺) at full energy deals an extra 50% of max mana as explosion damage; Sword Force: Flying Sword (剑势-飞剑) at full energy deals an extra 30% of max mana on hit; the charge-bar readout and the Soul Roams the Immortal Realm (魂游仙境) tooltip were corrected together (full charge also grants +100% attack speed)
+- ✨: Sword Force: Sword Riding (剑势-御剑术) reworked — flying swords are summoned to fight alongside you while riding (up to 4), and the dash and flight visuals were all replaced with new dedicated effects
+- ✨: Starting weapon Ember Claw Greatsword (烬爪巨剑) reworked — brand-new textures; level requirement 120→1, sockets 5→2; its shield effect now scales with 150% of max mana, trigger cooldown 5→30 seconds (the weapon icon will be redesigned later)
+- ♻️: Growth curves reworked — the bonus coefficients on Sword Qi (剑气) and Sword Dao: Sword Patriarch / Sword Saint / Sword Sovereign (剑道-剑宗/剑圣/剑皇) changed from three fixed tiers to per-level growth (a 15-level affix chain added for each); Sword Dao: Swordsman (剑道-剑士) filled in for levels 3~15; Unity of Man and Sword (人剑合一) restored to per-level growth at 11~15; Azure Origin Sword Art (青元剑诀) realigned across every tier
+- 📈: Nerfs — Sword Qi coefficients 100/150/300%→85/120/150%; Clear Sword Heart (剑心通明) halved across the whole ladder; Swordplay: Slash (剑术-斩) tiers 25/50/75/100→20/30/40/50 (now benefits from charge instead); Sword Force: Storm (剑势-风暴) scaling 20/30/50/80→15/20/25/30; Sword Intent Slaughter (剑意杀戮) T3 scaling 80→60%; Sword Emperor (剑帝) T3 200→100%; Song of Ten Thousand Swords (万剑曲) stun is 1 second and no longer ignores resistance (its 40% damage scaling is unchanged); the Sword Force: Dominion (剑势君临) aura falls off more slowly; Sword Draw (拔剑术) value ladder rearranged; Taigeng Sword Formation (太庚剑阵) cooldown 5→10 seconds (7.5 at ultimate); Sword Step (剑步) duration 3→2 seconds plus a new 2-second cooldown
+- 📈: Buffs — Spirit Sword Domain (灵剑剑域) enemy debuffs strengthened across the whole ladder (roughly 1.5~2×); Sword Flash (剑闪) weapon damage 180→185%; Juque Sword Art (巨阙剑诀) proc chance changed from a flat 25% to 15%~29% scaling with level
+- 🐛: Fixes — Sword Venerable (剑尊) unlocked at the wrong tier (it had been gated behind the tier-1 requirement) and its T1 effect was never attached; Sword God (剑神) T1 had its value written in the wrong direction; Sword Aura (剑罡) visual-effect binding was dead; Boundless Edge (无量锋) silence duration was never implemented (now 2/3 seconds); Spirit Flying Sword (元灵飞剑) stun changed to 1.5 seconds (resistance applies); many descriptions realigned with actual behavior (Sword Tomb (剑冢) / Sword Body Void (剑体空冥) / Sword Dao: Only Self (剑道唯我) / Yijian (奕剑), etc.)
+
+### Mechanics repaired — promised in the tooltip, finally live (by class)
+- 🐛: Jungle Hunter (丛林猎人) — the poison mechanic on Survival: Poison Coating (生存-淬毒) is back from the dead: a broken internal reference meant "adds 15%~44% of weapon DPS as poison damage" had never worked at all; now fixed
+- 🐛: Demon Spirit Vanguard (魔灵先锋) — the main effect of Vanguard: Demon Lance Shield (先锋-魔枪护盾) is back: the level-15 stance bonus was rebuilt to the original design, and 225 dead references were cleaned up along the way
+- 🐛: Necromancer (死灵法师) — the `NEC_HP` affix family is back: one botched rename left 126 health bonuses inert; all of them now apply
+- 🐛: Conqueror Emperor (征服大帝) — the kinetic enhancement effects are back (44 files involved), restored to the original design
+- 🐛: Temple Guardian (圣殿守卫) — the per-rank bonuses on Frost: Freezing Strike (寒冰-冰冻打击) work again
+- 🐛: Overwatch (守望先锋) — the three-tier bonus on Trap: Shock Pellet Device (陷阱-电弹装置) (+10%/20%/30% crit chance and +20%/40%/60% crit damage) was an empty shell; now implemented
+- 🐛: Dark Archer (暗黑弓手) — the vulnerability affix on Firearms: Laser Cannon (枪械-激光火炮) filled in (physical + electric 8%→15% for 3 seconds)
+- 🐛: Alchemist (炼金术士) — the three-tier slow on Dueling: Blink Device (决斗-瞬移装置) finally applies (-30% for 4 seconds)
+- 📈: Berserker (狂暴战士) — the proc chance on Passive: Fury (被动-狂怒) restored to the 5%~33% the tooltip promises (by level): it had actually been triggering on 100% of kills, far stronger than described, and now matches both the description and vanilla (a nerf). Rage: Dismember and Debone (狂暴-肢解剔骨) bleed durations rearranged to match the description at 6/3/2/2 seconds (total damage unchanged, the bleed just resolves faster; the tier-1 -3s and tier-2 -1s finally do something)
+- 📈: Zealot Slayer (狂热杀神) — scaling coefficients aligned to the descriptions: the damage-over-time on Combat Prowess (作战能力) now scales with 0.5% health + 5% strength (base) / 1% health + 10% strength (tier 1), where the real numbers had been far above the tooltip (a nerf); the armor shred on Combat Technique (战斗技巧) scales with dexterity 2%→15% (a buff); the "scales with 10% mana" clause on Elemental Defense (元素防御) is now actually implemented
+- 📈: Peerless War God (绝世武神) — the "scales with 10% mana" clause on Realm of Protection (护之意境) is now implemented, and its percentage scaling with cultivation goes 1%→2%
+- 🐛: Unicorn (独角兽) and Archdruid (大德鲁伊) — the rank-5 weaken radius on Roar (咆哮) fixed 5→7.5 metres (each class had one value the edit missed; now consistent with ranks 6~9 and with the description)
+- ✨: Weapon requirements on 11 skills went from "tooltip-only" to actually enforced — you could previously ignore the stated requirement entirely, and now the listed weapon is required:
+  - Conqueror Emperor — Passive: Last Stand Counter (被动-绝地反击) (axe / hammer / sword + shield)
+  - Warhammer Chieftain (蛮锤酋长) — Passive: Offense-Defense Switch (被动-攻防转换) (two-handed melee)
+  - Lingjiu Palace Master (灵鹫宫主) — Technique: Kasaya Demon-Subduing Art (招式-袈裟伏魔功) (claws / fist weapons)
+  - Necromancer — Passive: Speed Mastery (被动-速度掌握) (staff)
+  - Void Warlock (虚空术士) — Flesh: Lash (血肉-鞭笞) (dual wield)
+  - Assassin Battle Soul (刺客斗魂) — Assassination: Claw Mastery (暗杀-利爪掌握) (fist weapons) and Assassination: Blade Shield (暗杀-刀刃之盾) (shield)
+  - Engineering Technician (工程技师) — Blitz: Magnetic Vortex (闪击-磁力漩涡) (axe / sword / hammer / polearm)
+  - Sacred Shield Knight (圣盾骑士) — Passive: Ice Shield Bash (被动-冰盾重击) (one-handed melee)
+  - Incantation Wizard (吟咒巫师) — Wizard Fire: Flame Ray (巫师火系-火焰射线) (staff)
+  - Wandering Marksman (漂泊射手) — Passive: Critical Mastery (被动-暴击专精) (bow / crossbow / rifle / pistol)
+- 🐛: 29 skills gained the weapon-restriction notice they had been hiding (the skill simply would not work with the wrong gear, with nothing to explain why; the description now spells it out)
+
+### Description corrections — the numbers now tell the truth, actual power unchanged (by class)
+- 💬: Roughly 400 skill-description values across the whole library realigned with actual behavior; the largest groups by class follow
+- 💬: Heavy Mech Pilot (重甲机师) — the added damage on all five Tech: Stun / Fire / Freeze / Lightning / Venom Bomb (科技-眩晕/火焰/冰冻/闪电/猛毒炸弹) skills re-labelled level by level (51 lines across 7 bomb skills in total; the other two are under Engineering Technician / Unicorn)
+- 💬: Engineering Technician — bomb damage on Engineering Talent (工程天赋) re-labelled level by level; the shield armor bonus on Passive: Sword and Shield (被动-剑与盾) re-labelled across all 15 levels (every level had been overstated by 40 points); Blitz: Energy Surge (闪击-能量冲击) level-15 DPS 112→96
+- 💬: Sacred Shield Knight — Passive: Sword and Shield re-labelled the same way (overstated by 40 points per level)
+- 💬: Unicorn — damage on Passive: Sticky Bomb (被动-黏性炸弹) re-labelled level by level
+- 💬: Ash Warlock (灰烬术士) — four blind chance/duration values on Storm: Electric Pulse (风暴-电能磁爆) had been written one rank low and are now correct; the absorb on Inferno: Fire Tornado (炼狱-火焰旋风) changed to 25/35 to match reality
+- 💬: Temple Guardian — Frost: Source of Frost (寒冰-寒冰之源) tier 3 11→14
+- 💬: Doom Warrior (毁灭战士) — Titan: Titan Stomp (泰坦-泰坦践踏) cast speed 25→15; Technique: Phantom Armor (技巧-幽灵盔甲) dual resistance 50→100
+- 💬: Peerless War God — Soul Magic: Valor (魂法-骁勇) dual resistance 50→100
+- 💬: Berserker — the radius on Rage: Shadow Link (狂暴-暗影链接) had been written one rank high and is now correct; the range on Rage: Wolf Lunge (狂暴-狼性突刺) now matches reality; a further 9 descriptions corrected individually from player reports
+- 💬: Wolf Soul Ritualist (狼魂祭祀) — the range on Wolf God: Wolf Lunge (狼神-狼性突刺) now matches reality
+- 💬: Archdruid — Nature: Wolverine's Heart (自然-狼獾之心) damage reduction 15→25
+- 💬: Necromancer — Curse: Soul Phantom (诅咒-灵魂虚影) reflect 55→50
+- 💬: Barbarian Lord (野蛮领主) — Lord: Impale (领主-穿刺) attack speed 40→20; Shout: Weaken (呐喊-虚弱) 30→35 seconds
+- 💬: Wandering Marksman — Shadow: Shadow Cloak (暗影-暗影斗篷) reflect 250→175; Firearms: Reflective Shell Pulse (枪械-反光壳脉冲) had a description that did not match its actual mechanic, so the whole passage was rewritten (6 places)
+- 💬: Void Warlock — Flesh: Tentacle Smash (血肉-触手猛击) radius 5→5.5 metres
+- 💬: Jungle Hunter — Jungle: Beast Trap (丛林-捕兽夹) range 8→10 metres
+- 💬: Cross-class — 16 mistranslations of 「导弹」 ("guided missile") changed by context to projectile / missile / arrow / shell / pellet; 24 full-width characters normalized
+- 💬: A batch of descriptions turned out to be correct all along and were left alone — the 25%/75% on Legendary War God (传奇战神) Taoist: Demon Binding Curse (道士-困魔咒), the formula on Temple Guardian Fire: Phoenix Rebirth (火焰-凤凰重生), the whole Kill Recovery (击杀回复) family in the restoration line, and the four-piece enchant set coefficients
+
+### Demon Fall
+- 🗑️: Monsters lose the Collapse Trap (坍塌陷阱, internally Firebomb) as a group — the "fire trap" monsters dropped held you in place with a 20-second gravity well, and the trap itself could not be targeted or destroyed, so all you could do was wait it out; it has been removed from 3 bosses (Jungle Treant (丛林树魔) / Enigmatic Armored Warrior (迷之铠甲勇士) / Ancient Fire Treant (远古火树妖)) and 516 regular monsters. The Ash Warlock player's own Inferno: Collapse Trap (炼狱-坍塌陷阱) is unaffected
+
+### Packing
+- ♻️: All components fully rebuilt with the packer; Azure Lotus Sword Immortal [Refined] ships as a standalone new package, and replacing the whole pack is recommended
 
 ## 2026-07-24
 Translation polish + a mercenary shield fix, plus a full repack. This release mainly rounds out the "Diablo Legacy" Chinese text — unifying wording and filling in a large batch of previously missing translations, and fixes the mercenary "Indestructible Shield." All MODs have been fully repacked; replacing the whole pack is recommended.
