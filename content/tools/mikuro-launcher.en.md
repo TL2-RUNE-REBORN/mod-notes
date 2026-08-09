@@ -12,7 +12,7 @@ params:
   affixes:
     - "MIKURO X layer: loot filter / save-crash fix / WASD movement: one switch, all on"
     - "Breaks the official 10-mod cap: stack as many as you like (in-memory, exe untouched)"
-    - "Dual DXVK builds auto-selected by GPU driver: cures black screens and instant exits on old drivers"
+    - "Dual DXVK builds auto-selected by GPU driver: Direct3D 9 rendered through Vulkan"
     - "Save tools: respec skills & stats, unbind mods precisely, double-click to select a save's mod set"
     - "One click to join the MIKURO Afdian multiplayer servers (Guangzhou / Australia)"
     - "Environment self-check on every launch: OS / first run / mod folder / VC++ runtime"
@@ -73,7 +73,7 @@ The enhancement layer and the loot filter live in the same `d3d9.dll` proxy; one
 
 ## Ⅲ DXVK Graphics Compatibility
 
-Torchlight II's aging D3D9 renderer **black-screens or instantly exits** on some modern drivers and GPUs. The launcher bundles **DXVK** (translates Direct3D 9 to Vulkan), labelled "**DXVK (anti-crash)**", and does two things for you:
+The launcher bundles **DXVK** (translates Direct3D 9 to Vulkan) behind a toggle simply labelled "**DXVK**" — it improves compatibility on modern GPUs and drivers, and comes with a set of image-quality and frame-rate knobs. It does two things for you:
 
 - **Dual builds, auto-picked by driver.** Ships both DXVK **3.x (new)** and **2.7.1 (legacy)**; the launcher reads your GPU driver version and recommends one. Recent NVIDIA drivers get "new", older ones fall back to "legacy".
 - **Optional quality knobs.** 60 FPS cap, v-sync, ground texture sharpening (16× AF), FPS display, max frame latency, texture LOD bias, all with recommended values. The legacy build exposes just the frame cap and v-sync.
